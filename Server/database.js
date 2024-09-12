@@ -45,25 +45,31 @@ const initTables = () => {
             PRIMARY KEY (id)
         )`
     )
+    const borrowedBooks = (
+        `CREATE TABLE IF NOT EXISTS borrowed_books (
+            id INT AUTO_INCREMENT,
+            accession_number VARCHAR(255) NOT NULL,
+            title VARCHAR(255) NOT NULL,
+            date_pubslished DATE NOT NULL,
+            idNumber VARCHAR(255) NOT NULL,
+            pickup_date DATE NOT NULL,
+            contactNumber VARCHAR(20) NOT NULL,
+            PRIMARY KEY (id)
+        )`
+    )
+    
+    
+    
     connection.query(profile, (error) => {
         if(error) throw error;
     });
     connection.query(books, (error) => {
         if(error) throw error;
     });
+    connection.query(borrowedBooks, (error) => {
+        if(error) throw error;
+    });
 }
-    
-
-
-
-
-
-
-
-
-
-
-
 module.exports = {
     connection,
     initTables,

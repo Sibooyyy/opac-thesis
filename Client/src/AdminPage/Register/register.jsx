@@ -2,7 +2,7 @@ import Header from '../../Components/navbar'
 import candaleria from '../../assets/candaleria.png'
 import { useState } from 'react'
 import { FaEyeSlash, FaEye  } from "react-icons/fa";
-import { registrationForm } from '../../Utils/utils';
+import { registrationForm } from '../../utils/utils';
 import axios from 'axios';
 
 

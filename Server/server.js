@@ -6,7 +6,6 @@ const {connection} = database;
 const bodyParser = require('body-parser');
 const bcrypt = require("bcrypt");
 const saltRounds = 10;
-const jwt = require('jsonwebtoken');
 
 
 
@@ -113,7 +112,7 @@ app.post('/add/book', (req, res) => {
 app.get('/book/data', (req, res) => {
     const table = new DataTable(connection, "books");
     table.findAll((result) => {
-        if (result && result.length > 0) {
+        if (result) {
             return res.json({ status: true, message: "Data fetched successfully", data: result });
         } else {
             return res.json({ status: false, message: "No data found" });
@@ -132,23 +131,12 @@ app.delete('/book/data/:author', (req, res) => {
         }
     })
 })
+
+
 // Display data from registration table
 app.get('/register/data', (req, res) => {
     const table = new DataTable(connection, "profile");
     table.findAll((result) => {
-        if (result && result.length > 0) {
-            return res.json({ status: true, message: "Data fetched successfully", data: result });
-        } else {
-            return res.json({ status: false, message: "No data found" });
-        }
-    })
-})
-
-// SEARCH BOOK IN CLIENT-SIDE
-app.get('search/book', (req, res) => {
-    const searchQuery = req.query.search;
-    const table = new DataTable(connection, "books");
-    table.findAll(searchQuery, (result) => {
         if (result && result.length > 0) {
             return res.json({ status: true, message: "Data fetched successfully", data: result });
         } else {

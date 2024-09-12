@@ -1,9 +1,7 @@
 
 
 const BasicSearch = () => {
-
     const options = ['Title', 'Author', 'Accession Number', 'ISBN/ISSN', 'Category']
-
 
 
   return (
@@ -22,11 +20,11 @@ const BasicSearch = () => {
             </div>
             <div className='flex flex-col text-center gap-3'>
                 <h1 className='text-[white] font-montserrat font-semibold text-[17px]'>Search Expression</h1>
-                <input className="py-3 pl-2 rounded-lg w-[300px] font-montserrat text-md" type="text" placeholder="Type Something ..." />
+                <input className="py-3 pl-2 rounded-lg w-[300px] font-montserrat text-md" type="text" name='searchText' placeholder="Type Something ..." />
             </div>
             <div className='flex mt-10 gap-1'>
-                 <button type="button" className="bg-[#161D6F] text-[white] py-2 w-[90px] rounded-lg cursor-pointer font-montserrat text-[12px] hover:bg-[#161D6F]/70">Search</button>
-                 <button type="button" className="bg-[#161D6F] text-[white] py-2 w-[90px] rounded-lg cursor-pointer font-montserrat text-[12px] hover:bg-[#161D6F]/70">Clear</button>
+                 <button type="submit" className="bg-[#161D6F] text-[white] py-2 w-[90px] rounded-lg cursor-pointer font-montserrat text-[12px] hover:bg-[#161D6F]/70">Search</button>
+                 <button type="submit" className="bg-[#161D6F] text-[white] py-2 w-[90px] rounded-lg cursor-pointer font-montserrat text-[12px] hover:bg-[#161D6F]/70">Clear</button>
             </div>
         </form>
     </div>

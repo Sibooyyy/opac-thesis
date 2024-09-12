@@ -1,11 +1,15 @@
 import { useNavigate } from "react-router-dom"
+import { useContext } from "react";
+import { AuthContext } from '../App'; 
 
 const catalog = () => {
   const navigate = useNavigate()
+  const handleClick = (link) => {navigate(link)}
+  const { isLoggedIn } = useContext(AuthContext);
 
-  const handleClick = (link) => {
-    navigate(link)
-  }
+
+
+  
 
   return (
     <div className="h-[100%]">
@@ -23,6 +27,14 @@ const catalog = () => {
                     <li onClick={() => handleClick("/home/borrow")} className=" text-zinc-500 cursor-pointer font-poppins">View Borrow Book</li>
                 </ul>
             </div>
+            {isLoggedIn && (
+                <div>
+                    <h1 className="text-[#161D6F] font-poppins font-bold text-[18px] border-b border-b-gray-400 border-solid">My Profile</h1>
+                    <ul className="ml-4 mt-1">
+                    <li onClick={() => handleClick("/home/profile")} className=" text-zinc-500 cursor-pointer font-poppins">View Profile</li>
+                    </ul>
+                </div>
+                )}
         </div>
     </div>
   )

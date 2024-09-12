@@ -1,13 +1,15 @@
 import Header from "../Components/header";
 import candaleria from '../assets/candaleria.png'
-import { useState } from'react';
+import { useState, useContext  } from'react';
 import axios from "axios";
-import { loginForm } from '../Utils/utils';
-import { ADMIN, PASSWORD } from '../Utils/credential';
-
+import { loginForm } from '../utils/utils';
+import { ADMIN, PASSWORD } from '../utils/credential';
+import { useNavigate } from "react-router-dom";
+import { AuthContext } from "../App";
 
 function login() {
-
+  const { login } = useContext(AuthContext);  
+  const navigate = useNavigate();
   const [formData, setFormData] = useState(loginForm());
   const [loading, setLoading] = useState(false);
   const [successPopUp, setSuccessPopUp] = useState(false);
@@ -28,7 +30,8 @@ function login() {
     if (formData.username === ADMIN && formData.password === PASSWORD) {
         setSuccessPopUp(true);
         setTimeout(() => {
-            window.location.href = '/admin/home';
+          login();
+          navigate ('/admin/home');
         }, 3000)
     } else {
         setLoading(true);
@@ -39,7 +42,8 @@ function login() {
                 if (status) {
                     setSuccessPopUp(true);
                     setTimeout(() => {
-                        window.location.href = '/home';
+                    login();
+                    navigate('/home');
                     }, 3000)
                 } else {
                     setFailedPopup(true);

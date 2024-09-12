@@ -18,6 +18,7 @@ export const loginForm = () => {
     }
 }
 
+
 export const bookForm = () => {
     return {
         title: "",
@@ -30,13 +31,5 @@ export const bookForm = () => {
     }
 }
 
-export const profileData = (id, firstname, last, idNumber, contact, designation, token, avatar, url,   []) => {
-    return {id, firstname, last, idNumber, contact, designation, token, avatar, url};
-}
-
-export const fetchProfile = (data) => {
-    const {id, firstname, last, idNumber, contact, designation, token, avatar, url} = data;
-    return profileData(id, firstname, last, idNumber, contact, designation, token, avatar, url);
-}
 
 
