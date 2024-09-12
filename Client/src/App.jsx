@@ -24,8 +24,21 @@ import HomePage from "./UsePage/homepage.jsx";
 const App = () => {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
 
-  const login = () => {setIsLoggedIn(true);}
-  const logout = () => {setIsLoggedIn(false);};
+  const login = () => {
+    setIsLoggedIn(true);
+    localStorage.setItem("isLoggedIn", "true"); 
+  }
+  const logout = () => {
+    setIsLoggedIn(false);
+    localStorage.removeItem("isLoggedIn");
+  };
+
+  useEffect(() => {
+    const loggedIn = localStorage.getItem('isLoggedIn') === 'true';
+    setIsLoggedIn(loggedIn);
+  }, []);
+
+
 
 
 
