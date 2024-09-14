@@ -8,7 +8,8 @@ import { useNavigate } from "react-router-dom";
 import { AuthContext } from "../App";
 
 function login() {
-  const { login } = useContext(AuthContext);  
+  
+  const { handleLogin } = useContext(AuthContext);  
   const navigate = useNavigate();
   const [formData, setFormData] = useState(loginForm());
   const [loading, setLoading] = useState(false);
@@ -30,7 +31,7 @@ function login() {
     if (formData.username === ADMIN && formData.password === PASSWORD) {
         setSuccessPopUp(true);
         setTimeout(() => {
-          login();
+          handleLogin(formData); 
           navigate ('/admin/home');
         }, 3000)
     } else {
@@ -38,11 +39,11 @@ function login() {
         const url = 'http://localhost:8081/auth/login';
         axios.post(url, formData)
             .then((res) => {
-                const { status, message } = res.data;
+                const { status, message, data } = res.data;
                 if (status) {
                     setSuccessPopUp(true);
                     setTimeout(() => {
-                    login();
+                    handleLogin(data);
                     navigate('/home');
                     }, 3000)
                 } else {
@@ -53,7 +54,7 @@ function login() {
             })
             .catch((error) => {
                 setFailedPopup(true);
-                setError("An error occurred. Please try again.");
+                setError("No Username or Password found!");
                 setLoading(false);
                 console.log(error);
             });
@@ -63,7 +64,7 @@ function login() {
   return (
     <>
         <Header/>
-        <div className="flex justify-center flex-col items-center border-2 w-[40%] mx-auto my-[100px] rounded-2xl gap-10 drop-shadow-sm">
+        <div className="flex justify-center flex-col items-center border-2 w-[40%] mx-auto my-[100px] rounded-2xl gap-10 drop-shadow-sm ">
             <div className="mt-5">
               <img src={candaleria} alt="" />
             </div>
@@ -84,12 +85,12 @@ function login() {
                 </div>
             </form>
             {successPopUp && (
-                <div className="bg-green-500 text-white p-2 rounded-md">
+                <div className="bg-green-500 text-[black] p-2 rounded-md">
                     <p>Login successful</p>
                 </div>
             )}
             {failedPopup && (
-                <div className="bg-red-500 text-white p-2 rounded-md">
+                <div className="bg-red-500 text-[black] p-2 rounded-md">
                     <p>{error}</p>
                 </div>
             )}

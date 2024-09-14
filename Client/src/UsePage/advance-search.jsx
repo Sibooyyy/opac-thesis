@@ -50,12 +50,6 @@ const AdvanceSearch = () => {
                         <option value={index} key={item}>{item}</option>
                     ))}
                 </select>
-                <select className='py-3 pl-1 w-[220px] rounded-lg font-montserrat text-md'>
-                    <option hidden>Select Operator</option>
-                    {operators.map((item, index) => (
-                        <option value={index} key={item}>{item}</option>
-                    ))}
-                </select>
             </div>
         </form>  
             <div className='flex mt-10 gap-1 self-end'>

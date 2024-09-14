@@ -49,7 +49,7 @@ const AccountRecord = () => {
                         <th className='border border-r-2 px-[10px] w-[10%]'>No</th>
                         <th className='border border-r-2 px-[40px] w-[30%]'>First Name</th>
                         <th className='border border-r-2 px-[40px] w-[30%]'>Last Name</th>
-                        <th className='border border-r-2 px-[40px]'>idNumber</th>
+                        <th className='border border-r-2 px-[40px]'>ID Number</th>
                         <th className='border border-r-2 px-[20px] '>Contact</th>
                         <th className='border border-r-2 px-[20px] w-[1%]'>Designation</th>
                         <th className='border border-r-2 px-[20px] w-[12%]'>Username</th>

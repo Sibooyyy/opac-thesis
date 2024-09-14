@@ -67,7 +67,8 @@ app.post('/auth/login', (req, res) => {
             }
             res.json({
                 status: true,
-                message: "Login successful"
+                message: "Login successful",
+                data: result
             });
         });
     });
@@ -135,12 +136,43 @@ app.delete('/book/data/:author', (req, res) => {
 
 // Display data from registration table
 app.get('/register/data', (req, res) => {
-    const table = new DataTable(connection, "profile");
+    const table = new DataTable(connection, "profile", "books");
     table.findAll((result) => {
         if (result && result.length > 0) {
             return res.json({ status: true, message: "Data fetched successfully", data: result });
         } else {
             return res.json({ status: false, message: "No data found" });
+        }
+    })
+})
+
+app.get('/search/book', (req, res) => {
+    const table = new DataTable(connection, "books");
+    const { field, expression } = req.query;
+
+    if (!field || !expression) {
+        return res.json({ status: false, message: "Search field and expression are required" });
+    }
+    let searchCondition = {};
+    searchCondition[field] = expression;
+    table.findSome(searchCondition, (result) => {
+        if (result.length > 0) {
+            return res.json({ status: true, message: "Data fetched successfully", data: result });
+        } else {
+            return res.json({ status: false, message: "No data found" });
+        }
+    });
+});
+
+// Edit Books Details 
+app.post('/edit/book', (req, res) => {
+    const { title, category, isbn_issn, author, publisher, accession_number, date_published } = req.body;
+    const table = new DataTable(connection, "books");
+    table.update({ title, category, isbn_issn, author, publisher, accession_number, date_published }, (result) => {
+        if(result) {
+            return res.json({ status: true, message: "Book edited successfully" });
+        } else {
+            return res.json({ status: false, message: "Failed to edit book" });
         }
     })
 })
