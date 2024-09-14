@@ -51,7 +51,7 @@ const register = () => {
   return (
     <>
         <Header/>
-        <div className='flex justify-center items-center flex-col border-2 rounded-lg drop-shadow-sm w-[60%] mx-auto my-12 h-screen'>
+        <div className='flex justify-center items-center flex-col border-2 rounded-lg drop-shadow-sm w-[50%] mx-auto my-12 h-[40%] bg-[white]' >
           <div className='mt-5'>
               <img src={candaleria} alt="" />
           </div>

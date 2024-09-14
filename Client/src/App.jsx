@@ -1,6 +1,5 @@
-import { BrowserRouter, Route, Routes } from "react-router-dom"
+import { BrowserRouter, json, Route, Routes } from "react-router-dom"
 import { createContext, useState, useEffect } from "react";
-import Home from "./UsePage/homepage.jsx"
 import Login from "./Auth/login.jsx"
 import Register from "./AdminPage/Register/register.jsx"
 import AdvanceSearch from './UsePage/advance.jsx'
@@ -17,56 +16,63 @@ import HomePage from "./UsePage/homepage.jsx";
 
 
 
-
-
-
-
 const App = () => {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
-
-  const login = () => {
-    setIsLoggedIn(true);
-    localStorage.setItem("isLoggedIn", "true"); 
-  }
-  const logout = () => {
-    setIsLoggedIn(false);
-    localStorage.removeItem("isLoggedIn");
-  };
+  const [user, setUser] = useState(null);
 
   useEffect(() => {
-    const loggedIn = localStorage.getItem('isLoggedIn') === 'true';
-    setIsLoggedIn(loggedIn);
+    const data = localStorage.getItem("isLoggedIn");
+    const storedUser = localStorage.getItem("user");
+    if (data && JSON.parse(data)) {
+      setIsLoggedIn(true);
+      setUser(JSON.parse(storedUser));
+    } else {
+      setIsLoggedIn(false);
+      setUser(null);
+    }
   }, []);
 
+  const handleLogin = (data) => {
+    setUser(data);
+    setIsLoggedIn(true);
+    localStorage.setItem("isLoggedIn", JSON.stringify(true));
+    localStorage.setItem("user", JSON.stringify(data));
+  }
 
-
-
+  const handleLogout = () => {
+    setUser(null);
+    setIsLoggedIn(false);
+    localStorage.removeItem("isLoggedIn");
+    localStorage.removeItem("user");
+  }
 
 
 return (
-  <AuthContext.Provider value={{ isLoggedIn, login, logout}}>
+  <AuthContext.Provider value={{ isLoggedIn, handleLogin, handleLogout, user}}>
     <BrowserRouter>
-    <Routes>
+        <Routes>
           {/* Public routes */}
           <Route path="/" element={<HomePage />} />
           <Route path="/login" element={<Login />} />
           <Route path="/home" element={<HomePage />} />
           <Route path="/home/advance" element={<AdvanceSearch />} />
+          <Route path="/home/borrow"element={<Borrow/>}/>
 
         
           {/* Client protected routes */}
-          <Route path="/home/borrow"element={<PrivateRoute><Borrow /></PrivateRoute>}/>
+
           <Route path="/home/profile" element={<PrivateRoute><Profile /></PrivateRoute>}/>
             
           {/* Admin protected routes */}
           <Route path="/admin/home"element={<PrivateRoute><AdminHome /></PrivateRoute>}/>
+          <Route path="/admin/register"element={<PrivateRoute><Register /></PrivateRoute>}/>
           <Route path="/admin/category"element={<PrivateRoute><Category /></PrivateRoute>}/>
           <Route path="/admin/books" element={<PrivateRoute><Books /></PrivateRoute>}/>
           <Route path="/admin/student/record" element={<PrivateRoute><StudentRecord /></PrivateRoute> }/>
           <Route path="/admin/faculty/record"element={<PrivateRoute><FacultyRecord /></PrivateRoute>}/>
           <Route path="/admin/account/record" element={<PrivateRoute><AccountRecord /></PrivateRoute>}/>
         </Routes>
-      </BrowserRouter>  
+      </BrowserRouter> 
     </AuthContext.Provider>
   )
 }

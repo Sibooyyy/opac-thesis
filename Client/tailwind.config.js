@@ -5,15 +5,13 @@ export default {
     "./src/**/*.{js,ts,jsx,tsx}",
   ],
   theme: {
-    colors: {
-      white: "ffffff"
-      
+    extend: {
+      fontFamily: { 
+        'poppins': ['Poppins', 'sans-serif'], 
+        'source-sans': ['Source Sans Pro', 'Arial', 'sans-serif'], 
+        'montserrat': ['Montserrat', 'Arial', 'sans-serif']
+      }
     },
-      fontFamily: {
-        'poppins': ['Poppins', 'sans-serif'],
-        'source-sans': ['Source Sans Pro', 'Arial','sans-serif'],
-        'montserrat': ['Montserrat', 'Arial','sans-serif'],
-      },
-    plugins: []
-  }
+  },
+  plugins: [],
 }

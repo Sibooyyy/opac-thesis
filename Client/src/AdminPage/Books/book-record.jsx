@@ -69,7 +69,12 @@ const BookRecord = () => {
                         <td className='border border-r-2 px-[20px]'>{item.author}</td>
                         <td className='border border-r-2 px-[20px]'>{item.accession_number}</td>
                         <td className='border border-r-2 px-[20px]'>{moment(item.date_published).format('MM-DD-YYYY')}</td>
-                        <td className='px-[30px] border border-r-2'><button onClick={() =>handleDelete(item.author)}><MdDelete/></button></td>
+                        <td className='border border-r-2'>
+                            <div className="flex gap-2 text-center pl-1">
+                                <span className="border bg-[#003687] text-white rounded-md px-3 font-montserrat text-[15px] cursor-pointer">Edit</span>
+                                <span className="border bg-[#CC0000] text-white rounded-md px-3 font-montserrat text-[15px] cursor-pointer" onClick={() => handleDelete(item.author)}>Delete</span>
+                            </div>
+                        </td>
                         </tr>
                     ))}
                 </tbody>

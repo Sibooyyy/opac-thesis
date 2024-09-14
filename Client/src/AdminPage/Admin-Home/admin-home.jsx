@@ -12,7 +12,7 @@ import axios from 'axios';
 
 const AdminHome = () => {
 
-  const [student, setStudent] = useState([]);
+  const [record, setRecord] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
@@ -20,7 +20,7 @@ const AdminHome = () => {
     axios.get('http://localhost:8081/register/data')
       .then(response => {
         if (response.data.status) {
-          setStudent(response.data.data);
+          setRecord(response.data.data);
         } else {
           setError(response.data.message);
         }
@@ -39,20 +39,20 @@ const AdminHome = () => {
             <MdDashboard/><span>Dashboard</span>
         </div>
         <div className='flex flex-col items-center gap-5 h-screen mt-[50px]'>
-            <div className='flex flex-row gap-10 h-[200px]'>
+            <div className='flex flex-row gap-10 h-[200px] '>
                   <div className='w-[200px] border-[2px] rounded-lg border-[#17A300] flex items-center justify-center flex-col gap-8'>
-                    <FaBookOpen className='text-[#17A300] text-[40px]'/><span className='text-[#17A300] text-md font-montserrat'>Books Listed</span>
+                    <FaBookOpen className='text-[#17A300] text-[40px]'/><span className='text-[#17A300] text-[17px]'></span><span className='text-[#17A300] text-md font-montserrat'>Books Listed</span>
                   </div>
                   <div className='w-[200px] border-[2px] rounded-lg border-[#003687] flex items-center justify-center flex-col gap-8'>
                     <FaClock className='text-[#003687] text-[40px]'/><span className='text-[#003687] text-md font-montserrat'>Times Book Issued</span>
                   </div>
                   <div className='w-[200px] border-[2px] rounded-lg border-[#CC0000] flex items-center justify-center flex-col gap-8'>
-                    <FaUser className='text-[#CC0000] text-[40px]'/>{student.length}<span className='text-[#CC0000] text-md font-montserrat'>Registered Account</span>
+                    <FaUser className='text-[#CC0000] text-[40px]'/><span className='text-[#CC0000] text-[17px]'>{record.length}</span><span className='text-[#CC0000] text-md font-montserrat'>Registered Account</span>
                   </div>
               </div>
-              <div className='flex flex-row gap-10 h-[200px]'>
+              <div className='flex flex-row gap-10 h-[200px] ]'>
                     <div className='w-[200px] border-[2px] rounded-lg border-[#17A300] flex items-center justify-center flex-col gap-8'>
-                      <IoPeople className='text-[#17A300] text-[40px]'/><span className='text-[#17A300] text-md font-montserrat'>Author Listed</span>
+                      <IoPeople className='text-[#17A300] text-[40px]'/><span className='text-[#17A300] text-[17px]'></span><span className='text-[#17A300] text-md font-montserrat'>Author Listed</span>
                     </div>
                     <div className='w-[200px] border-[2px] rounded-lg border-[#003687] flex items-center justify-center flex-col gap-8'>
                       <TbCategory2 className='text-[#003687] text-[40px]'/><span className='text-[#003687] text-md font-montserrat'>Listed Categories</span>
