@@ -146,16 +146,48 @@ app.get('/register/data', (req, res) => {
     })
 })
 
-app.get('/search/book', (req, res) => {
+// Edit Books Details 
+app.post('/edit/books', (req, res) => {
+    const { title, category, isbn_issn, author, publisher, accession_number, date_published} = req.body;
     const table = new DataTable(connection, "books");
-    const { field, expression } = req.query;
+    table.update({ title, category, isbn_issn, author, publisher, date_published},{ accession_number },(result) => {
+            if (result) {
+                return res.json({ status: true, message: "Book edited successfully" });
+            } else {
+                return res.json({ status: false, message: "Failed to edit book" });
+            }
+        }
+    );
+});
+app.post('/update/status', (req, res) => {
+    const { category, status, date_update,  accession_number } = req.body;
+    const table = new DataTable(connection, "books");
+    table.update({category, status, date_update }, { accession_number },(result) => {
+        if(result) {
+            return res.json({ status: true, message: "Status updated successfully" });
+        } else {
+            return res.json({ status: false, message: "Failed to update status" });
+        }
+    })
+})
+
+app.post('/search/book', (req, res) => {
+    const table = new DataTable(connection, "books");
+    const { field, expression } = req.body;
 
     if (!field || !expression) {
         return res.json({ status: false, message: "Search field and expression are required" });
     }
+    const allowedFields = ['Title', 'Author', 'Accession Number', 'Publisher', 'ISBN/ISSN', 'Category'];
+    if (!allowedFields.includes(field)) {
+        return res.json({ status: false, message: "Invalid search field" });
+    }
     let searchCondition = {};
     searchCondition[field] = expression;
-    table.findSome(searchCondition, (result) => {
+    table.findSome(searchCondition, (result, err) => {
+        if (err) {
+            return res.json({ status: false, message: "Error fetching data", error: err });
+        }
         if (result.length > 0) {
             return res.json({ status: true, message: "Data fetched successfully", data: result });
         } else {
@@ -164,18 +196,7 @@ app.get('/search/book', (req, res) => {
     });
 });
 
-// Edit Books Details 
-app.post('/edit/book', (req, res) => {
-    const { title, category, isbn_issn, author, publisher, accession_number, date_published } = req.body;
-    const table = new DataTable(connection, "books");
-    table.update({ title, category, isbn_issn, author, publisher, accession_number, date_published }, (result) => {
-        if(result) {
-            return res.json({ status: true, message: "Book edited successfully" });
-        } else {
-            return res.json({ status: false, message: "Failed to edit book" });
-        }
-    })
-})
+
 
 
 

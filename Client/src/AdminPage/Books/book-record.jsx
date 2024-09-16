@@ -1,11 +1,10 @@
 import axios from "axios";
 import { useState, useEffect } from "react";
-import { MdDelete } from "react-icons/md";
 import moment from 'moment';
 
 
 
-const BookRecord = () => {
+const BookRecord = ({ books, onEditClick, onDeleteClick}) => {
     
   
 
@@ -27,22 +26,20 @@ const BookRecord = () => {
             setError(error);
             setLoading(false);
         });
-}, []);
+}, [books]);
 
-    const handleDelete = (author) => {
-      if (window.confirm(`Are you sure you want to delete book with ${author}?`)) {
-        axios.delete(`http://localhost:8081/book/data/${author}`)
-          .then(response => {
-            console.log(response.data);
-            setData(data.filter(item => item.author !== author)); 
-            setUpdate(!update);
-          })
-          .catch(error => {
-            console.error(error);
-          });
-      }
-    };
-
+const handleDelete = (author) => {
+  if (window.confirm(`Are you sure you want to delete book with ${author}?`)) {
+    axios.delete(`http://localhost:8081/book/data/${author}`)
+      .then(response => {
+        console.log(response.data);
+        setData(data.filter(item => item.author !== author)); 
+      })
+      .catch(error => {
+        console.error(error);
+      });
+  }
+};
 
   return (
     <div className='w-[68%]'>
@@ -55,6 +52,7 @@ const BookRecord = () => {
                   <th className='border border-r-2 w-[150px]'>ISBN/ISSN</th>
                   <th className='border border-r-2 w-[150px]'>Author</th>
                   <th className='border border-r-2 w-[150px]' >Publisher</th>
+                  <th className='border border-r-2 w-[150px]' >Accession Number</th>
                   <th className='border border-r-2 w-[150px]' >Date Published</th>
                   <th className=''>Action</th>
               </tr>
@@ -67,11 +65,12 @@ const BookRecord = () => {
                         <td className='border border-r-2 px-[40px]'>{item.category}</td>
                         <td className='border border-r-2 px-[40px]'>{item.isbn_issn}</td>
                         <td className='border border-r-2 px-[20px]'>{item.author}</td>
+                        <td className='border border-r-2 px-[20px]'>{item.publisher}</td>
                         <td className='border border-r-2 px-[20px]'>{item.accession_number}</td>
-                        <td className='border border-r-2 px-[20px]'>{moment(item.date_published).format('MM-DD-YYYY')}</td>
+                        <td className='border border-r-2 px-[20px]'>{moment(item.date_published).format('YYYY-MM-DD')}</td>
                         <td className='border border-r-2'>
                             <div className="flex gap-2 text-center pl-1">
-                                <span className="border bg-[#003687] text-white rounded-md px-3 font-montserrat text-[15px] cursor-pointer">Edit</span>
+                                <span className="border bg-[#003687] text-white rounded-md px-3 font-montserrat text-[15px] cursor-pointer" onClick={() => onEditClick(item)}>Edit</span>
                                 <span className="border bg-[#CC0000] text-white rounded-md px-3 font-montserrat text-[15px] cursor-pointer" onClick={() => handleDelete(item.author)}>Delete</span>
                             </div>
                         </td>

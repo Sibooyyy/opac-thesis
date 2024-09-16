@@ -42,6 +42,8 @@ const initTables = () => {
             publisher VARCHAR(255) NOT NULL,
             accession_number VARCHAR(50) NOT NULL,
             date_published DATE NOT NULL,
+            date_update DATE NOT NULL,
+            status VARCHAR(255) NOT NULL,
             PRIMARY KEY (id)
         )`
     )
@@ -57,8 +59,6 @@ const initTables = () => {
             PRIMARY KEY (id)
         )`
     )
-    
-    
     
     connection.query(profile, (error) => {
         if(error) throw error;

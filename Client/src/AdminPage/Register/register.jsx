@@ -51,34 +51,34 @@ const register = () => {
   return (
     <>
         <Header/>
-        <div className='flex justify-center items-center flex-col border-2 rounded-lg drop-shadow-sm w-[50%] mx-auto my-12 h-[40%] bg-[white]' >
+        <div className='flex justify-center items-center flex-col border-2 rounded-lg drop-shadow-sm w-full max-w-[800px] mx-auto my-[70px] h-auto bg-white' >
           <div className='mt-5'>
               <img src={candaleria} alt="" />
           </div>
           <div>
               <h1 className='font-poppins font-bold text-3xl text-[#001377] mb-10 mt-3'>Register Form</h1>
           </div>
-          <form className='flex flex-col gap-4' onSubmit={handleSubmit}>
-            <div className='flex gap-10'>
-                <div className='flex flex-col gap-1'>
+          <form className='flex flex-col gap-4 w-full px-8' onSubmit={handleSubmit}>
+            <div className='flex flex-wrap gap-6 md:gap-10'>
+                <div className='flex flex-col gap-1 w-full md:w-[25%]'>
                     <label className='font-montserrat text-[15px] font-semibold'>First Name</label>
                     <input className='p-1 border border-black rounded-md drop-shadow-sm cursor-pointer' value={formData.firstname} onChange={handleChange} type="text" name="firstname"/>
                  </div>
-                <div className='flex flex-col gap-1'>
+                <div className='flex flex-col gap-1 w-full md:w-[25%]'>
                     <label className='font-montserrat text-[15px] font-semibold'>Last Name</label>
                     <input className='p-1 border border-black rounded-md drop-shadow-sm cursor-pointer' value={formData.lastname} onChange={handleChange} type="text" name="lastname"/>
                 </div>
-                <div className='flex flex-col gap-1'>
+                <div className='flex flex-col gap-1 w-full md:w-[23%]'>
                     <label className='font-montserrat text-[15px] font-semibold'>ID Number</label>
                     <input className='p-1 border border-black rounded-md drop-shadow-sm cursor-pointer' value={formData.idNumber} onChange={handleChange} type="text" name="idNumber"/>
                 </div>
             </div>
-            <div className='flex gap-10'>
-                <div className='flex flex-col gap-1'>
+            <div className='flex flex-wrap gap-6 md:gap-10'>
+                <div className='flex flex-col gap-1 w-full md:w-[25%]'>
                     <label className='font-montserrat text-[15px] font-semibold'>Contact Number</label>
                     <input className='p-1 border border-black rounded-md drop-shadow-sm cursor-pointer' value={formData.contactNumber} onChange={handleChange} type="text" name="contactNumber" />
                  </div>
-                <div className='flex flex-col gap-1'>
+                <div className='flex flex-col gap-1 w-full md:w-[25%]'>
                     <label className='font-montserrat text-[15px] font-semibold'>Designation</label>
                     <select className='p-1 border w-[190px] border-black rounded-md drop-shadow-sm cursor-pointer' value={formData.designation} onChange={handleChange} name="designation" id="" >
                       <option hidden>Select Designation</option>
@@ -88,12 +88,12 @@ const register = () => {
                     </select>
                 </div>
             </div>
-            <div className='flex gap-10'>
-                <div className='flex flex-col gap-1'>
+            <div className='flex flex-wrap gap-6 md:gap-10'>
+                <div className='flex flex-col gap-1 w-full md:w-[25%]'>
                     <label className='font-montserrat text-[15px] font-semibold'>Username</label>
                     <input className='p-1 border border-black rounded-md drop-shadow-sm cursor-pointer' value={formData.username} onChange={handleChange} type="text" name="username" />
                  </div>
-                <div className='flex flex-col gap-1'>
+                <div className='flex flex-col gap-1 w-full md:w-[25%]'>
                     <label className='font-montserrat text-[15px] font-semibold'>Password</label>
                     <div className='relative'>
                       <input className='p-1 border border-black rounded-md drop-shadow-sm cursor-pointer'
@@ -105,14 +105,14 @@ const register = () => {
                       </span>
                     </div>
                 </div>
-                <div className='flex flex-col gap-1'>
+                <div className='flex flex-col gap-1 w-full md:w-[25%]'>
                     <label className='font-montserrat text-[15px] font-semibold'>Confirm Password</label>
                     <div className='relative'>
                       <input className='p-1 border border-black rounded-md drop-shadow-sm cursor-pointer'
                       type={showConfirmPassword? 'password' : 'text'} 
                       value={formData.confirm_password} onChange={handleChange}    
                       name="confirm_password" />
-                      <span className="absolute right-2 top-1/2 -translate-y-1/2" onClick={handleToggleShowConfirmPassword}>
+                      <span className="absolute right-2 top-1/2 -translate-y-1/2 cursor-pointer" onClick={handleToggleShowConfirmPassword}>
                         {showConfirmPassword ? <FaEye /> : <FaEyeSlash/>}
                       </span>
                     </div>
