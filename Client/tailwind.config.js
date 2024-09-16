@@ -10,7 +10,7 @@ export default {
         'poppins': ['Poppins', 'sans-serif'], 
         'source-sans': ['Source Sans Pro', 'Arial', 'sans-serif'], 
         'montserrat': ['Montserrat', 'Arial', 'sans-serif']
-      }
+      },
     },
   },
   plugins: [],

@@ -7,7 +7,7 @@ const StudentRecord = () => {
     <>
       <Navbar/>
       <div className='w-[100%] h-screen'>
-          <div className='flex flex-row mt-8 items-center pl-[250px] border-b font-montserrat font-bold text-[25px] p-5 gap-1'> 
+          <div className='flex flex-row pt-8 items-center pl-[250px] border-b font-montserrat font-bold text-[25px] p-5 gap-1'> 
                 <FaUser/><span>Student Record</span>
           </div>
           <div className='flex w-[100%] justify-between items-center mt-10'>

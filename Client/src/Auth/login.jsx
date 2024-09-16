@@ -64,24 +64,24 @@ function login() {
   return (
     <>
         <Header/>
-        <div className="flex justify-center flex-col items-center border-2 w-[40%] mx-auto my-[100px] rounded-2xl gap-10 drop-shadow-sm ">
+        <div className="flex justify-center flex-col items-center border-2 w-[40%] max-w-[600px] mx-auto my-16 p-8 rounded-2xl gap-10 drop-shadow-sm bg-white">
             <div className="mt-5">
-              <img src={candaleria} alt="" />
+              <img src={candaleria} alt="" className="max-w-full h-auto" />
             </div>
-            <div>
+            <div className="text-center">
               <h1 className="font-poppins font-bold text-3xl text-[#001377]">Library Online Public Catalog</h1>
             </div>
-            <form className="flex flex-col gap-4" onSubmit={handleSubmit}>
+            <form className="flex flex-col gap-4 w-[80%]" onSubmit={handleSubmit}>
                 <div className="flex gap-3 items-center">
-                  <label className="font-montserrat text-[17px] font-medium">Username</label>
-                  <input className="p-1 border border-black rounded-md drop-shadow-sm cursor-pointer" value={formData.username} onChange={handleChange} type="text" name="username" placeholder="Enter your username"   />
+                  <label className="font-montserrat text-lg font-medium">Username</label>
+                  <input className="p-2 border border-black rounded-md drop-shadow-sm cursor-pointer w-full" value={formData.username} onChange={handleChange} type="text" name="username" placeholder="Enter your username"   />
                 </div>
                 <div className="flex gap-3 items-center">
                   <label className="font-montserrat text-[17px] font-medium">Password</label>
-                  <input className="p-1 border border-black rounded-md drop-shadow-sm cursor-pointer" value={formData.password} onChange={handleChange} type="password" name="password" placeholder="Enter your password" />
+                  <input className="p-2 border border-black rounded-md drop-shadow-sm cursor-pointer w-full" value={formData.password} onChange={handleChange} type="password" name="password" placeholder="Enter your password" />
                 </div>
-                <div className="flex justify-center mt-1 pb-[40px]">
-                  <button className="bg-[#0CA1E2] text-[white] py-3 w-[90px] rounded-lg cursor-pointer font-montserrat text-[12px]" type="submit">Login</button>
+                <div className="flex justify-center mt-2">
+                  <button className="bg-[#0CA1E2] text-white py-3 px-6 rounded-lg cursor-pointer font-montserrat text-sm" type="submit">Login</button>
                 </div>
             </form>
             {successPopUp && (
