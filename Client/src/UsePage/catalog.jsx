@@ -5,11 +5,8 @@ import { AuthContext } from '../App';
 const catalog = () => {
   const navigate = useNavigate()
   const handleClick = (link) => {navigate(link)}
-  const { isLoggedIn } = useContext(AuthContext);
+  const { isLoggedIn, reservedBooks  } = useContext(AuthContext);
 
-
-
-  
 
   return (
     <div className="h-[100%]">
@@ -24,7 +21,9 @@ const catalog = () => {
             <div>
                 <h1 className="text-[#161D6F] font-poppins font-bold text-[18px] border-b border-b-gray-400 border-solid">My Borrow Book</h1>
                 <ul className="ml-4 mt-1">
-                    <li onClick={() => handleClick("/home/borrow")} className=" text-zinc-500 cursor-pointer font-poppins">View Borrow Book</li>
+                    <li onClick={() => handleClick("/home/borrow")} className=" text-zinc-500 cursor-pointer font-poppins">View Borrow Book
+                     {reservedBooks.length > 0 && <span className="bg-red-500 text-white rounded-full px-2 ml-2">{reservedBooks.length}</span>}
+                    </li>
                 </ul>
             </div>
             {isLoggedIn && (

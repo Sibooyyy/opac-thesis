@@ -36,29 +36,64 @@ const initTables = () => {
         `CREATE TABLE IF NOT EXISTS books (
             id INT AUTO_INCREMENT,
             title VARCHAR(255) NOT NULL,
-            category VARCHAR(255) NOT NULL,
+            category VARCHAR(255) NOT NULL,   
             isbn_issn VARCHAR(50) NOT NULL,
             author VARCHAR(255) NOT NULL,
             publisher VARCHAR(255) NOT NULL,
             accession_number VARCHAR(50) NOT NULL,
             date_published DATE NOT NULL,
-            date_update DATE NOT NULL,
-            status VARCHAR(255) NOT NULL,
+            book_status ENUM('available', 'borrowed') DEFAULT 'available',
+            status ENUM('active', 'inactive') DEFAULT 'active',
             PRIMARY KEY (id)
         )`
     )
     const borrowedBooks = (
         `CREATE TABLE IF NOT EXISTS borrowed_books (
             id INT AUTO_INCREMENT,
-            accession_number VARCHAR(255) NOT NULL,
+            book_id INT NOT NULL,
+            firstname VARCHAR(255) NOT NULL,
+            lastname VARCHAR(255) NOT NULL,
+            designation VARCHAR(255) NOT NULL,
             title VARCHAR(255) NOT NULL,
-            date_pubslished DATE NOT NULL,
+            author VARCHAR(255) NOT NULL,
+            isbn_issn VARCHAR(50) NOT NULL,
             idNumber VARCHAR(255) NOT NULL,
             pickup_date DATE NOT NULL,
+            booking_date DATE NOT NULL,
             contactNumber VARCHAR(20) NOT NULL,
+            status VARCHAR(255) NOT NULL,
+            book_status ENUM('reserved', 'borrowed') NOT NULL,
+            PRIMARY KEY (id),
+            FOREIGN KEY (book_id) REFERENCES books(id)
+        )`
+    )
+    const categories = (
+        `CREATE TABLE IF NOT EXISTS categories (
+            id INT AUTO_INCREMENT,
+            category VARCHAR(255) NOT NULL,
+            status ENUM('active', 'inactive') DEFAULT 'active',
+            date_update DATE NOT NULL,
             PRIMARY KEY (id)
         )`
     )
+    const notification = (
+        `CREATE TABLE IF NOT EXISTS notification (
+            id INT AUTO_INCREMENT,
+            idNumber VARCHAR(255) NOT NULL,
+            message TEXT,
+            status ENUM('unread', 'read') DEFAULT 'unread',
+            timestamp DATETIME DEFAULT CURRENT_TIMESTAMP,
+            PRIMARY KEY(id)
+        )`
+    )
+    const tagsTable = (
+        `CREATE TABLE IF NOT EXISTS tags (
+            id INT AUTO_INCREMENT PRIMARY KEY,
+            name VARCHAR(255) NOT NULL,
+            status VARCHAR(50) DEFAULT 'active',
+            date_added TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+        )`
+    );
     
     connection.query(profile, (error) => {
         if(error) throw error;
@@ -69,6 +104,20 @@ const initTables = () => {
     connection.query(borrowedBooks, (error) => {
         if(error) throw error;
     });
+    connection.query(categories, (error) => {
+        if(error) throw error;
+    });
+    connection.query(notification, (error) => {
+        if(error) throw error;
+    });
+    connection.query(tagsTable, (error) => {
+        if(error) throw error;
+    });
+
+
+
+
+
 }
 module.exports = {
     connection,

@@ -16,39 +16,93 @@ import HomePage from "./UsePage/homepage.jsx";
 
 
 
+
 const App = () => {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [user, setUser] = useState(null);
+  const [reservedBooks, setReservedBooks] = useState([]);
+  const [bookingSuccess, setBookingSuccess] = useState(false);
+  
 
   useEffect(() => {
     const data = localStorage.getItem("isLoggedIn");
     const storedUser = localStorage.getItem("user");
+    
     if (data && JSON.parse(data)) {
+      const parsedUser = JSON.parse(storedUser);
       setIsLoggedIn(true);
-      setUser(JSON.parse(storedUser));
+      setUser(parsedUser);
+
+      const userBooks = localStorage.getItem(`reservedBooks_${parsedUser.id}`);
+      if (userBooks) {
+        setReservedBooks(JSON.parse(userBooks));
+      }
     } else {
       setIsLoggedIn(false);
       setUser(null);
     }
   }, []);
 
+  useEffect(() => {
+    if (user) {
+      localStorage.setItem(`reservedBooks_${user.id}`, JSON.stringify(reservedBooks));
+    }
+  }, [reservedBooks, user]);
+
+
+
   const handleLogin = (data) => {
     setUser(data);
     setIsLoggedIn(true);
     localStorage.setItem("isLoggedIn", JSON.stringify(true));
     localStorage.setItem("user", JSON.stringify(data));
+    const userBooks = localStorage.getItem(`reservedBooks_${data.id}`);
+    if (userBooks) {
+      setReservedBooks(JSON.parse(userBooks));
+    } else {
+      setReservedBooks([]);
+    }
   }
 
   const handleLogout = () => {
     setUser(null);
     setIsLoggedIn(false);
+    setReservedBooks([])
     localStorage.removeItem("isLoggedIn");
     localStorage.removeItem("user");
+
   }
+
+  const updateUser = (updatedUserData) => {
+    setUser(updatedUserData);
+    localStorage.setItem("user", JSON.stringify(updatedUserData));
+  };
+
+  const addReservedBook = (book) => {
+    setReservedBooks((prevBooks) => {
+      const updatedBooks = [...prevBooks, book];
+      localStorage.setItem(`reservedBooks_${user.id}`, JSON.stringify(updatedBooks)); 
+      return updatedBooks;
+    });
+  }
+
+  const removeReservedBook = (bookId) => {
+    setReservedBooks((prevBooks) => {
+      const updatedBooks = prevBooks.filter((book) => book.id !== bookId);
+      localStorage.setItem(`reservedBooks_${user.id}`, JSON.stringify(updatedBooks)); 
+      return updatedBooks;
+    });
+  }
+  const triggerBookingSuccess = () => {
+    setBookingSuccess(true);
+    setTimeout(() => {
+      setBookingSuccess(false);
+    }, 3000);
+  };
 
 
 return (
-  <AuthContext.Provider value={{ isLoggedIn, handleLogin, handleLogout, user}}>
+  <AuthContext.Provider value={{ isLoggedIn, handleLogin, handleLogout, user, reservedBooks, addReservedBook, removeReservedBook, bookingSuccess, triggerBookingSuccess, setReservedBooks, updateUser }}>
     <BrowserRouter>
         <Routes>
           {/* Public routes */}
@@ -57,6 +111,7 @@ return (
           <Route path="/home" element={<HomePage />} />
           <Route path="/home/advance" element={<AdvanceSearch />} />
           <Route path="/home/borrow"element={<Borrow/>}/>
+  
 
         
           {/* Client protected routes */}
@@ -71,6 +126,7 @@ return (
           <Route path="/admin/student/record" element={<PrivateRoute><StudentRecord /></PrivateRoute> }/>
           <Route path="/admin/faculty/record"element={<PrivateRoute><FacultyRecord /></PrivateRoute>}/>
           <Route path="/admin/account/record" element={<PrivateRoute><AccountRecord /></PrivateRoute>}/>
+
         </Routes>
       </BrowserRouter> 
     </AuthContext.Provider>
