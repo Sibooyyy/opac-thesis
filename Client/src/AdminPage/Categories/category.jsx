@@ -2,27 +2,37 @@ import Navbar from '../../Components/navbar'
 import { TbCategory2 } from "react-icons/tb";
 import CategoryInfo from './category-info';
 import CategoryRec from './category-rec';
-import { useState } from 'react';
+import { bookForm } from '../../utils/utils';
+import { useState } from'react';
+
 
 
 
 
 const category = () => {
-  const [selectedCategory, setSelectedCategory] = useState(null);
+  const [formData, setFormData] = useState(bookForm());
   const [categories, setCategories] = useState([]);
 
-  const handleEditCategory = (category) => {
-    setSelectedCategory(category);
+  const handleEditClick = (category, status, id) => {
+    setFormData({ category, status, id  });
   };
 
-  const handleUpdateCategories = (updatedCategory) => {
-    // Update the specific category in the categories list
-    setCategories((prevCategories) =>
-      prevCategories.map((cat) =>
-        cat.accession_number === updatedCategory.accession_number ? updatedCategory : cat
-      )
-    );
-  }
+  const handleFormSubmit = (updatedCategory) => {
+    if (updatedCategory.id) {  // Ensure id exists
+      // Update an existing category in the list
+      setCategories((prevCategories) =>
+        prevCategories.map((cat) =>
+          cat.id === updatedCategory.id ? updatedCategory : cat
+        )
+      );
+    } else {
+      // Add a new category to the list
+      setCategories([...categories, updatedCategory]);
+    }
+  };
+
+
+
 
   return (
     <>
@@ -31,8 +41,8 @@ const category = () => {
             <TbCategory2/><span>Categories</span>
         </div>
         <div className='h-screen flex justify-between w-[100%] p-[50px] gap-8'>
-            <CategoryInfo selectedCategory={selectedCategory}  onUpdateCategories={handleUpdateCategories}/>
-            <CategoryRec onEditCategory={handleEditCategory}  categories={categories} setCategories={setCategories} />
+            <CategoryInfo formData={formData} setFormData={setFormData} onFormSubmit={handleFormSubmit} />
+            <CategoryRec  categories={categories} onEditClick={handleEditClick} />
         </div>
     </>
   )
