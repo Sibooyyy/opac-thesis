@@ -21,8 +21,8 @@ function Login() {
     const handleChange = (e) => {
         const { name, value } = e.target;
         setFormData({ ...formData, [name]: value });
-        setError(''); // Clear error message
-        setFailedPopup(false); // Hide error popup
+        setError(''); 
+        setFailedPopup(false); 
     }
 
     const handleSubmit = (e) => {
@@ -74,12 +74,16 @@ function Login() {
     return (
         <>
             <Header />
-            <div className="flex justify-center flex-col items-center border-2 w-[40%] max-w-[600px] mx-auto my-16 p-8 rounded-2xl gap-8 shadow-lg bg-white">
+            <div
+                className="flex justify-center flex-col items-center border-2 w-[40%] max-w-[600px] mx-auto my-16 p-8 rounded-2xl gap-8 shadow-lg bg-white">
                 <div>
-                    <img src={candaleria} alt="Candelaria" className="max-w-full h-auto" />
+                    <img
+                        src={candaleria}
+                        alt="Candelaria"
+                    />
                 </div>
                 <div className="text-center">
-                    <h1 className="font-poppins font-bold text-3xl text-[#001377]">Library Online Public Catalog</h1>
+                    <h1 className="font-poppins font-bold text-lg text-[#001377]">Library Online Public Catalog</h1>
                 </div>
                 <form className="flex flex-col gap-4 w-[80%]" onSubmit={handleSubmit}>
                     <div className="flex flex-col gap-2">
@@ -108,7 +112,7 @@ function Login() {
                         <button
                             className="bg-[#0CA1E2] text-white py-3 px-6 rounded-lg cursor-pointer font-montserrat text-sm flex items-center justify-center gap-2"
                             type="submit"
-                            disabled={loading} 
+                            disabled={loading}
                         >
                             {loading ? <FaSpinner className="animate-spin" /> : "Login"}
                         </button>
@@ -130,6 +134,7 @@ function Login() {
                     </div>
                 )}
             </div>
+
         </>
     );
 }

@@ -42,6 +42,7 @@ const initTables = () => {
             publisher VARCHAR(255) NOT NULL,
             accession_number VARCHAR(50) NOT NULL,
             date_published DATE NOT NULL,
+            mark_tags VARCHAR(255) NOT NULL,
             book_status ENUM('available', 'borrowed') DEFAULT 'available',
             status ENUM('active', 'inactive') DEFAULT 'active',
             PRIMARY KEY (id)
@@ -86,14 +87,7 @@ const initTables = () => {
             PRIMARY KEY(id)
         )`
     )
-    const tagsTable = (
-        `CREATE TABLE IF NOT EXISTS tags (
-            id INT AUTO_INCREMENT PRIMARY KEY,
-            name VARCHAR(255) NOT NULL,
-            status VARCHAR(50) DEFAULT 'active',
-            date_added TIMESTAMP DEFAULT CURRENT_TIMESTAMP
-        )`
-    );
+
     
     connection.query(profile, (error) => {
         if(error) throw error;
@@ -110,10 +104,6 @@ const initTables = () => {
     connection.query(notification, (error) => {
         if(error) throw error;
     });
-    connection.query(tagsTable, (error) => {
-        if(error) throw error;
-    });
-
 
 
 

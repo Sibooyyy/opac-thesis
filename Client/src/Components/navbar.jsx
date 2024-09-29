@@ -1,22 +1,37 @@
 import Header from "./header";
 import { useNavigate } from "react-router-dom";
-import { useEffect, useState, useContext } from "react";
+import { useEffect, useState, useRef } from "react";
 import { IoIosNotifications } from "react-icons/io";
-import { AuthContext } from "../App";
 import axios from "axios";
 
 const HeaderOption = () => {
-  const { user } = useContext(AuthContext);
   const [notifications, setNotifications] = useState([]);
-  const [unreadCount, setUnreadCount] = useState(0); // Track unread count separately
+  const [unreadCount, setUnreadCount] = useState(0);
   const [showNotifications, setShowNotifications] = useState(false);
-
-  const navigate = useNavigate();
-  const handleClick = (link) => { navigate(link); };
   const [showDropdown, setShowDropdown] = useState(false);
   const [showBorrowUserDropdown, setShowBorrowUserDropdown] = useState(false);
-  const handleToggleDropdown = () => setShowDropdown(!showDropdown);
-  const handleToggleBorrowUserDropdown = () => { setShowBorrowUserDropdown(!showBorrowUserDropdown); };
+
+  const navigate = useNavigate();
+  const dropdownRef = useRef(null);
+  const borrowUserDropdownRef = useRef(null);
+  const notificationsRef = useRef(null);
+
+  const handleClick = (link) => {
+    navigate(link);
+    window.scrollTo({ top: 0, behavior: 'smooth' })
+  };
+
+  const handleToggleDropdown = () => {
+    setShowDropdown(!showDropdown);
+  };
+
+  const handleToggleBorrowUserDropdown = () => {
+    setShowBorrowUserDropdown(!showBorrowUserDropdown);
+  };
+
+  const handleToggleNotifications = () => {
+    setShowNotifications(!showNotifications);
+  };
 
   useEffect(() => {
     const fetchNotifications = async () => {
@@ -24,7 +39,7 @@ const HeaderOption = () => {
         const response = await axios.get('http://localhost:8081/admin/notifications');
         const unreadNotifications = response.data.notifications.filter(notification => notification.status === 'unread');
         setNotifications(response.data.notifications);
-        setUnreadCount(unreadNotifications.length); // Set unread count
+        setUnreadCount(unreadNotifications.length); 
       } catch (error) {
         console.error("Error fetching notifications:", error);
       }
@@ -32,18 +47,13 @@ const HeaderOption = () => {
     fetchNotifications();
   }, []);
 
-  const handleToggleNotifications = () => {
-    setShowNotifications(!showNotifications);
-  };
-
   const handleMarkAsRead = async (id) => {
     try {
       await axios.post('http://localhost:8081/admin/notifications/mark-read', { id });
-      // Update the state to change the status of the specific notification to "read"
       setNotifications(notifications.map(notification => 
         notification.id === id ? { ...notification, status: 'read' } : notification
       ));
-      setUnreadCount(prevCount => prevCount - 1); // Decrease the unread count
+      setUnreadCount(prevCount => prevCount - 1);
     } catch (error) {
       console.error("Error marking as read:", error);
     }
@@ -53,7 +63,6 @@ const HeaderOption = () => {
     try {
       await axios.delete('http://localhost:8081/admin/notifications/delete', { data: { id } });
       setNotifications(notifications.filter(notification => notification.id !== id));
-      // Decrease unread count only if the deleted notification was unread
       const deletedNotification = notifications.find(notification => notification.id === id);
       if (deletedNotification.status === 'unread') {
         setUnreadCount(prevCount => prevCount - 1);
@@ -63,13 +72,42 @@ const HeaderOption = () => {
     }
   };
 
+  const handleClickOutside = (event) => {
+    if (
+      dropdownRef.current && !dropdownRef.current.contains(event.target) &&
+      showDropdown
+    ) {
+      setShowDropdown(false);
+    }
+    if (
+      borrowUserDropdownRef.current && !borrowUserDropdownRef.current.contains(event.target) &&
+      showBorrowUserDropdown
+    ) {
+      setShowBorrowUserDropdown(false);
+    }
+    if (
+      notificationsRef.current && !notificationsRef.current.contains(event.target) &&
+      showNotifications
+    ) {
+      setShowNotifications(false);
+    }
+  };
+
+  useEffect(() => {
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, [showDropdown, showBorrowUserDropdown, showNotifications]);
+
   return (
     <>
       <Header />
       <div className="drop-shadow-md bg-[#F1F1F1] w-full font-poppins uppercase p-8 flex justify-center font-bold">
         <ul className="flex flex-wrap justify-between list-none gap-8 md:gap-16 lg:gap-20">
-          <li className="cursor-pointer" onClick={() => handleClick('/admin/home')}>Dashboard</li>
-          <li className="relative cursor-pointer" onClick={handleToggleDropdown}>Register Account
+          <li className="cursor-pointer underline-animation" onClick={() => handleClick('/admin/home')}>Dashboard</li>
+          <li ref={dropdownRef} className="relative cursor-pointer underline-animation" onClick={handleToggleDropdown}>
+            Register Account
             {showDropdown && (
               <ul className="absolute bg-white shadow-md p-2 rounded-md w-[170px] flex flex-col gap-2">
                 <li className="text-[14px] cursor-pointer hover:bg-gray-100 p-1" onClick={() => handleClick('/admin/register')}>Add Student</li>
@@ -77,17 +115,18 @@ const HeaderOption = () => {
               </ul>
             )}
           </li>
-          <li className="cursor-pointer" onClick={() => handleClick('/admin/category')}>Categories</li>
-          <li className="cursor-pointer" onClick={() => handleClick('/admin/books')}>Books</li>
-          <li className="relative cursor-pointer" onClick={handleToggleBorrowUserDropdown}>Borrow User
+          <li className="cursor-pointer underline-animation" onClick={() => handleClick('/admin/category')}>Categories</li>
+          <li className="cursor-pointer underline-animation" onClick={() => handleClick('/admin/books')}>Books</li>
+          <li ref={borrowUserDropdownRef} className="relative cursor-pointer underline-animation" onClick={handleToggleBorrowUserDropdown}>
+            Borrow Record
             {showBorrowUserDropdown && (
               <ul className="absolute bg-white shadow-md p-2 rounded-md w-[150px] flex flex-col gap-2">
-                <li className="text-[14px]  cursor-pointer hover:bg-gray-100 p-1" onClick={() => handleClick('/admin/faculty/record')}>Faculty</li>
+                <li className="text-[14px] cursor-pointer hover:bg-gray-100 p-1" onClick={() => handleClick('/admin/faculty/record')}>Faculty</li>
                 <li className="text-[14px] cursor-pointer hover:bg-gray-100 p-1" onClick={() => handleClick('/admin/student/record')}>Student</li>
               </ul>
             )}
           </li>
-          <li className="relative cursor-pointer text-[30px]" onClick={handleToggleNotifications}>
+          <li ref={notificationsRef} className="relative cursor-pointer text-[30px]" onClick={handleToggleNotifications}>
             <IoIosNotifications />
             {unreadCount > 0 && ( 
               <div className="absolute right-0 top-0 w-5 h-5 bg-red-600 text-white rounded-full text-xs flex items-center justify-center">
@@ -95,7 +134,7 @@ const HeaderOption = () => {
               </div>
             )}
             {showNotifications && (
-              <div className="absolute right-0 mt-2 w-80 bg-white shadow-lg rounded-md p-4 text-sm border border-gray-200">
+              <div className="absolute right-0 mt-2 w-80 max-h-80 bg-white shadow-lg rounded-md p-4 text-sm border border-gray-200 overflow-y-auto">
                 {notifications.length === 0 ? (
                   <p className="text-center text-gray-500">No notifications</p>
                 ) : (

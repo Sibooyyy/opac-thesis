@@ -70,16 +70,16 @@ const AdvanceSearch = () => {
     };
 
     const handleReserveBook = (book) => {
-        addReservedBook(book); // Add the selected book to the reserved books list
+        addReservedBook(book); 
     };
 
     return (
-        <div className='w-full h-screen p-6 md:p-12 bg-[#0CA1E2] flex flex-col items-center gap-5'>
-            <h1 className='font-poppins text-white text-2xl md:text-3xl font-bold'>Advance Search</h1>
-            <p className='font-poppins text-white text-sm md:text-lg'>Search the library's holdings for books, digital records, periodicals, and more</p>
-            <form className='flex flex-col md:flex-row gap-6 items-center mt-1 w-full max-w-5xl' onSubmit={handleSearch}>
+        <div className='w-[100%] h-screen p-[60px] bg-[#0CA1E2] flex flex-col items-center gap-5'>
+            <h1 className='font-poppins text-[white] text-[25px] font-bold'>Advance Search</h1>
+            <p className='font-poppins text-[white] text-[16px]'>Search the library's holdings for books, digital records, periodicals, and more</p>
+            <form className='flex gap-9 items-center mt-1' onSubmit={handleSearch}>
                 <div className='flex flex-col text-center gap-3'>
-                    <h1 className='text-white font-montserrat font-semibold text-base md:text-lg'>Search Field</h1>
+                    <h1 className='text-[white] font-montserrat font-semibold text-[17px]'>Search Field</h1>
                     <select
                         className='py-2 pl-2 w-full md:w-56 rounded-lg font-montserrat text-md'
                         name="option1"
@@ -104,7 +104,7 @@ const AdvanceSearch = () => {
                     </select>
                 </div>
                 <div className='flex flex-col text-center gap-3'>
-                    <h1 className='text-white font-montserrat font-semibold text-base md:text-lg'>Search Expression</h1>
+                    <h1 className='text-[white] font-montserrat font-semibold text-[17px]'>Search Expression</h1>
                     <input
                         className="py-2 pl-2 rounded-lg w-full md:w-72 font-montserrat text-md"
                         type="text"
@@ -123,7 +123,7 @@ const AdvanceSearch = () => {
                     />
                 </div>
                 <div className='flex flex-col text-center gap-3'>
-                    <h1 className='text-white font-montserrat font-semibold text-base md:text-lg'>Operator</h1>
+                    <h1 className='text-[white] font-montserrat font-semibold text-[17px]'>Operator</h1>
                     <select
                         className='py-2 pl-2 w-full md:w-56 rounded-lg font-montserrat text-md'
                         name="operator"
@@ -136,21 +136,21 @@ const AdvanceSearch = () => {
                         ))}
                     </select>
                 </div>
-                <div className='flex mt-10 gap-1'>
-                    <button
-                        type="submit"
-                        className="bg-[#161D6F] text-white py-2 w-24 rounded-lg cursor-pointer font-montserrat text-xs md:text-sm hover:bg-[#161D6F]/70"
-                    >
-                        Search
-                    </button>
-                    <button
-                        type="button"
-                        className="bg-[#161D6F] text-white py-2 w-24 rounded-lg cursor-pointer font-montserrat text-xs md:text-sm hover:bg-[#161D6F]/70"
-                        onClick={handleClear}
-                    >
-                        Clear
-                    </button>
-                </div>
+                <div className='flex items-start gap-1 mt-4'>
+                        <button
+                            type="submit"
+                            className="bg-[#161D6F] text-white py-2 w-24 rounded-lg cursor-pointer font-montserrat text-xs md:text-sm hover:bg-[#161D6F]/70"
+                        >
+                            Search
+                        </button>
+                        <button
+                            type="button"
+                            className="bg-[#161D6F] text-white py-2 w-24 rounded-lg cursor-pointer font-montserrat text-xs md:text-sm hover:bg-[#161D6F]/70"
+                            onClick={handleClear}
+                        >
+                            Clear
+                        </button>
+                    </div>
             </form>
 
             {error && <p className="text-red-500 font-montserrat mt-4">{error}</p>}
@@ -186,7 +186,7 @@ const AdvanceSearch = () => {
                                             </span>
                                         ) : book.book_status === 'borrowed' ? (
                                             <span className='bg-red-500 text-white px-3 py-1 rounded cursor-not-allowed'>
-                                                Inactive
+                                                Borrowed
                                             </span>
                                         ) : (
                                             <span className='text-gray-500'>Unknown</span>
@@ -194,6 +194,11 @@ const AdvanceSearch = () => {
                                     </td>
                                     <td className='py-2 px-5'>
                                         {book.book_status === 'available' && (
+                                            <button className='bg-[#0CA1E2] text-white px-3 py-1 rounded-md hover:bg-[#0A90D2]' onClick={() => handleReserveBook(book)}>
+                                                Reserve Book
+                                            </button>
+                                        )}
+                                        {book.book_status === 'borrowed' && (
                                             <button className='bg-[#0CA1E2] text-white px-3 py-1 rounded-md hover:bg-[#0A90D2]' onClick={() => handleReserveBook(book)}>
                                                 Reserve Book
                                             </button>

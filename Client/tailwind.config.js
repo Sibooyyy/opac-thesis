@@ -11,6 +11,9 @@ export default {
         'source-sans': ['Source Sans Pro', 'Arial', 'sans-serif'], 
         'montserrat': ['Montserrat', 'Arial', 'sans-serif']
       },
+      backgroundImage: {
+        'custom-bg': "url('/assets/output.png')",
+      },
     },
   },
   plugins: [],

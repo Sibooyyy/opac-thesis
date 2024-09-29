@@ -110,8 +110,88 @@ app.get('/account/data', (req, res) => {
         } else {
             return res.json({ status: false, message: "No data found" });
         }
-    })
-})
+    });
+});
+
+
+app.get('/category/data', (req, res) => {
+    const { category } = req.query; 
+    const table = new DataTable(connection, "categories");
+    
+    if (category) {
+        table.findOne({ category }, (result) => {
+            if (result) {
+                return res.json({ status: true, message: "Data fetched successfully", data: result });
+            } else {
+                return res.json({ status: false, message: "No data found" });
+            }
+        });
+    } else {
+        table.findAll((results) => {
+            return res.json({ status: true, message: "Data fetched successfully", data: results });
+        });
+    }
+});
+
+
+app.get('/borrowed/data', (req, res) => {
+    const { status } = req.query; 
+    const table = new DataTable(connection, "borrowed_books");
+    
+    if (status) {
+        table.findOne({ status }, (result) => {
+            if (result) {
+                return res.json({ status: true, message: "Data fetched successfully", data: result });
+            } else {
+                return res.json({ status: false, message: "No data found" });
+            }
+        });
+    } else {
+        table.findAll((results) => {
+            return res.json({ status: true, message: "Data fetched successfully", data: results });
+        });
+    }
+});
+
+app.get('/bookinfo/data', (req, res) => {
+    const { title, author } = req.query; 
+    const table = new DataTable(connection, "books");
+    
+    if (title && author) {
+        table.findSome({ title, author }, (result) => {
+            if (result) {
+                return res.json({ status: true, message: "Data fetched successfully", data: result });
+            } else {
+                return res.json({ status: false, message: "No data found" });
+            }
+        });
+    } else {
+        table.findAll((results) => {
+            return res.json({ status: true, message: "Data fetched successfully", data: results });
+        });
+    }
+});
+
+
+
+app.get('/bookinfo/data', (req, res) => {
+    const {title, author } = req.query; 
+    if (!author || !id) {
+        return res.json({ status: false, message: "Author and Category are required" });
+    }
+    const table = new DataTable(connection, "books");
+    table.findSome({title, author }, (result) => {
+        if (result) {
+            return res.json({ status: true, message: "Data fetched successfully", data: result });
+        } else {
+            return res.json({ status: false, message: "No data found" });
+        }
+    });
+});
+
+
+
+
 // Delete Register Account
 app.delete('/account/data/:idNumber', (req, res) => {
     const idNUmber = req.params.idNumber;
@@ -124,6 +204,8 @@ app.delete('/account/data/:idNumber', (req, res) => {
         }
     })
 })
+
+
 // Add Books in DB
 app.post('/add/book', (req, res) => {
     const { title, category, isbn_issn, author, publisher, accession_number, date_published } = req.body;
@@ -137,6 +219,8 @@ app.post('/add/book', (req, res) => {
     })
 
 })
+
+
 // DISPLAY BOOK DATA from Table
 app.get('/book/data', (req, res) => {
     const table = new DataTable(connection, "books");
@@ -341,19 +425,17 @@ app.post('/search/book', (req, res) => {
 app.post('/user/book', (req, res) => {
     const { firstname, lastname, designation, title, idNumber, pickup_date, author, isbn_issn, booking_date, contactNumber } = req.body;
     const table = new DataTable(connection, "borrowed_books");
+    
 
-    // Query to get the book_id from the books table using isbn_issn
     const getBookIdQuery = `SELECT id FROM books WHERE isbn_issn = ? AND book_status = 'available' LIMIT 1`;
     connection.query(getBookIdQuery, [isbn_issn], (err, results) => {
         if (err) {
             return res.json({ status: false, message: "Failed to retrieve book ID." });
         }
-
         if (results.length === 0) {
             return res.json({ status: false, message: "Book not available or invalid ISBN/ISSN." });
         }
         const book_id = results[0].id;
-
         table.insert({
             book_id, 
             firstname, 
@@ -370,15 +452,12 @@ app.post('/user/book', (req, res) => {
             book_status: 'borrowed'
         }, (insertResult) => {
             if (insertResult) {
-                // Update the book status in the books table
                 const updateBookStatusQuery = `UPDATE books SET book_status = 'borrowed' WHERE id = ?`;
                 connection.query(updateBookStatusQuery, [book_id], (updateErr) => {
                     if (updateErr) {
                         return res.json({ status: false, message: "Failed to update book status." });
                     }
-
-                    // Create notification message
-                    const message = `${firstname} ${lastname} with ID number ${idNumber} has borrowed the book(s) titled "${title}" for pickup on ${pickup_date}.`;
+                    const message = `${firstname} ${lastname} with ID number ${idNumber} with ${designation} has borrowed the book(s) titled "${title}" for pickup on ${pickup_date}.`;
                     const notificationQuery = `INSERT INTO notification (idNumber, message) VALUES (?, ?)`;
                     connection.query(notificationQuery, [idNumber, message], (notificationErr) => {
                         if (notificationErr) {
@@ -397,9 +476,7 @@ app.post('/user/book', (req, res) => {
 
 app.post('/user/booked', (req, res) => {
     const { idNumber } = req.body; 
-
     const table = new DataTable(connection, "borrowed_books");
-
     if (idNumber) {
         table.findSome({ idNumber }, (result) => {
             if (result && result.length > 0) {
@@ -498,34 +575,6 @@ app.delete('/admin/notifications/delete', (req, res) => {
 });
 
 
-app.get('/get/tags', (req, res) => {
-    const table = new DataTable(connection, "tags");
-    table.findAll((result) => {
-        if (result) {
-            return res.json({ status: true, message: "Tags fetched successfully", data: result });
-        } else {
-            return res.json({ status: false, message: "No tags found" });
-        }
-    });
-});
-
-app.post('/add/tag', (req, res) => {
-    const { name, status } = req.body;
-    const table = new DataTable(connection, "tags");
-
-    if (!name) {
-        return res.json({ status: false, message: "Tag name is required" });
-    }
-
-    table.insert({ name, status: status || 'active' }, (result) => {
-        if (result) {
-            return res.json({ status: true, message: "Tag added successfully" });
-        } else {
-            return res.json({ status: false, message: "Failed to add tag" });
-        }
-    });
-});
-  
 
 
 
