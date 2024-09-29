@@ -8,13 +8,13 @@ const Borrow = () => {
 
     const deleteBook = (bookId) => {
       removeReservedBook(bookId); // Use removeReservedBook function from context
-  };
-  const openPopup = () => {
+    };
+     const openPopup = () => {
     setShowPopup(true); // Set the state to show the popup
-};
-  const closePopup = () => {
-    setShowPopup(false); // Set the state to hide the popup
-};
+    };
+    const closePopup = () => {
+        setShowPopup(false); // Set the state to hide the popup
+    };
 
     return (
         <div className='w-[100%] h-screen p-[60px] bg-[#0CA1E2] flex flex-col items-center'>

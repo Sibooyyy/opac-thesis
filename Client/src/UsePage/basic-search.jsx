@@ -143,7 +143,7 @@ const BasicSearch = () => {
                                             </span>
                                         ) : book.book_status === 'borrowed' ? (
                                             <span className='bg-red-500 text-white px-3 py-1 rounded cursor-not-allowed'>
-                                                Inactive
+                                                Borrowed
                                             </span>
                                         ) : (
                                             <span className='text-gray-500'>Unknown</span>
@@ -155,7 +155,12 @@ const BasicSearch = () => {
                                                 Reserve Book
                                             </button>
                                         )}
-                                    </td>
+                                        {book.book_status === 'borrowed' && (
+                                            <button className='bg-[#0CA1E2] text-white px-3 py-1 rounded-md hover:bg-[#0A90D2]' onClick={() => handleReserveBook(book)}>
+                                                Reserve Book
+                                            </button>
+                                        )}
+                                    </td>                        
                                 </tr>
                             ))}
                         </tbody>

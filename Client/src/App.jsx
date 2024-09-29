@@ -23,6 +23,7 @@ const App = () => {
   const [reservedBooks, setReservedBooks] = useState([]);
   const [bookingSuccess, setBookingSuccess] = useState(false);
   
+  
 
   useEffect(() => {
     const data = localStorage.getItem("isLoggedIn");
@@ -51,12 +52,13 @@ const App = () => {
 
 
 
-  const handleLogin = (data) => {
-    setUser(data);
+  const handleLogin = (userData) => {
+    const updatedUserData = { ...userData, role: 'admin' };
+    setUser(updatedUserData);
     setIsLoggedIn(true);
     localStorage.setItem("isLoggedIn", JSON.stringify(true));
-    localStorage.setItem("user", JSON.stringify(data));
-    const userBooks = localStorage.getItem(`reservedBooks_${data.id}`);
+    localStorage.setItem("user", JSON.stringify(updatedUserData));
+    const userBooks = localStorage.getItem(`reservedBooks_${updatedUserData.id}`);
     if (userBooks) {
       setReservedBooks(JSON.parse(userBooks));
     } else {
@@ -93,6 +95,20 @@ const App = () => {
       return updatedBooks;
     });
   }
+
+  const forceUpdate = useState()[1].bind(null, {});
+  const updateBookStatus = (bookId, newStatus) => {
+    setReservedBooks((prevBooks) => {
+      const updatedBooks = prevBooks.map((book) =>
+        book.id === bookId ? { ...book, book_status: newStatus } : book
+      );
+      localStorage.setItem(`reservedBooks_${user.id}`, JSON.stringify(updatedBooks));
+      forceUpdate(); // Force a re-render
+      return updatedBooks;
+    });
+  };
+
+
   const triggerBookingSuccess = () => {
     setBookingSuccess(true);
     setTimeout(() => {
@@ -102,7 +118,7 @@ const App = () => {
 
 
 return (
-  <AuthContext.Provider value={{ isLoggedIn, handleLogin, handleLogout, user, reservedBooks, addReservedBook, removeReservedBook, bookingSuccess, triggerBookingSuccess, setReservedBooks, updateUser }}>
+  <AuthContext.Provider value={{ isLoggedIn, handleLogin, handleLogout, user, reservedBooks, addReservedBook, removeReservedBook, bookingSuccess, triggerBookingSuccess, setReservedBooks, updateUser, updateBookStatus }}>
     <BrowserRouter>
         <Routes>
           {/* Public routes */}
