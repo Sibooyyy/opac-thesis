@@ -128,10 +128,10 @@ const StudentRecord = () => {
       <div className='flex flex-row pt-8 items-center justify-start pl-[250px] border-b font-montserrat font-bold text-[25px] p-5 gap-1'>
         <FaUser /><span>Student Record</span>
       </div>
-      <div className='flex justify-between w-[80%] mx-auto mt-5 mb-3'>
+      <div className='flex justify-between w-[80%] mx-auto mt-5 mb-3  font-montserrat'>
         <div className='flex flex-row items-center gap-3'>
           <span>Search By</span>
-          <div className='relative'>
+          <div>
             <input 
               type="text" 
               className='pl-10 py-1 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-400' 
@@ -139,9 +139,6 @@ const StudentRecord = () => {
               value={searchTerm} 
               onChange={(e) => setSearchTerm(e.target.value)} 
             />
-            <span className='absolute inset-y-0 left-0 flex items-center pl-3 text-gray-400'>
-              <CiSearch />
-            </span>
           </div>
         </div>
         <div>

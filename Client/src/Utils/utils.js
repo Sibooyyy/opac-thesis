@@ -36,7 +36,7 @@ export const bookForm = () => {
         date_published: "",
         status: "",
         date_update: "",
-        tags: ""
+        mark_tags: []
     }
 }
 

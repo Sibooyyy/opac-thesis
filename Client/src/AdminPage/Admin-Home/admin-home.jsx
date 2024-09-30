@@ -44,7 +44,7 @@ const AdminHome = () => {
             });
     }, []);
 
-    // Fetch book info (without parameters)
+
     useEffect(() => {
         axios.get('http://localhost:8081/bookinfo/data')
             .then(response => {
@@ -61,7 +61,7 @@ const AdminHome = () => {
             });
     }, []);
 
-    // Fetch borrowed books (without parameters)
+
     useEffect(() => {
         axios.get('http://localhost:8081/borrowed/data')
             .then(response => {
@@ -78,7 +78,7 @@ const AdminHome = () => {
             });
     }, []);
 
-    // Fetch categories (without parameters)
+
     useEffect(() => {
         axios.get('http://localhost:8081/category/data')
             .then(response => {
@@ -142,7 +142,7 @@ const AdminHome = () => {
                      </div>
                     <div className="w-[200px] border-[2px] rounded-lg border-blue-500 flex items-center justify-center flex-col gap-4 bg-white shadow-lg p-5">
                         <FaClock className="text-blue-500 text-[40px]" />
-                        <span className="text-blue-500 text-[30px] font-bold">{borrowList.length}</span>
+                        <span className="text-blue-500 text-[30px] font-bold"></span>
                         <span className="text-blue-500 text-lg font-montserrat text-nowrap">Times Book Issued</span>
                     </div>
                     <div className="w-[200px] border-[2px] rounded-lg border-red-500 flex items-center justify-center flex-col gap-4 bg-white shadow-lg p-5">
@@ -154,7 +154,11 @@ const AdminHome = () => {
                 <div className='flex flex-row gap-10 h-[200px]'>
                     <div className="w-[200px] border-[2px] rounded-lg border-green-500 flex items-center justify-center flex-col gap-4 bg-white shadow-lg p-5">
                         <IoPeople className="text-green-500 text-[40px]" />
-                        <span className="text-green-500 text-[30px] font-bold">{bookList.length}</span>
+                        <span className="text-green-500 text-[30px] font-bold">
+                            {
+                                [...new Set(bookList.map(book => book.author))].length
+                            }
+                        </span>
                         <span className="text-green-500 text-lg font-montserrat">Authors Listed</span>
                     </div>
                     <div className="w-[200px] border-[2px] rounded-lg border-blue-500 flex items-center justify-center flex-col gap-4 bg-white shadow-lg p-5">
@@ -172,12 +176,6 @@ const AdminHome = () => {
                     <h2 className='text-lg font-bold mb-4'>Library Analytics</h2>
                     <Bar data={chartData} />
                 </div>
-                <button
-                    className='bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded mt-4'
-                    onClick={exportToExcel}
-                >
-                    Export Analytics to Excel
-                </button>
             </div>
         </>
     );
