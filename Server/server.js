@@ -208,9 +208,10 @@ app.delete('/account/data/:idNumber', (req, res) => {
 
 // Add Books in DB
 app.post('/add/book', (req, res) => {
-    const { title, category, isbn_issn, author, publisher, accession_number, date_published } = req.body;
+    const { title, category, isbn_issn, author, publisher, accession_number, date_published, mark_tags } = req.body;
+    const markTagsString = Array.isArray(mark_tags) ? mark_tags.join(', ') : mark_tags;
     const table = new DataTable(connection, "books");
-    table.insert({ title, category, isbn_issn, author, publisher, accession_number, date_published, book_status: "Available" }, (result) => {
+    table.insert({ title, category, isbn_issn, author, publisher, accession_number, date_published, mark_tags: markTagsString, book_status: "Available" }, (result) => {
         if (result) {
             return res.json({ status: true, message: "Book added successfully" });
         } else {
@@ -221,7 +222,6 @@ app.post('/add/book', (req, res) => {
 })
 
 
-// DISPLAY BOOK DATA from Table
 app.get('/book/data', (req, res) => {
     const table = new DataTable(connection, "books");
     table.findAll((result) => {
@@ -574,6 +574,34 @@ app.delete('/admin/notifications/delete', (req, res) => {
     });
 });
 
+app.post('/add/tag', (req, res) => {
+    const { mark_tags } = req.body;  // Ensure you're sending the correct field from the front end
+
+    if (!mark_tags || mark_tags.trim() === '') {
+        return res.json({ status: false, message: "Tag name cannot be empty" });
+    }
+
+    const table = new DataTable(connection, "tags");
+    
+    table.insert({ mark_tags }, (result) => {
+        if (result) {
+            return res.json({ status: true, message: "Tag added successfully" });
+        } else {
+            return res.json({ status: false, message: "Failed to add tag" });
+        }
+    });
+})
+
+app.get('/get/tag', (req, res) => {
+    const table = new DataTable(connection, "tags");
+    table.findAll((result) => {
+        if (result && result.length > 0) {
+            return res.json({ status: true, message: "Data fetched successfully", data: result });
+        } else {
+            return res.json({ status: false, message: "No data found" });
+        }
+    })
+})
 
 
 

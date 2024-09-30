@@ -89,23 +89,18 @@ const BookRecord = ({ books, onEditClick }) => {
 
   return (
     <div className='w-[70%] font-montserrat'>
-      <div className='flex flex-row justify-between w-full mb-4'>
-        <div className='flex flex-row items-center gap-3'>
+        <div className='flex flex-row items-center gap-3 mb-3'>
           <span>Search By</span>
           <div>
             <input 
               type="text" 
-              className='pl-10 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-400' 
+              className='pl-10 py-1 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-400' 
               placeholder="Search..." 
               value={searchTerm} 
               onChange={(e) => setSearchTerm(e.target.value)} 
             />
-            <span className='absolute inset-y-0 left-0 flex items-center pl-3 text-gray-400'>
-              <CiSearch />
-            </span>
           </div>
         </div>
-      </div>
       <table className='w-full'>
         <thead className='font-poppins text-[14px] border-2 h-[45px] bg-[#F2F2F2] py-2'>
           <tr className="text-center">

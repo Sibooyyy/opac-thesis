@@ -87,6 +87,13 @@ const initTables = () => {
             PRIMARY KEY(id)
         )`
     )
+    const tags = (
+        `CREATE TABLE IF NOT EXISTS tags (
+            id INT AUTO_INCREMENT,
+            mark_tags VARCHAR(255) NOT NULL,
+            PRIMARY KEY (id)
+        )`
+    )
 
     
     connection.query(profile, (error) => {
@@ -102,6 +109,9 @@ const initTables = () => {
         if(error) throw error;
     });
     connection.query(notification, (error) => {
+        if(error) throw error;
+    });
+    connection.query(tags, (error) => {
         if(error) throw error;
     });
 
