@@ -80,7 +80,7 @@ const AccountRecord = () => {
   return (
     <>
       <Navbar />
-      <div className='flex flex-row pt-8 items-center pl-[250px] border-b font-montserrat font-bold text-[25px] p-5 gap-1'>
+      <div className='flex flex-row pt-8 items-center pl-[250px] border-b font-montserrat font-bold text-[25px] p-5 gap-1 bg-white'>
         <FaUser /><span>Account Record</span>
       </div>
       <div className='flex flex-col w-[100%] items-center mt-10 font-montserrat h-screen'>
@@ -121,7 +121,7 @@ const AccountRecord = () => {
             )}
             {!loading && !error && currentRecords.length > 0 && (
               currentRecords.map((item, index) => (
-                <tr key={index} className='text-[14px] text-center'>
+                <tr key={index} className='text-[14px] text-center bg-white'>
                   <td className='border border-r-2 px-[40px] py-[10px] whitespace-nowrap'>{indexOfFirstRecord + index + 1}</td>
                   <td className='border border-r-2 px-[40px] py-[10px] whitespace-nowrap'>{item.firstname}</td>
                   <td className='border border-r-2 px-[40px] py-[10px] whitespace-nowrap'>{item.lastname}</td>

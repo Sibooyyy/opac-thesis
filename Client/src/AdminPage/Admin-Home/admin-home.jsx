@@ -24,74 +24,66 @@ const AdminHome = () => {
     const [bookList, setBookList] = useState([]);
     const [borrowList, setBorrowList] = useState([]);
     const [categoryList, setCategoryList] = useState([]);
-    const [loading, setLoading] = useState(true);
-    const [error, setError] = useState(null);
 
+    // Separate loading and error states for each fetch
+    const [loadingRecords, setLoadingRecords] = useState(true);
+    const [loadingBooks, setLoadingBooks] = useState(true);
+    const [loadingBorrows, setLoadingBorrows] = useState(true);
+    const [loadingCategories, setLoadingCategories] = useState(true);
     // Fetch registered accounts
     useEffect(() => {
         axios.get('http://localhost:8081/register/data')
             .then(response => {
                 if (response.data.status) {
                     setRecord(response.data.data);
-                } else {
-                    setError(response.data.message);
                 }
-                setLoading(false);
+                setLoadingRecords(false);
             })
             .catch(error => {
-                setError(error.message);
-                setLoading(false);
+                setCriticalError('Error fetching registered users');
+                setLoadingRecords(false);
             });
     }, []);
-
 
     useEffect(() => {
         axios.get('http://localhost:8081/bookinfo/data')
             .then(response => {
                 if (response.data.status) {
                     setBookList(response.data.data);
-                } else {
-                    setError(response.data.message);
                 }
-                setLoading(false);
+                setLoadingBooks(false);
             })
             .catch(error => {
-                setError(error.message);
-                setLoading(false);
+                setCriticalError('Error fetching books');
+                setLoadingBooks(false);
             });
     }, []);
-
 
     useEffect(() => {
         axios.get('http://localhost:8081/borrowed/data')
             .then(response => {
                 if (response.data.status) {
                     setBorrowList(response.data.data);
-                } else {
-                    setError(response.data.message);
                 }
-                setLoading(false);
+                setLoadingBorrows(false);
             })
             .catch(error => {
-                setError(error.message);
-                setLoading(false);
+                setCriticalError('Error fetching borrowed books');
+                setLoadingBorrows(false);
             });
     }, []);
-
 
     useEffect(() => {
         axios.get('http://localhost:8081/category/data')
             .then(response => {
                 if (response.data.status) {
                     setCategoryList(response.data.data);
-                } else {
-                    setError(response.data.message);
                 }
-                setLoading(false);
+                setLoadingCategories(false);
             })
             .catch(error => {
-                setError(error.message);
-                setLoading(false);
+                setCriticalError('Error fetching categories');
+                setLoadingCategories(false);
             });
     }, []);
 
@@ -119,63 +111,89 @@ const AdminHome = () => {
         XLSX.writeFile(wb, "LibraryAnalytics.xlsx");
     };
 
-    if (loading) {
-        return <div>Loading...</div>;
-    }
-
-    if (error) {
-        return <div>Error: {error}</div>;
-    }
-
     return (
         <>
             <HeaderOption />
-            <div className='flex flex-row mt-8 items-center pl-[250px] border-b font-montserrat font-bold text-[25px] p-5 gap-1'>
+            <div className='flex flex-row pt-8 items-center pl-[250px] border-b font-montserrat font-bold text-[25px] p-5 gap-1 bg-white'>
                 <MdDashboard /><span>Dashboard</span>
             </div>
             <div className='flex flex-col items-center gap-5 h-screen mt-[50px]'>
+        
                 <div className='flex flex-row gap-10 h-[200px]'>
-                    <div className="w-[200px] border-[2px] rounded-lg border-green-500 flex items-center justify-center flex-col gap-4 bg-white shadow-lg p-5">
-                        <FaBookOpen className="text-green-500 text-[40px]" />
-                        <span className="text-green-500 text-[30px] font-bold">{bookList.length}</span>
-                        <span className="text-green-500 text-lg font-montserrat">Books Listed</span>
-                     </div>
-                    <div className="w-[200px] border-[2px] rounded-lg border-blue-500 flex items-center justify-center flex-col gap-4 bg-white shadow-lg p-5">
-                        <FaClock className="text-blue-500 text-[40px]" />
-                        <span className="text-blue-500 text-[30px] font-bold"></span>
-                        <span className="text-blue-500 text-lg font-montserrat text-nowrap">Times Book Issued</span>
-                    </div>
                     <div className="w-[200px] border-[2px] rounded-lg border-red-500 flex items-center justify-center flex-col gap-4 bg-white shadow-lg p-5">
                         <FaUser className="text-red-500 text-[40px]" />
-                        <span className="text-red-500 text-[30px] font-bold">{record.length}</span>
+                        {loadingRecords ? (
+                            <span className="text-red-500 text-lg">Loading...</span>
+                        ) : (
+                            <span className="text-red-500 text-[30px] font-bold">
+                                {record.length > 0 ? record.length : ""}
+                            </span>
+                        )}
                         <span className="text-red-500 text-lg font-montserrat text-nowrap">Registered Students</span>
+                    </div>
+                    <div className="w-[200px] border-[2px] rounded-lg border-green-500 flex items-center justify-center flex-col gap-4 bg-white shadow-lg p-5">
+                        <FaBookOpen className="text-green-500 text-[40px]" />
+                        {loadingBooks ? (
+                            <span className="text-green-500 text-lg">Loading...</span>
+                        ) : (
+                            <span className="text-green-500 text-[30px] font-bold">
+                                {bookList.length > 0 ? bookList.length : ""}
+                            </span>
+                        )}
+                        <span className="text-green-500 text-lg font-montserrat">Books Listed</span>
+                    </div>
+                    <div className="w-[200px] border-[2px] rounded-lg border-blue-500 flex items-center justify-center flex-col gap-4 bg-white shadow-lg p-5">
+                        <FaClock className="text-blue-500 text-[40px]" />
+                        {loadingBorrows ? (
+                            <span className="text-blue-500 text-lg">Loading...</span>
+                        ) : (
+                            <span className="text-blue-500 text-[30px] font-bold">
+                                {borrowList.length > 0 ? borrowList.length : ""}
+                            </span>
+                        )}
+                        <span className="text-blue-500 text-lg font-montserrat text-nowrap">Times Book Issued</span>
                     </div>
                 </div>
                 <div className='flex flex-row gap-10 h-[200px]'>
                     <div className="w-[200px] border-[2px] rounded-lg border-green-500 flex items-center justify-center flex-col gap-4 bg-white shadow-lg p-5">
                         <IoPeople className="text-green-500 text-[40px]" />
-                        <span className="text-green-500 text-[30px] font-bold">
-                            {
-                                [...new Set(bookList.map(book => book.author))].length
-                            }
-                        </span>
+                        {loadingBooks ? (
+                            <span className="text-green-500 text-lg">Loading...</span>
+                        ) : (
+                            <span className="text-green-500 text-[30px] font-bold">
+                                {bookList.length > 0 ? [...new Set(bookList.map(book => book.author))].length : ""}
+                            </span>
+                        )}
                         <span className="text-green-500 text-lg font-montserrat">Authors Listed</span>
                     </div>
                     <div className="w-[200px] border-[2px] rounded-lg border-blue-500 flex items-center justify-center flex-col gap-4 bg-white shadow-lg p-5">
                         <TbCategory2 className="text-blue-500 text-[40px]" />
-                        <span className="text-blue-500 text-[30px] font-bold">{categoryList.length}</span>
+                        {loadingCategories ? (
+                            <span className="text-blue-500 text-lg">Loading...</span>
+                        ) : (
+                            <span className="text-blue-500 text-[30px] font-bold">
+                                {categoryList.length > 0 ? categoryList.length : ""}
+                            </span>
+                        )}
                         <span className="text-blue-500 text-lg font-montserrat">Categories</span>
                     </div>
                     <div className="w-[200px] border-[2px] rounded-lg border-yellow-500 flex items-center justify-center flex-col gap-4 bg-white shadow-lg p-5">
                         <GrReturn className="text-yellow-500 text-[40px]" />
-                        <span className="text-yellow-500 text-[30px] font-bold">{borrowList.filter(b => b.returned === true).length}</span>
+                        {loadingBorrows ? (
+                            <span className="text-yellow-500 text-lg">Loading...</span>
+                        ) : (
+                            <span className="text-yellow-500 text-[30px] font-bold">
+                                {borrowList.length > 0 ? borrowList.filter(b => b.status === 'Returned').length : ""}
+                            </span>
+                        )}
                         <span className="text-yellow-500 text-lg font-montserrat">Books Returned</span>
                     </div>
                 </div>
-                <div className='w-[60%] p-10'>
+                <div className='w-[60%] p-10 bg-white'>
                     <h2 className='text-lg font-bold mb-4'>Library Analytics</h2>
                     <Bar data={chartData} />
                 </div>
+                
             </div>
         </>
     );

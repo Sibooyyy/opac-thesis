@@ -13,6 +13,7 @@ import AccountRecord from './AdminPage/Register/account-record.jsx'
 import Profile from "./UsePage/profile.jsx";
 import PrivateRoute from "./utils/privateroute.jsx";
 import HomePage from "./UsePage/homepage.jsx";
+import outputImage from './assets/output.png'; 
 
 
 

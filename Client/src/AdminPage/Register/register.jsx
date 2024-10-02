@@ -28,7 +28,7 @@ const Register = () => {
     setError(message);
     setTimeout(() => {
       setError('');
-    }, 1000); // Error message disappears after 2 seconds
+    }, 1000);
   };
 
   const handleSubmit = async (e) => {
@@ -64,7 +64,7 @@ const Register = () => {
         console.log(message);
         setTimeout(() => {
           setSuccessPopUp(false);
-          setFormData(registrationForm()); // Reset form after success
+          setFormData(registrationForm()); 
         }, 3000);
       }
     }).catch(error => {
@@ -77,14 +77,13 @@ const Register = () => {
   return (
     <>
       <Header />
-      <div className='flex justify-center items-center flex-col border border-gray-200 rounded-lg shadow-lg w-full max-w-[800px] mx-auto my-[70px] p-8 bg-white'>
-        <div className='mb-5'>
-          <img src={candaleria} alt="Candelaria" className='w-32 h-32 mx-auto' />
+      <div className='flex flex-row justify-center items-start border border-gray-200 rounded-lg shadow-lg w-full max-w-[1200px] mx-auto my-[70px] p-8 bg-white'>
+        {/* Left side with logo and title */}
+        <div className='flex flex-col justify-center items-center w-[20%] mt-12'>
+          <img src={candaleria} alt="Candelaria" className='w-32 h-32' />
+          <h1 className='font-poppins font-bold text-3xl text-[#001377] mt-6'>Register Form</h1>
         </div>
-        <div>
-          <h1 className='font-poppins font-bold text-3xl text-[#001377] mb-6 mt-3'>Register Form</h1>
-        </div>
-        <form className='flex flex-col gap-6 w-full px-4 md:px-8' onSubmit={handleSubmit}>
+        <form className='flex flex-col gap-6 w-[70%] px-4 md:px-8' onSubmit={handleSubmit}>
           <div className='flex flex-wrap gap-4 md:gap-6'>
             <div className='flex flex-col gap-2 w-full md:w-[30%]'>
               <label className='font-montserrat text-md font-semibold'>First Name</label>
@@ -113,14 +112,12 @@ const Register = () => {
                 ))}
               </select>
             </div>
-          </div>
-
-          {/* Third Row */}
-          <div className='flex flex-wrap gap-4 md:gap-6'>
             <div className='flex flex-col gap-2 w-full md:w-[30%]'>
               <label className='font-montserrat text-md font-semibold'>Username</label>
               <input className='p-2 border border-gray-300 rounded-md shadow-sm focus:border-blue-500 focus:outline-none' value={formData.username} onChange={handleChange} type="text" name="username" />
             </div>
+          </div>
+          <div className='flex flex-wrap gap-4 md:gap-6'>
             <div className='flex flex-col gap-2 w-full md:w-[30%]'>
               <label className='font-montserrat text-md font-semibold'>Password</label>
               <div className='relative'>
@@ -146,12 +143,12 @@ const Register = () => {
               </div>
             </div>
           </div>
-
+  
           {/* Error Message */}
-          {error && <p className="text-red-500">{error}</p>}
-
+          {error && <p className="text-red-500 w-full">{error}</p>}
+  
           {/* Submit Button */}
-          <div className='flex justify-end mt-8'>
+          <div className='flex justify-end mt-8 w-full'>
             <button 
               className={`bg-[#0CA1E2] text-white py-3 px-6 rounded-lg cursor-pointer font-montserrat text-sm transition-all duration-200 hover:bg-[#007bb5] ${loading ? 'opacity-50 cursor-not-allowed' : ''}`} 
               type="submit"
@@ -161,7 +158,7 @@ const Register = () => {
             </button>
           </div>
         </form>
-
+  
         {/* Success Modal */}
         {successPopUp && (
           <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
@@ -173,7 +170,7 @@ const Register = () => {
         )}
       </div>
     </>
-  );
+  );   
 };
 
 export default Register;
