@@ -83,7 +83,7 @@ function Login() {
                     />
                 </div>
                 <div className="text-center">
-                    <h1 className="font-poppins font-bold text-lg text-[#001377]">Library Online Public Catalog</h1>
+                    <h1 className="font-poppins font-bold text-3xl text-[#001377]">Library Online Public Catalog</h1>
                 </div>
                 <form className="flex flex-col gap-4 w-[80%]" onSubmit={handleSubmit}>
                     <div className="flex flex-col gap-2">

@@ -118,7 +118,7 @@ const BookRecord = ({ books, onEditClick }) => {
         </thead>
         <tbody>
           {currentRecords.map((book, index) => (
-            <tr key={book.accession_number} className='text-center hover:bg-gray-100'>
+            <tr key={book.accession_number} className='text-center hover:bg-gray-100 bg-white'>
               <td className='border border-r-2'>{indexOfFirstRecord + index + 1}</td>
               <td className='border border-r-2'>{book.title}</td>
               <td className='border border-r-2'>{book.category}</td>

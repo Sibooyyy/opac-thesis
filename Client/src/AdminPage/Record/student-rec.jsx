@@ -125,7 +125,7 @@ const StudentRecord = () => {
   return (
     <>
       <Navbar />
-      <div className='flex flex-row pt-8 items-center justify-start pl-[250px] border-b font-montserrat font-bold text-[25px] p-5 gap-1'>
+      <div className='flex flex-row pt-8 items-center justify-start pl-[250px] border-b font-montserrat font-bold text-[25px] p-5 gap-1 bg-white'>
         <FaUser /><span>Student Record</span>
       </div>
       <div className='flex justify-between w-[80%] mx-auto mt-5 mb-3  font-montserrat'>
@@ -176,7 +176,7 @@ const StudentRecord = () => {
           <tbody>
             {currentRecords.length > 0 ? (
               currentRecords.map((record, index) => (
-                <tr key={record.id} className='text-[14px] text-center'>
+                <tr key={record.id} className='text-[14px] text-center bg-white'>
                   <td className='border border-r-2 px-2 py-1 whitespace-nowrap'>{indexOfFirstRecord + index + 1}</td>
                   <td className='border border-r-2 px-2 py-1 whitespace-nowrap'>{record.firstname} {record.lastname}</td>
                   <td className='border border-r-2 px-2 py-1 whitespace-nowrap'>{record.designation}</td>

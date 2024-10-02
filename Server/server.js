@@ -135,11 +135,11 @@ app.get('/category/data', (req, res) => {
 
 
 app.get('/borrowed/data', (req, res) => {
-    const { status } = req.query; 
+    const { status, book_status } = req.query; 
     const table = new DataTable(connection, "borrowed_books");
     
     if (status) {
-        table.findOne({ status }, (result) => {
+        table.findOne({ status, book_status }, (result) => {
             if (result) {
                 return res.json({ status: true, message: "Data fetched successfully", data: result });
             } else {
@@ -148,7 +148,9 @@ app.get('/borrowed/data', (req, res) => {
         });
     } else {
         table.findAll((results) => {
-            return res.json({ status: true, message: "Data fetched successfully", data: results });
+            const filteredResults = results.filter(book => book.book_status !== "Returned");
+            console.log("Filtered results:", filteredResults);
+            return res.json({ status: true, message: "Data fetched successfully", data: filteredResults });
         });
     }
 });
@@ -206,7 +208,6 @@ app.delete('/account/data/:idNumber', (req, res) => {
 })
 
 
-// Add Books in DB
 app.post('/add/book', (req, res) => {
     const { title, category, isbn_issn, author, publisher, accession_number, date_published, mark_tags } = req.body;
     const markTagsString = Array.isArray(mark_tags) ? mark_tags.join(', ') : mark_tags;
@@ -285,13 +286,19 @@ app.post('/edit/books', (req, res) => {
         }
     );
 });
+
 app.post('/update/status', (req, res) => {
     const { category, status, id, date_update } = req.body;
+
     if (!id) {
         return res.status(400).json({ status: false, message: "ID is required to update status." });
     }
+
+    // Convert date_update to MySQL compatible format
+    const formattedDateUpdate = new Date(date_update).toISOString().slice(0, 19).replace('T', ' ');
+
     const table = new DataTable(connection, "categories");
-    table.update({ category, status, date_update }, { id }, (result) => {
+    table.update({ category, status, date_update: formattedDateUpdate }, { id }, (result) => {
         if (result) {
             const booksTable = new DataTable(connection, "books");
             booksTable.update({ status }, { category }, (bookResult) => {
@@ -305,7 +312,8 @@ app.post('/update/status', (req, res) => {
             return res.json({ status: false, message: "Failed to update category status." });
         }
     });
-})
+});
+
 
 // Insert book data
 app.post('/add/books', (req, res) => {

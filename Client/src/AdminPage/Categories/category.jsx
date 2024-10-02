@@ -37,7 +37,7 @@ const category = () => {
   return (
     <>
         <Navbar/>
-        <div className='flex flex-row pt-8 items-center pl-[250px] border-b font-montserrat font-bold text-[25px] p-5 gap-1'> 
+        <div className='flex flex-row pt-8 items-center pl-[250px] border-b font-montserrat font-bold text-[25px] p-5 gap-1 bg-white'> 
             <TbCategory2/><span>Categories</span>
         </div>
         <div className='h-screen flex justify-between w-[100%] p-[50px] gap-8'>

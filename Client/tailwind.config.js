@@ -12,7 +12,7 @@ export default {
         'montserrat': ['Montserrat', 'Arial', 'sans-serif']
       },
       backgroundImage: {
-        'custom-bg': "url('/assets/output.png')",
+        'custom-bg': "url('/Client/assets/output.png')",
       },
     },
   },

@@ -63,7 +63,7 @@ const initTables = () => {
             booking_date DATE NOT NULL,
             contactNumber VARCHAR(20) NOT NULL,
             status VARCHAR(255) NOT NULL,
-            book_status ENUM('reserved', 'borrowed') NOT NULL,
+            book_status ENUM('reserved', 'borrowed', 'returned') NOT NULL,
             PRIMARY KEY (id),
             FOREIGN KEY (book_id) REFERENCES books(id)
         )`

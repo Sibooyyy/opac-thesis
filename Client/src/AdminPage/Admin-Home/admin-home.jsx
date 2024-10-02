@@ -30,9 +30,6 @@ const AdminHome = () => {
     const [loadingBooks, setLoadingBooks] = useState(true);
     const [loadingBorrows, setLoadingBorrows] = useState(true);
     const [loadingCategories, setLoadingCategories] = useState(true);
-
-    const [criticalError, setCriticalError] = useState(null);
-
     // Fetch registered accounts
     useEffect(() => {
         axios.get('http://localhost:8081/register/data')
@@ -117,10 +114,11 @@ const AdminHome = () => {
     return (
         <>
             <HeaderOption />
-            <div className='flex flex-row mt-8 items-center pl-[250px] border-b font-montserrat font-bold text-[25px] p-5 gap-1'>
+            <div className='flex flex-row pt-8 items-center pl-[250px] border-b font-montserrat font-bold text-[25px] p-5 gap-1 bg-white'>
                 <MdDashboard /><span>Dashboard</span>
             </div>
             <div className='flex flex-col items-center gap-5 h-screen mt-[50px]'>
+        
                 <div className='flex flex-row gap-10 h-[200px]'>
                     <div className="w-[200px] border-[2px] rounded-lg border-red-500 flex items-center justify-center flex-col gap-4 bg-white shadow-lg p-5">
                         <FaUser className="text-red-500 text-[40px]" />
@@ -185,16 +183,17 @@ const AdminHome = () => {
                             <span className="text-yellow-500 text-lg">Loading...</span>
                         ) : (
                             <span className="text-yellow-500 text-[30px] font-bold">
-                                {borrowList.length > 0 ? borrowList.filter(b => b.returned === true).length : ""}
+                                {borrowList.length > 0 ? borrowList.filter(b => b.status === 'Returned').length : ""}
                             </span>
                         )}
                         <span className="text-yellow-500 text-lg font-montserrat">Books Returned</span>
                     </div>
                 </div>
-                <div className='w-[60%] p-10'>
+                <div className='w-[60%] p-10 bg-white'>
                     <h2 className='text-lg font-bold mb-4'>Library Analytics</h2>
                     <Bar data={chartData} />
                 </div>
+                
             </div>
         </>
     );
