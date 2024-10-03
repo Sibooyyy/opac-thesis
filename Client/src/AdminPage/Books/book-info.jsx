@@ -72,7 +72,7 @@ const BookInfo = ({ selectedBook, onFormSubmit }) => {
     e.preventDefault();
     setError(null);
 
-    const requiredFields = ['title', 'category', 'isbn_issn', 'author', 'publisher', 'accession_number', 'date_published'];
+    const requiredFields = ['title', 'category', 'isbn_issn', 'author', 'publisher', 'accession_number', 'date_published', 'status'];
     const hasEmptyFields = requiredFields.some(field => !formData[field]);
 
     if (hasEmptyFields) {
@@ -85,7 +85,6 @@ const BookInfo = ({ selectedBook, onFormSubmit }) => {
     setTimeout(() => {
       setShowSuccessModal(false);
       setSuccessMessage('');
-      window.location.reload();
     }, 3000);
   };
 
@@ -221,10 +220,41 @@ const BookInfo = ({ selectedBook, onFormSubmit }) => {
               onChange={handleChange} 
               type="date" 
               name="date_published" 
-              required // Mark field as required
+              required 
             />
           </div>
         </div>
+
+        {/* Status Radio Buttons */}
+        <div className='flex flex-col w-[400px]'>
+          <label className='font-poppins text-[17px] font-semibold'>Status</label>
+          <div className='flex gap-2 font-poppins'>
+            <label>
+              <input 
+                type="radio" 
+                name="status" 
+                value="active" 
+                checked={formData.status === 'active'} 
+                onChange={handleChange} 
+                required 
+              />
+              Active
+            </label>
+            <label>
+              <input 
+                type="radio" 
+                name="status" 
+                value="inactive" 
+                checked={formData.status === 'inactive'} 
+                onChange={handleChange} 
+                required 
+              />
+              Inactive
+            </label>
+          </div>
+        </div>
+
+        {/* Tags */}
         <div className='flex flex-col w-[400px]'>
           <label className='font-poppins text-[17px] font-semibold'>Tags</label>
           <input 
@@ -240,7 +270,6 @@ const BookInfo = ({ selectedBook, onFormSubmit }) => {
             onChange={handleTagChange} 
             name="mark_tags" 
             multiple
-            required // Mark field as required
           >
             {filteredTags.map((tag, index) => (
               <option key={`${tag.id}-${index}`} value={tag.mark_tags}>

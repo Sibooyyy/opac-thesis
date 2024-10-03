@@ -45,13 +45,13 @@ const initTables = () => {
             mark_tags VARCHAR(255) NOT NULL,
             book_status ENUM('available', 'borrowed') DEFAULT 'available',
             status ENUM('active', 'inactive') DEFAULT 'active',
-            PRIMARY KEY (id)
+            PRIMARY KEY (id) 
         )`
     )
     const borrowedBooks = (
         `CREATE TABLE IF NOT EXISTS borrowed_books (
             id INT AUTO_INCREMENT,
-            book_id INT NOT NULL,
+            book_id INT,
             firstname VARCHAR(255) NOT NULL,
             lastname VARCHAR(255) NOT NULL,
             designation VARCHAR(255) NOT NULL,
@@ -64,8 +64,7 @@ const initTables = () => {
             contactNumber VARCHAR(20) NOT NULL,
             status VARCHAR(255) NOT NULL,
             book_status ENUM('reserved', 'borrowed', 'returned') NOT NULL,
-            PRIMARY KEY (id),
-            FOREIGN KEY (book_id) REFERENCES books(id)
+            PRIMARY KEY (id)
         )`
     )
     const categories = (
@@ -82,6 +81,7 @@ const initTables = () => {
             id INT AUTO_INCREMENT,
             idNumber VARCHAR(255) NOT NULL,
             message TEXT,
+            link VARCHAR(255),
             status ENUM('unread', 'read') DEFAULT 'unread',
             timestamp DATETIME DEFAULT CURRENT_TIMESTAMP,
             PRIMARY KEY(id)

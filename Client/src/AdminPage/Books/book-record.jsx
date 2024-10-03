@@ -168,7 +168,6 @@ const BookRecord = ({ books, onEditClick }) => {
           </div>
         </div>
       )}
-
       {/* Success Modal */}
       {showSuccessModal && (
         <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">

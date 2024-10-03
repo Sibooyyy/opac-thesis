@@ -126,7 +126,7 @@ const AdminHome = () => {
                             <span className="text-red-500 text-lg">Loading...</span>
                         ) : (
                             <span className="text-red-500 text-[30px] font-bold">
-                                {record.length > 0 ? record.length : ""}
+                                {record.length > 0 ? record.length : "0"}
                             </span>
                         )}
                         <span className="text-red-500 text-lg font-montserrat text-nowrap">Registered Students</span>
@@ -137,7 +137,7 @@ const AdminHome = () => {
                             <span className="text-green-500 text-lg">Loading...</span>
                         ) : (
                             <span className="text-green-500 text-[30px] font-bold">
-                                {bookList.length > 0 ? bookList.length : ""}
+                                {bookList.length > 0 ? bookList.length : "0"}
                             </span>
                         )}
                         <span className="text-green-500 text-lg font-montserrat">Books Listed</span>
@@ -148,7 +148,7 @@ const AdminHome = () => {
                             <span className="text-blue-500 text-lg">Loading...</span>
                         ) : (
                             <span className="text-blue-500 text-[30px] font-bold">
-                                {borrowList.length > 0 ? borrowList.length : ""}
+                                {borrowList.length > 0 ? borrowList.length : "0"}
                             </span>
                         )}
                         <span className="text-blue-500 text-lg font-montserrat text-nowrap">Times Book Issued</span>
@@ -161,7 +161,7 @@ const AdminHome = () => {
                             <span className="text-green-500 text-lg">Loading...</span>
                         ) : (
                             <span className="text-green-500 text-[30px] font-bold">
-                                {bookList.length > 0 ? [...new Set(bookList.map(book => book.author))].length : ""}
+                                {bookList.length > 0 ? [...new Set(bookList.map(book => book.author))].length : "0"}
                             </span>
                         )}
                         <span className="text-green-500 text-lg font-montserrat">Authors Listed</span>
@@ -172,7 +172,7 @@ const AdminHome = () => {
                             <span className="text-blue-500 text-lg">Loading...</span>
                         ) : (
                             <span className="text-blue-500 text-[30px] font-bold">
-                                {categoryList.length > 0 ? categoryList.length : ""}
+                                {categoryList.length > 0 ? categoryList.length : "0"}
                             </span>
                         )}
                         <span className="text-blue-500 text-lg font-montserrat">Categories</span>
@@ -183,7 +183,7 @@ const AdminHome = () => {
                             <span className="text-yellow-500 text-lg">Loading...</span>
                         ) : (
                             <span className="text-yellow-500 text-[30px] font-bold">
-                                {borrowList.length > 0 ? borrowList.filter(b => b.status === 'Returned').length : ""}
+                                {borrowList.length > 0 ? borrowList.filter(b => b.status === 'Returned').length : "0"}
                             </span>
                         )}
                         <span className="text-yellow-500 text-lg font-montserrat">Books Returned</span>
