@@ -123,6 +123,7 @@ const BasicSearch = () => {
                                 <th className='py-3 px-5'>Publisher</th>
                                 <th className='py-3 px-5'>ISBN/ISSN</th>
                                 <th className='py-3 px-5'>Category</th>
+                                <th className='py-3 px-5'>Book Status</th>
                                 <th className='py-3 px-5'>Status</th>
                                 <th className='py-3 px-5'></th>
                             </tr>
@@ -136,31 +137,45 @@ const BasicSearch = () => {
                                     <td className='py-2 px-5'>{book.publisher}</td>
                                     <td className='py-2 px-5'>{book.isbn_issn}</td>
                                     <td className='py-2 px-5'>{book.category}</td>
+
+                                    {/* Show Book Status if active */}
+                                    {book.status === 'active' && (
+                                        <td className='py-2 px-5'>
+                                            {book.book_status === 'available' ? (
+                                                <span className='bg-green-500 text-white px-3 py-1 rounded'>
+                                                    Available
+                                                </span>
+                                            ) : book.book_status === 'borrowed' ? (
+                                                <span className='bg-red-500 text-white px-3 py-1 rounded cursor-not-allowed'>
+                                                    Borrowed
+                                                </span>
+                                            ) : (
+                                                <span className='text-gray-500'>Unknown</span>
+                                            )}
+                                        </td>
+                                    )}
+
+                                    {/* Handle Book Inactive Status */}
+                                    {book.status === 'inactive' && (
+                                        <td className='py-2 px-5'>
+                                            <span className='bg-gray-400 text-white px-3 py-1 rounded cursor-not-allowed'>
+                                                Inactive
+                                            </span>
+                                        </td>
+                                    )}
+
+                                    {/* Show Reserve Button only for active books */}
                                     <td className='py-2 px-5'>
-                                        {book.book_status === 'available' ? (
-                                            <span className='bg-green-500 text-white px-3 py-1 rounded'>
-                                                Available
-                                            </span>
-                                        ) : book.book_status === 'borrowed' ? (
-                                            <span className='bg-red-500 text-white px-3 py-1 rounded cursor-not-allowed'>
-                                                Borrowed
-                                            </span>
-                                        ) : (
-                                            <span className='text-gray-500'>Unknown</span>
+                                        {book.status === 'active' && book.book_status === 'available' && (
+                                            <button className='bg-[#0CA1E2] text-white px-3 py-1 rounded-md hover:bg-[#0A90D2]' onClick={() => handleReserveBook(book)}>
+                                                Reserve Book
+                                            </button>
+                                        )}
+                                        {/* Do not display Reserve button for inactive books */}
+                                        {book.status === 'inactive' && (
+                                            <span className='text-gray-500'>Cannot Reserve</span>
                                         )}
                                     </td>
-                                    <td className='py-2 px-5'>
-                                        {book.book_status === 'available' && (
-                                            <button className='bg-[#0CA1E2] text-white px-3 py-1 rounded-md hover:bg-[#0A90D2]' onClick={() => handleReserveBook(book)}>
-                                                Reserve Book
-                                            </button>
-                                        )}
-                                        {book.book_status === 'borrowed' && (
-                                            <button className='bg-[#0CA1E2] text-white px-3 py-1 rounded-md hover:bg-[#0A90D2]' onClick={() => handleReserveBook(book)}>
-                                                Reserve Book
-                                            </button>
-                                        )}
-                                    </td>                        
                                 </tr>
                             ))}
                         </tbody>

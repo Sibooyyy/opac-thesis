@@ -246,8 +246,6 @@ app.get('/categories/data', (req, res) => {
 })
 
 
-
-// Delete Author in Table
 app.delete('/book/data/:author', (req, res) => {
     const author = req.params.author;
     const table = new DataTable(connection, "books");
@@ -275,9 +273,15 @@ app.get('/register/data', (req, res) => {
 
 // Edit Books Details 
 app.post('/edit/books', (req, res) => {
-    const { title, category, isbn_issn, author, publisher, accession_number, date_published} = req.body;
+    const { title, category, isbn_issn, author, publisher, accession_number, date_published, status } = req.body;
+    
     const table = new DataTable(connection, "books");
-    table.update({ title, category, isbn_issn, author, publisher, date_published},{ accession_number },(result) => {
+    
+    // Update book details, including status
+    table.update(
+        { title, category, isbn_issn, author, publisher, date_published, status },  // The updated fields including status
+        { accession_number },  // Where condition to find the book by accession number
+        (result) => {
             if (result) {
                 return res.json({ status: true, message: "Book edited successfully" });
             } else {
@@ -286,6 +290,7 @@ app.post('/edit/books', (req, res) => {
         }
     );
 });
+
 
 app.post('/update/status', (req, res) => {
     const { category, status, id, date_update } = req.body;
@@ -314,19 +319,6 @@ app.post('/update/status', (req, res) => {
     });
 });
 
-
-// Insert book data
-app.post('/add/books', (req, res) => {
-    const { title, category, isbn_issn, author, publisher, accession_number, date_published } = req.body;
-    const table = new DataTable(connection, "books");
-    table.insert({ title, category, isbn_issn, author, publisher, accession_number, date_published }, (result) => {
-        if (result) {
-            return res.json({ status: true, message: "Book added successfully" });
-        } else {
-            return res.json({ status: false, message: "Failed to add book" });
-        }
-    });
-});
 
 // Insert category data
 app.post('/add/category', (req, res) => {
@@ -431,52 +423,63 @@ app.post('/search/book', (req, res) => {
 
 
 app.post('/user/book', (req, res) => {
-    const { firstname, lastname, designation, title, idNumber, pickup_date, author, isbn_issn, booking_date, contactNumber } = req.body;
-    const table = new DataTable(connection, "borrowed_books");
-    
+    const { 
+        firstname, 
+        lastname, 
+        designation, 
+        title, 
+        idNumber, 
+        pickup_date, 
+        author, 
+        isbn_issn, 
+        booking_date, 
+        contactNumber 
+    } = req.body;
 
     const getBookIdQuery = `SELECT id FROM books WHERE isbn_issn = ? AND book_status = 'available' LIMIT 1`;
+    
     connection.query(getBookIdQuery, [isbn_issn], (err, results) => {
         if (err) {
-            return res.json({ status: false, message: "Failed to retrieve book ID." });
+            return res.status(500).json({ status: false, message: "Failed to retrieve book ID.", error: err });
         }
         if (results.length === 0) {
-            return res.json({ status: false, message: "Book not available or invalid ISBN/ISSN." });
+            return res.status(404).json({ status: false, message: "Book not available or invalid ISBN/ISSN." });
         }
+
         const book_id = results[0].id;
-        table.insert({
-            book_id, 
-            firstname, 
-            lastname, 
-            designation, 
-            title, 
-            idNumber, 
-            pickup_date, 
-            author, 
-            isbn_issn, 
-            booking_date, 
-            contactNumber, 
-            status: "Pending", 
-            book_status: 'borrowed'
-        }, (insertResult) => {
-            if (insertResult) {
-                const updateBookStatusQuery = `UPDATE books SET book_status = 'borrowed' WHERE id = ?`;
-                connection.query(updateBookStatusQuery, [book_id], (updateErr) => {
-                    if (updateErr) {
-                        return res.json({ status: false, message: "Failed to update book status." });
-                    }
-                    const message = `${firstname} ${lastname} with ID number ${idNumber} with ${designation} has borrowed the book(s) titled "${title}" for pickup on ${pickup_date}.`;
-                    const notificationQuery = `INSERT INTO notification (idNumber, message) VALUES (?, ?)`;
-                    connection.query(notificationQuery, [idNumber, message], (notificationErr) => {
-                        if (notificationErr) {
-                            return res.json({ status: true, message: "Book borrowed successfully, but failed to create notification." });
-                        }
-                        return res.json({ status: true, message: "Book borrowed successfully and notification created." });
-                    });
-                });
-            } else {
-                return res.json({ status: false, message: "Failed to borrow book" });
+
+        const insertBorrowedBookQuery = `
+            INSERT INTO borrowed_books (
+                book_id, firstname, lastname, designation, title, idNumber, 
+                pickup_date, author, isbn_issn, booking_date, contactNumber, 
+                status, book_status
+            ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, 'Pending', 'borrowed')`;
+
+        connection.query(insertBorrowedBookQuery, [
+            book_id, firstname, lastname, designation, title, idNumber,
+            pickup_date, author, isbn_issn, booking_date, contactNumber
+        ], (insertErr) => {
+            if (insertErr) {
+                return res.status(500).json({ status: false, message: "Failed to borrow book.", error: insertErr });
             }
+
+            const updateBookStatusQuery = `UPDATE books SET book_status = 'borrowed' WHERE id = ?`;
+
+            connection.query(updateBookStatusQuery, [book_id], (updateErr) => {
+                if (updateErr) {
+                    return res.status(500).json({ status: false, message: "Failed to update book status.", error: updateErr });
+                }
+
+                const notificationMessage = `${firstname} ${lastname} with ID number ${idNumber} and the ${designation} has borrowed the book titled "${title}" for pickup on ${pickup_date}.`;
+                const insertNotificationQuery = `INSERT INTO notification (idNumber, message) VALUES (?, ?)`;
+
+                connection.query(insertNotificationQuery, [idNumber, notificationMessage], (notificationErr) => {
+                    if (notificationErr) {
+                        return res.status(500).json({ status: true, message: "Book borrowed successfully, but failed to create notification.", error: notificationErr });
+                    }
+                    return res.status(200).json({ status: true, message: "Book borrowed successfully and notification created." });
+                });
+            });
         });
     });
 });
@@ -507,7 +510,7 @@ app.post('/user/booked', (req, res) => {
 
 
 app.get('/admin/notifications', (req, res) => {
-    const query = `SELECT * FROM notification WHERE status = 'unread' ORDER BY timestamp DESC`;
+    const query = `SELECT id, message, status, link, timestamp FROM notification WHERE status = 'unread' ORDER BY timestamp DESC`;
     connection.query(query, (err, results) => {
       if (err) {
         return res.status(500).json({ status: false, message: `Error fetching notifications: ${err.message}` });
@@ -516,7 +519,7 @@ app.get('/admin/notifications', (req, res) => {
     });
   });
 
-  app.post('/admin/notifications/mark-read', (req, res) => {
+app.post('/admin/notifications/mark-read', (req, res) => {
     const { id } = req.body;
     const query = `UPDATE notification SET status = 'read' WHERE id = ?`;
     connection.query(query, [id], (err, results) => {

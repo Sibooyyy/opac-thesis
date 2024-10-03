@@ -5,16 +5,17 @@ import { bookForm } from '../../utils/utils';
 const CategoryInfo = ({ formData, setFormData, onFormSubmit }) => {
   const [error, setError] = useState('');
   const [success, setSuccess] = useState('');
-  const [showSuccessModal, setShowSuccessModal] = useState(false); // State for modal visibility
+  const [showSuccessModal, setShowSuccessModal] = useState(false);
+  const [showInactiveConfirm, setShowInactiveConfirm] = useState(false); // State for inactive status confirmation
 
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData({ ...formData, [name]: value });
-    setError(''); 
+    setError('');
   };
 
   const getCurrentTimestamp = () => {
-    return new Date().toISOString(); 
+    return new Date().toISOString();
   };
 
   const handleSubmit = (e) => {
@@ -31,30 +32,39 @@ const CategoryInfo = ({ formData, setFormData, onFormSubmit }) => {
       return;
     }
 
-    // Get the current timestamp for the update
+    // Show the confirmation modal if 'Inactive' is selected
+    if (formData.status === 'inactive') {
+      setShowInactiveConfirm(true);
+      return; // Do not submit yet, wait for confirmation
+    }
+
+    submitForm(); // Proceed with form submission if status is not 'Inactive'
+  };
+
+  const submitForm = () => {
     const timestamp = getCurrentTimestamp();
 
-    const url = formData.id 
-      ? 'http://localhost:8081/update/status'  
-      : 'http://localhost:8081/add/category';  
+    const url = formData.id
+      ? 'http://localhost:8081/update/status'
+      : 'http://localhost:8081/add/category';
 
     axios
-      .post(url, { ...formData, date_update: timestamp }) 
+      .post(url, { ...formData, date_update: timestamp })
       .then((res) => {
         const { status, message } = res.data;
         if (status) {
           setSuccess(message);
           onFormSubmit({ ...formData, date_update: timestamp });
           if (!formData.id) {
-            setFormData(bookForm()); 
+            setFormData(bookForm());
           }
-          setShowSuccessModal(true); 
+          setShowSuccessModal(true);
           setTimeout(() => {
-            setShowSuccessModal(false); 
+            setShowSuccessModal(false);
             setSuccess('');
           }, 5000);
           setTimeout(() => {
-            window.location.reload(); 
+            window.location.reload();
           }, 2000);
         } else {
           setError(message);
@@ -63,6 +73,17 @@ const CategoryInfo = ({ formData, setFormData, onFormSubmit }) => {
       .catch(() => {
         setError('An error occurred while submitting the form.');
       });
+  };
+
+  // Function to handle confirming the 'Inactive' status
+  const confirmInactive = () => {
+    setShowInactiveConfirm(false);
+    submitForm(); // Proceed with form submission
+  };
+
+  // Function to cancel the confirmation
+  const cancelInactive = () => {
+    setShowInactiveConfirm(false);
   };
 
   return (
@@ -75,7 +96,7 @@ const CategoryInfo = ({ formData, setFormData, onFormSubmit }) => {
           <label className="font-poppins text-[15px] font-semibold">Category Name</label>
           <input
             type="text"
-            name="category" 
+            name="category"
             className="p-1 border border-black rounded-md drop-shadow-sm cursor-pointer w-[100%] font-poppins"
             value={formData.category}
             onChange={handleChange}
@@ -86,7 +107,7 @@ const CategoryInfo = ({ formData, setFormData, onFormSubmit }) => {
           <input
             type="radio"
             id="active"
-            name="status" 
+            name="status"
             value="active"
             checked={formData.status === 'active'}
             onChange={handleChange}
@@ -97,7 +118,7 @@ const CategoryInfo = ({ formData, setFormData, onFormSubmit }) => {
           <input
             type="radio"
             id="inactive"
-            name="status" 
+            name="status"
             value="inactive"
             checked={formData.status === 'inactive'}
             onChange={handleChange}
@@ -109,11 +130,30 @@ const CategoryInfo = ({ formData, setFormData, onFormSubmit }) => {
           Submit
         </button>
       </form>
+      
+      {/* Success Modal */}
       {showSuccessModal && (
         <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
           <div className="bg-white rounded-lg shadow-lg p-6 w-[300px] text-center">
             <h2 className="text-2xl font-semibold text-green-500 mb-2">Success!</h2>
             <p className="text-gray-700">{success}</p>
+          </div>
+        </div>
+      )}
+
+      {/* Inactive Status Confirmation Modal */}
+      {showInactiveConfirm && (
+        <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
+          <div className="bg-white rounded-lg shadow-lg p-6 w-[300px] text-center">
+            <p className="text-gray-700">Are you sure you want to set the status to Inactive?</p>
+            <div className="mt-4 flex justify-center gap-4">
+              <button className="bg-red-500 text-white px-4 py-2 rounded" onClick={confirmInactive}>
+                Confirm
+              </button>
+              <button className="bg-gray-500 text-white px-4 py-2 rounded" onClick={cancelInactive}>
+                Cancel
+              </button>
+            </div>
           </div>
         </div>
       )}

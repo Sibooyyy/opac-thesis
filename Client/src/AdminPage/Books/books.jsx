@@ -4,7 +4,6 @@ import BookRecord from './book-record';
 import BookInfo from './book-info';
 import { FaBookOpen } from "react-icons/fa";
 import axios from 'axios';
-import { bookForm } from '../../utils/utils';
 
 const Books = () => {
   const [books, setBooks] = useState([]);
@@ -29,7 +28,7 @@ const Books = () => {
 
   const handleFormSubmit = (updatedBook) => {
     const endpoint = selectedBook ? 'http://localhost:8081/edit/books' : 'http://localhost:8081/add/book';
-
+  
     axios.post(endpoint, updatedBook)
       .then(response => {
         if (response.data.status) {
@@ -48,8 +47,12 @@ const Books = () => {
       .catch(error => {
         console.error('Error submitting book data', error);
       });
-
+  
     setSelectedBook(null);
+  };
+
+  const handleDeleteSuccess = () => {
+    setUpdate(!update);
   };
 
   return (
@@ -59,9 +62,8 @@ const Books = () => {
         <FaBookOpen /><span>Books</span>
       </div>
       <div className='h-screen flex justify-between w-[100%] p-[50px] gap-8'>
-        {/* Always pass formData to BookInfo */}
         <BookInfo selectedBook={selectedBook} onFormSubmit={handleFormSubmit} />
-        <BookRecord books={books} onEditClick={handleEditClick} />
+        <BookRecord books={books} onEditClick={handleEditClick} onDeleteSuccess={handleDeleteSuccess} />
       </div>
     </>
   );
