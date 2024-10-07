@@ -2,7 +2,8 @@ import { useEffect, useState } from 'react';
 import axios from 'axios';
 import moment from 'moment';
 import { MdNavigateNext, MdNavigateBefore } from "react-icons/md";
-import { CiSearch } from "react-icons/ci"
+import { FaEdit } from "react-icons/fa";
+
 
 const CategoryRec = ({ onEditClick }) => {
   
@@ -76,7 +77,7 @@ const CategoryRec = ({ onEditClick }) => {
             />
           </div>
       </div>
-      <table className='w-full'>
+      <table className='w-full font-poppins text-[15px]'>
         <thead className='font-poppins text-[14px] border-2 h-[45px] bg-[#F2F2F2] py-2'>
           <tr>
             <th className='border border-r-2'>No</th>
@@ -95,12 +96,12 @@ const CategoryRec = ({ onEditClick }) => {
               <td className='border border-r-2 py-1'>{moment(category.date_update).format("MMM Do YYYY")}</td>
               <td className='border border-r-2 py-1'>
                 <div>
-                  <span
+                  <button
                     className="bg-blue-500 text-white rounded-md px-3 py-1 font-montserrat text-[15px] hover:bg-blue-700"
-                    onClick={() => { onEditClick(category.category, category.status, category.id); }}
+                    onClick={() => { onEditClick(category.category, category.status, category.id); }} title="Edit Catalog"
                   >
-                    Edit
-                  </span>
+                    <FaEdit />
+                  </button>
                 </div>
               </td>
             </tr>

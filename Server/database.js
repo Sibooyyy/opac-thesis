@@ -24,12 +24,11 @@ const initTables = () => {
             lastname VARCHAR(255) NOT NULL,
             idNumber VARCHAR(255) NOT NULL,
             contactNumber VARCHAR(20) NOT NULL,
+            email VARCHAR(20) NOT NULL,
             designation VARCHAR(255) NOT NULL,
             username VARCHAR(255) NOT NULL,
             password VARCHAR(255) NOT NULL,
-            PRIMARY KEY (id),
-            UNIQUE KEY (username),
-            UNIQUE KEY (idNumber)
+            PRIMARY KEY (id)
         )`
     )
     const books = (
@@ -37,8 +36,10 @@ const initTables = () => {
             id INT AUTO_INCREMENT,
             title VARCHAR(255) NOT NULL,
             category VARCHAR(255) NOT NULL,   
-            isbn_issn VARCHAR(50) NOT NULL,
+            isbn_issn VARCHAR(50) NOT NULL,      
             author VARCHAR(255) NOT NULL,
+            subject VARCHAR(255) NOT NULL,
+            ddc_class VARCHAR(255) NOT NULL,
             publisher VARCHAR(255) NOT NULL,
             accession_number VARCHAR(50) NOT NULL,
             date_published DATE NOT NULL,

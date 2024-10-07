@@ -6,7 +6,7 @@ const CategoryInfo = ({ formData, setFormData, onFormSubmit }) => {
   const [error, setError] = useState('');
   const [success, setSuccess] = useState('');
   const [showSuccessModal, setShowSuccessModal] = useState(false);
-  const [showInactiveConfirm, setShowInactiveConfirm] = useState(false); // State for inactive status confirmation
+  const [showInactiveConfirm, setShowInactiveConfirm] = useState(false);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -18,27 +18,33 @@ const CategoryInfo = ({ formData, setFormData, onFormSubmit }) => {
     return new Date().toISOString();
   };
 
+  const handleReset = () => {
+    setFormData(bookForm()); 
+    setError('');            
+    setSuccess('');       
+    setShowErrorModal(false);
+    setShowSuccessModal(false);
+  };
+
   const handleSubmit = (e) => {
     e.preventDefault();
 
-    // Validation for category and status
     if (!formData.category) {
       setError('Category name is required.');
+      setShowErrorModal(true); 
       return;
     }
 
     if (!formData.status) {
       setError('Category status is required.');
+      setShowErrorModal(true); 
       return;
     }
-
-    // Show the confirmation modal if 'Inactive' is selected
     if (formData.status === 'inactive') {
       setShowInactiveConfirm(true);
-      return; // Do not submit yet, wait for confirmation
+      return;
     }
-
-    submitForm(); // Proceed with form submission if status is not 'Inactive'
+    submitForm();
   };
 
   const submitForm = () => {
@@ -68,42 +74,43 @@ const CategoryInfo = ({ formData, setFormData, onFormSubmit }) => {
           }, 2000);
         } else {
           setError(message);
+          setShowErrorModal(true); 
         }
       })
       .catch(() => {
         setError('An error occurred while submitting the form.');
+        setShowErrorModal(true); 
       });
   };
 
-  // Function to handle confirming the 'Inactive' status
   const confirmInactive = () => {
     setShowInactiveConfirm(false);
-    submitForm(); // Proceed with form submission
+    submitForm();
   };
 
-  // Function to cancel the confirmation
   const cancelInactive = () => {
     setShowInactiveConfirm(false);
   };
 
   return (
-    <div className="border-2 border-[#0CA1E2] w-[30%] h-[60%] flex flex-col gap-3 bg-white">
-      <div className="h-[55px] bg-[#0CA1E2] pt-5 pl-4">
+    <div className="border-2 border-[#0CA1E2] w-[30%] h-[60%] flex flex-col gap-1 bg-white">
+      <div className="h-[55px] bg-[#0CA1E2] pt-4 pl-3">
         <h1 className="font-poppins text-white text-[15px]">Category Status</h1>
       </div>
-      <form className="flex flex-col pl-4 gap-3" onSubmit={handleSubmit}>
+      <form className="flex flex-col pl-3 gap-2 pt-3" onSubmit={handleSubmit}>
         <div className="flex flex-col w-[70%]">
-          <label className="font-poppins text-[15px] font-semibold">Category Name</label>
+          <label className="font-poppins text-[17px] font-semibold">Category Name</label>
           <input
             type="text"
             name="category"
             className="p-1 border border-black rounded-md drop-shadow-sm cursor-pointer w-[100%] font-poppins"
             value={formData.category}
             onChange={handleChange}
+            required
           />
         </div>
-        <h1 className="font-poppins text-[15px] font-semibold">Status</h1>
-        <div className="flex gap-2">
+        <h1 className="font-poppins text-[17px] font-semibold pt-3">Status</h1>
+        <div className="flex gap-1">
           <input
             type="radio"
             id="active"
@@ -111,10 +118,11 @@ const CategoryInfo = ({ formData, setFormData, onFormSubmit }) => {
             value="active"
             checked={formData.status === 'active'}
             onChange={handleChange}
+            required
           />
           <label htmlFor="active">Active</label>
         </div>
-        <div className="flex gap-2">
+        <div className="flex gap-1">
           <input
             type="radio"
             id="inactive"
@@ -122,15 +130,20 @@ const CategoryInfo = ({ formData, setFormData, onFormSubmit }) => {
             value="inactive"
             checked={formData.status === 'inactive'}
             onChange={handleChange}
+            required
           />
           <label htmlFor="inactive">Inactive</label>
         </div>
-        {error && <p className="text-red-500">{error}</p>}
-        <button type="submit" className="mt-4 p-2 bg-blue-500 text-white rounded w-[21%]">
-          Submit
-        </button>
+        <div className="flex gap-2">
+          <button type="submit" className="mt-3 p-2 bg-[#0CA1E2] text-white rounded-lg w-[75px] text-[14px]">
+            Submit
+          </button>
+          <button type="reset" className="mt-3 p-2 bg-gray-500 text-white rounded-lg w-[75px] text-[14px]" onClick={handleReset}>
+            Clear
+          </button>
+        </div>
       </form>
-      
+
       {/* Success Modal */}
       {showSuccessModal && (
         <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
@@ -140,7 +153,6 @@ const CategoryInfo = ({ formData, setFormData, onFormSubmit }) => {
           </div>
         </div>
       )}
-
       {/* Inactive Status Confirmation Modal */}
       {showInactiveConfirm && (
         <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
