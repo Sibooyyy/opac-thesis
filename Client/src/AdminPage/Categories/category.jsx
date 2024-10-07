@@ -7,8 +7,6 @@ import { useState } from'react';
 
 
 
-
-
 const category = () => {
   const [formData, setFormData] = useState(bookForm());
   const [categories, setCategories] = useState([]);
@@ -18,19 +16,16 @@ const category = () => {
   };
 
   const handleFormSubmit = (updatedCategory) => {
-    if (updatedCategory.id) {  // Ensure id exists
-      // Update an existing category in the list
+    if (updatedCategory.id) {
       setCategories((prevCategories) =>
         prevCategories.map((cat) =>
           cat.id === updatedCategory.id ? updatedCategory : cat
         )
       );
     } else {
-      // Add a new category to the list
       setCategories([...categories, updatedCategory]);
     }
   };
-
 
 
 
@@ -40,7 +35,7 @@ const category = () => {
         <div className='flex flex-row pt-8 items-center pl-[250px] border-b font-montserrat font-bold text-[25px] p-5 gap-1 bg-white'> 
             <TbCategory2/><span>Categories</span>
         </div>
-        <div className='h-screen flex justify-between w-[100%] p-[50px] gap-8'>
+        <div className='h-screen flex justify-between w-[100%] p-[30px] gap-8'>
             <CategoryInfo formData={formData} setFormData={setFormData} onFormSubmit={handleFormSubmit} />
             <CategoryRec  categories={categories} onEditClick={handleEditClick} />
         </div>

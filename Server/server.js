@@ -6,6 +6,8 @@ const {connection} = database;
 const bodyParser = require('body-parser');
 const bcrypt = require("bcrypt");
 const saltRounds = 10;
+const nodemailer = require('nodemailer');
+
 
 
 
@@ -27,15 +29,48 @@ const hashPassword = (password, callback) => {
 }
 
 app.post('/auth/register', (req, res) => {
-    const { firstname, lastname, idNumber, contactNumber, designation, username, password } = req.body;
+    const { firstname, lastname, idNumber, contactNumber, email, designation, username, password } = req.body;
     let table = new DataTable(connection, "profile");
-    table.findOne({ idNumber }, (result) => {
-      if (result) return res.json({ status: false, message: "ID Number already exists" });
+  
+    table.findOne({ username }, (result) => {
+      if (result) return res.json({ status: false, message: "Username already exists" });
   
       hashPassword(password, (hash) => {
-        const datas = { firstname, lastname, idNumber, contactNumber, designation, username, password: hash };
+        const datas = { firstname, lastname, idNumber, contactNumber, email, designation, username, password: hash };
+  
         table.insert(datas, (result) => {
           if (result) {
+            let transporter = nodemailer.createTransport({
+              service: 'gmail',
+              auth: {
+                user: 'eyce0x@gmail.com', 
+                pass: 'losq ejdn upgd vngt', 
+              },
+            });
+  
+            let mailOptions = {
+              from: 'your-email@gmail.com', 
+              to: email, 
+              subject: 'Registration Sucessful for Online Public Access Catalog (OPAC)',  
+              text: `Hi ${firstname},\n\nYou have successfully registered with the following details:\n
+                     First Name: ${firstname}
+                     Last Name: ${lastname}
+                     ID Number: ${idNumber}
+                     Contact Number: ${contactNumber}
+                     Designation: ${designation}
+                     Username: ${username}
+                     Password: ${password} 
+                     
+                     \n\nThank you for registering!`,
+            };
+            transporter.sendMail(mailOptions, (error, info) => {
+              if (error) {
+                console.error('Error sending email:', error);
+              } else {
+                console.log('Email sent: ' + info.response);
+              }
+            });
+  
             return res.json({ status: true, message: "Registration successful", data: result });
           } else {
             return res.json({ status: false, message: "Registration failed" });
@@ -46,7 +81,7 @@ app.post('/auth/register', (req, res) => {
         });
       });
     });
-});
+  });
 
 
 app.post('/auth/login', (req, res) => {
@@ -209,10 +244,10 @@ app.delete('/account/data/:idNumber', (req, res) => {
 
 
 app.post('/add/book', (req, res) => {
-    const { title, category, isbn_issn, author, publisher, accession_number, date_published, mark_tags } = req.body;
+    const { title, category, isbn_issn, author, publisher, accession_number, date_published, mark_tags, subject, ddc_class } = req.body;
     const markTagsString = Array.isArray(mark_tags) ? mark_tags.join(', ') : mark_tags;
     const table = new DataTable(connection, "books");
-    table.insert({ title, category, isbn_issn, author, publisher, accession_number, date_published, mark_tags: markTagsString, book_status: "Available" }, (result) => {
+    table.insert({ title, category, isbn_issn, author, publisher, accession_number, date_published, mark_tags: markTagsString, book_status: "Available", subject, ddc_class }, (result) => {
         if (result) {
             return res.json({ status: true, message: "Book added successfully" });
         } else {
@@ -273,13 +308,13 @@ app.get('/register/data', (req, res) => {
 
 // Edit Books Details 
 app.post('/edit/books', (req, res) => {
-    const { title, category, isbn_issn, author, publisher, accession_number, date_published, status } = req.body;
+    const { title, category, isbn_issn, author, publisher, accession_number, date_published, status, subject, ddc_class } = req.body;
     
     const table = new DataTable(connection, "books");
     
     // Update book details, including status
     table.update(
-        { title, category, isbn_issn, author, publisher, date_published, status },  // The updated fields including status
+        { title, category, isbn_issn, author, publisher, date_published, status, subject, ddc_class },  // The updated fields including status
         { accession_number },  // Where condition to find the book by accession number
         (result) => {
             if (result) {
@@ -352,10 +387,13 @@ app.post('/search/book', (req, res) => {
     const fieldMapping = {
         'Title': 'title',
         'Author': 'author',
+        'Subject': 'subject',
+        'DDC Classification': 'ddc_class',
         'Accession Number': 'accession_number',
         'Publisher': 'publisher',
         'ISBN/ISSN': 'isbn_issn',
         'Category': 'category',
+        'Tags': 'mark_tags',
         'Book Status': 'book_status',
         'Status': 'status'
     };
@@ -418,6 +456,40 @@ app.post('/search/book', (req, res) => {
     }
 });
 
+app.get('/suggestions', (req, res) => {
+    const { field, query } = req.query;
+
+    if (!field || !query) {
+        return res.status(400).json({ message: "Missing search field or query" });
+    }
+
+    const fieldMapping = {
+        'Title': 'title',
+        'Author': 'author',
+        'Subject': 'subject',
+        'DDC Classification': 'ddc_class',
+        'Accession Number': 'accession_number',
+        'Publisher': 'publisher',
+        'ISBN/ISSN': 'isbn_issn',
+        'Category': 'category',
+        'Tags': 'mark_tags',
+        'Book Status': 'book_status',
+        'Status': 'status'
+    };
+
+    const dbField = fieldMapping[field];
+    if (!dbField) {
+        return res.status(400).json({ message: "Invalid search field" });
+    }
+
+    const queryString = `SELECT DISTINCT \`${dbField}\` FROM books WHERE \`${dbField}\` LIKE ? LIMIT 10`;
+    connection.query(queryString, [`%${query}%`], (err, result) => {
+        if (err) {
+            return res.status(500).json({ message: "Database error", error: err });
+        }
+        return res.json(result.map(row => row[dbField]));
+    });
+});
 
 
 

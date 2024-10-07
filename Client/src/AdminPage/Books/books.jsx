@@ -61,7 +61,7 @@ const Books = () => {
       <div className='flex flex-row pt-8 items-center pl-[250px] border-b font-montserrat font-bold text-[25px] p-5 gap-1 bg-white'>
         <FaBookOpen /><span>Books</span>
       </div>
-      <div className='h-screen flex justify-between w-[100%] p-[50px] gap-8'>
+      <div className='h-[100%] flex justify-between w-[100%] p-[30px] gap-8'>
         <BookInfo selectedBook={selectedBook} onFormSubmit={handleFormSubmit} />
         <BookRecord books={books} onEditClick={handleEditClick} onDeleteSuccess={handleDeleteSuccess} />
       </div>

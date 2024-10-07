@@ -13,7 +13,7 @@ import AccountRecord from './AdminPage/Register/account-record.jsx'
 import Profile from "./UsePage/profile.jsx";
 import PrivateRoute from "./utils/privateroute.jsx";
 import HomePage from "./UsePage/homepage.jsx";
-import outputImage from './assets/output.png'; 
+import BookRecord from "./AdminPage/Books/book-record.jsx";
 
 
 
@@ -140,6 +140,7 @@ return (
           <Route path="/admin/register"element={<PrivateRoute><Register /></PrivateRoute>}/>
           <Route path="/admin/category"element={<PrivateRoute><Category /></PrivateRoute>}/>
           <Route path="/admin/books" element={<PrivateRoute><Books /></PrivateRoute>}/>
+          <Route path="/admin/books/record" element={<PrivateRoute><BookRecord /></PrivateRoute>}/>
           <Route path="/admin/student/record" element={<PrivateRoute><StudentRecord /></PrivateRoute> }/>
           <Route path="/admin/faculty/record"element={<PrivateRoute><FacultyRecord /></PrivateRoute>}/>
           <Route path="/admin/account/record" element={<PrivateRoute><AccountRecord /></PrivateRoute>}/>

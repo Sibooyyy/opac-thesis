@@ -8,6 +8,7 @@ export const registrationForm = () => {
         lastname: "",
         idNumber: "",
         contactNumber: "",
+        email: "",
         designation: "",
         username: "",
         password: "",
@@ -27,6 +28,8 @@ export const bookForm = () => {
     return {
         id: "",
         title: "",
+        subject: "",
+        ddc_class: "",
         category: "",
         isbn_issn: "",
         author: "",

@@ -3,7 +3,8 @@ import { useState, useEffect } from "react";
 import moment from "moment";
 import { MdNavigateNext, MdNavigateBefore } from "react-icons/md";
 import { FaCheckCircle } from "react-icons/fa"; 
-import { CiSearch } from "react-icons/ci";
+import { MdDelete } from "react-icons/md";
+import { FaEdit, FaEye } from "react-icons/fa";
 
 const BookRecord = ({ books, onEditClick }) => {
   const [data, setData] = useState([]);
@@ -14,8 +15,11 @@ const BookRecord = ({ books, onEditClick }) => {
   const [successMessage, setSuccessMessage] = useState(''); 
   const [showSuccessModal, setShowSuccessModal] = useState(false); 
   const [searchTerm, setSearchTerm] = useState(''); 
-  
-  // Pagination state
+
+  // New state for modal
+  const [showModal, setShowModal] = useState(false);
+  const [selectedBook, setSelectedBook] = useState(null);
+
   const [currentPage, setCurrentPage] = useState(1);
   const recordsPerPage = 5;
 
@@ -54,6 +58,16 @@ const BookRecord = ({ books, onEditClick }) => {
     setDeleteAuthor(null);
   };
 
+  const handleViewClick = (book) => {
+    setSelectedBook(book);
+    setShowModal(true);
+  };
+
+  const closeModal = () => {
+    setShowModal(false);
+    setSelectedBook(null);
+  };
+
   // Filter data based on search term
   const filteredData = data.filter(book =>
     book.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
@@ -89,52 +103,63 @@ const BookRecord = ({ books, onEditClick }) => {
 
   return (
     <div className='w-[70%] font-montserrat'>
-        <div className='flex flex-row items-center gap-3 mb-3'>
-          <span>Search By</span>
-          <div>
-            <input 
-              type="text" 
-              className='pl-10 py-1 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-400' 
-              placeholder="Search..." 
-              value={searchTerm} 
-              onChange={(e) => setSearchTerm(e.target.value)} 
-            />
-          </div>
+      <div className='flex flex-row items-center gap-3 mb-3'>
+        <span>Search By</span>
+        <div>
+          <input 
+            type="text" 
+            className='pl-10 py-1 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-400' 
+            placeholder="Search..." 
+            value={searchTerm} 
+            onChange={(e) => setSearchTerm(e.target.value)} 
+          />
         </div>
-      <table className='w-full'>
+      </div>
+      <table className='w-full font-poppins text-[15px]'>
         <thead className='font-poppins text-[14px] border-2 h-[45px] bg-[#F2F2F2] py-2'>
           <tr className="text-center">
-            <th className='border border-r-2'>No</th>
+            <th className='border border-r-2 w-[80px]'>No</th>
             <th className='border border-r-2 w-[150px]'>Title</th>
             <th className='border border-r-2 w-[150px]'>Category</th>
-            <th className='border border-r-2 w-[150px]'>ISBN/ISSN</th>
             <th className='border border-r-2 w-[150px]'>Author</th>
-            <th className='border border-r-2 w-[150px]'>Publisher</th>
-            <th className='border border-r-2 w-[150px]'>Accession Number</th>
-            <th className='border border-r-2 w-[150px]'>Date Published</th>
+            <th className='border border-r-2 w-[150px]'>Subject</th>
+            <th className='border border-r-2 w-[170px]'>DDC Classification</th>
             <th className='border border-r-2 w-[150px]'>Status</th>
-            <th className=''>Action</th>
+            <th className='border border-r-2 w-[150px]'>Action</th>
           </tr>
         </thead>
         <tbody>
           {currentRecords.map((book, index) => (
-            <tr key={book.accession_number} className='text-center hover:bg-gray-100 bg-white'>
-              <td className='border border-r-2'>{indexOfFirstRecord + index + 1}</td>
-              <td className='border border-r-2'>{book.title}</td>
-              <td className='border border-r-2'>{book.category}</td>
-              <td className='border border-r-2'>{book.isbn_issn}</td>
-              <td className='border border-r-2'>{book.author}</td>
-              <td className='border border-r-2'>{book.publisher}</td>
-              <td className='border border-r-2'>{book.accession_number}</td>
-              <td className='border border-r-2'>{moment(book.date_published).format("MMM Do YYYY")}</td>
-              <td className='border border-r-2'>{book.status}</td>
-              <td className='border border-r-2'>
-                <div className="flex gap-2 text-center pl-1">
-                  <button className="bg-blue-500 text-white rounded-md px-3 py-1 font-montserrat text-[15px] hover:bg-blue-700" onClick={() => onEditClick(book)}>Edit</button>
-                  <button className="bg-red-500 text-white rounded-md px-3 py-1 font-montserrat text-[15px] hover:bg-red-700" onClick={() => handleDeleteClick(book.author)}>Delete</button>
-                </div>
-              </td>
-            </tr>
+            <>
+              <tr key={book.accession_number} className='text-center hover:bg-gray-100 bg-white'>
+                <td className='border border-r-2'>{indexOfFirstRecord + index + 1}</td>
+                <td className='border border-r-2'>{book.title}</td>
+                <td className='border border-r-2'>{book.category}</td>
+                <td className='border border-r-2'>{book.author}</td>
+                <td className='border border-r-2'>{book.subject}</td>
+                <td className='border border-r-2'>{book.ddc_class}</td>
+                <td className='border border-r-2'>{book.status}</td>
+                <td className='border border-r-2 py-1'>
+                  <div className="flex gap-1 text-center pl-1 pr-1 justify-center">
+                    <button 
+                      className="bg-green-500 text-white rounded-md px-3 py-1 font-montserrat text-[14px] hover:bg-green-700" 
+                      onClick={() => handleViewClick(book)} title="View Book Details">
+                      <FaEye />
+                    </button>
+                    <button 
+                      className="bg-blue-500 text-white rounded-md px-3 py-1 font-montserrat text-[14px] hover:bg-blue-700" 
+                      onClick={() => onEditClick(book)} title="Edit Book Details" >
+                      <FaEdit />
+                    </button>
+                    <button 
+                      className="bg-red-500 text-white rounded-md px-3 py-1 font-montserrat text-[14px] hover:bg-red-700" 
+                      onClick={() => handleDeleteClick(book.author)} title="Delete Book">
+                      <MdDelete />
+                    </button>
+                  </div>
+                </td>
+              </tr>
+            </>
           ))}
         </tbody>
       </table>
@@ -155,7 +180,49 @@ const BookRecord = ({ books, onEditClick }) => {
           <MdNavigateNext />
         </button>
       </div>
+      {showModal && selectedBook && (
+        <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
+          <div className="bg-white rounded-lg shadow-lg p-6 w-[600px]">
+            <h2 className="text-lg font-bold mb-4 text-center">Book Details</h2>
+            <div className="grid grid-cols-2 gap-y-2 gap-x-4 text-left">
+              <div className="font-bold">Title:</div>
+              <div>{selectedBook.title}</div>
 
+              <div className="font-bold">Category:</div>
+              <div>{selectedBook.category}</div>
+
+              <div className="font-bold">ISBN/ISSN:</div>
+              <div>{selectedBook.isbn_issn}</div>
+
+              <div className="font-bold">Author:</div>
+              <div>{selectedBook.author}</div>
+
+              <div className="font-bold">Subject:</div>
+              <div>{selectedBook.subject}</div>
+
+              <div className="font-bold">DDC Classification:</div>
+              <div>{selectedBook.ddc_class}</div>
+
+              <div className="font-bold">Accession Number:</div>
+              <div>{selectedBook.accession_number}</div>
+
+              <div className="font-bold">Publisher:</div>
+              <div>{selectedBook.publisher}</div>
+
+              <div className="font-bold">Tags:</div>
+              <div>{selectedBook.mark_tags}</div>
+
+              <div className="font-bold">Date Published:</div>
+              <div>{moment(selectedBook.date_published).format("MMM Do YYYY")}</div>
+            </div>
+            <div className="text-center mt-4">
+              <button onClick={closeModal} className="bg-red-500 text-white px-4 py-2 rounded">
+                Close
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
       {/* Delete Confirmation Modal */}
       {showDeleteConfirm && (
         <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
@@ -168,6 +235,7 @@ const BookRecord = ({ books, onEditClick }) => {
           </div>
         </div>
       )}
+
       {/* Success Modal */}
       {showSuccessModal && (
         <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">

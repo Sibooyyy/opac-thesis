@@ -34,7 +34,7 @@ const Register = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    if (!formData.firstname || !formData.lastname || !formData.idNumber || !formData.contactNumber || !formData.username || !formData.password || !formData.confirm_password || !formData.designation) {
+    if (!formData.firstname || !formData.lastname || !formData.idNumber || !formData.contactNumber || !formData.username || !formData.password || !formData.confirm_password || !formData.designation || !formData.email) {
       handleErrorTimeout('All fields are required.');
       return;
     }
@@ -53,6 +53,16 @@ const Register = () => {
       handleErrorTimeout('Passwords do not match');
       return;
     }
+    if (!formData.email.includes('@')) {
+      handleErrorTimeout('Email must contain @.');
+      return;
+    }
+  
+    const emailDomain = formData.email.split('@')[1];
+    if (emailDomain !== 'gmail.com' && emailDomain !== 'yahoo.com') {
+      handleErrorTimeout('Email must be either @gmail.com or @yahoo.com.');
+      return;
+    }
 
     setLoading(true);
     const url = 'http://localhost:8081/auth/register';
@@ -66,11 +76,15 @@ const Register = () => {
           setSuccessPopUp(false);
           setFormData(registrationForm()); 
         }, 3000);
+      } else{
+        setError(message);
+        setTimeout(() => {
+          setError('');
+        }, 3000)
       }
     }).catch(error => {
       console.log(error);
       setError('Registration failed. Please try again.');
-      setLoading(false);
     });
   };
 
@@ -113,11 +127,15 @@ const Register = () => {
               </select>
             </div>
             <div className='flex flex-col gap-2 w-full md:w-[30%]'>
-              <label className='font-montserrat text-md font-semibold'>Username</label>
-              <input className='p-2 border border-gray-300 rounded-md shadow-sm focus:border-blue-500 focus:outline-none' value={formData.username} onChange={handleChange} type="text" name="username" />
+              <label className='font-montserrat text-md font-semibold'>Email</label>
+              <input className='p-2 border border-gray-300 rounded-md shadow-sm focus:border-blue-500 focus:outline-none' value={formData.email} onChange={handleChange} type="text" name="email" />
             </div>
           </div>
           <div className='flex flex-wrap gap-4 md:gap-6'>
+            <div className='flex flex-col gap-2 w-full md:w-[30%]'>
+              <label className='font-montserrat text-md font-semibold'>Username</label>
+              <input className='p-2 border border-gray-300 rounded-md shadow-sm focus:border-blue-500 focus:outline-none' value={formData.username} onChange={handleChange} type="text" name="username" />
+            </div>
             <div className='flex flex-col gap-2 w-full md:w-[30%]'>
               <label className='font-montserrat text-md font-semibold'>Password</label>
               <div className='relative'>
@@ -150,11 +168,10 @@ const Register = () => {
           {/* Submit Button */}
           <div className='flex justify-end mt-8 w-full'>
             <button 
-              className={`bg-[#0CA1E2] text-white py-3 px-6 rounded-lg cursor-pointer font-montserrat text-sm transition-all duration-200 hover:bg-[#007bb5] ${loading ? 'opacity-50 cursor-not-allowed' : ''}`} 
+              className="bg-[#0CA1E2] text-white py-3 px-6 rounded-lg cursor-pointer font-montserrat text-sm transition-all duration-200 hover:bg-[#007bb5]" 
               type="submit"
-              disabled={loading}
             >
-              {loading ? 'Registering...' : 'Register'}
+              Register
             </button>
           </div>
         </form>

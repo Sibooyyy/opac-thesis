@@ -2,7 +2,9 @@ import Navbar from '../../Components/navbar';
 import { useState, useEffect } from 'react';
 import axios from 'axios';
 import { MdNavigateNext, MdNavigateBefore } from "react-icons/md";
-import { FaUser, FaCheckCircle } from "react-icons/fa"; // Importing icons
+import { FaUser, FaCheckCircle } from "react-icons/fa"; 
+import { MdDelete } from "react-icons/md";
+
 
 const AccountRecord = () => {
   const [data, setData] = useState([]);
@@ -92,6 +94,7 @@ const AccountRecord = () => {
               <th className='border border-r-2 px-[40px] py-[10px] whitespace-nowrap'>Last Name</th>
               <th className='border border-r-2 px-[40px] py-[10px] w-[12%] whitespace-nowrap'>ID Number</th>
               <th className='border border-r-2 px-[40px] py-[10px] w-[15%] whitespace-nowrap'>Contact</th>
+              <th className='border border-r-2 px-[40px] py-[10px] w-[15%] whitespace-nowrap'>Email</th>
               <th className='border border-r-2 px-[40px] py-[10px] w-[12%] whitespace-nowrap'>Designation</th>
               <th className='border border-r-2 px-[40px] py-[10px] w-[17%] whitespace-nowrap'>Username</th>
               <th className='px-[40px] py-[10px] whitespace-nowrap'>Action</th>
@@ -127,15 +130,16 @@ const AccountRecord = () => {
                   <td className='border border-r-2 px-[40px] py-[10px] whitespace-nowrap'>{item.lastname}</td>
                   <td className='border border-r-2 px-[40px] py-[10px] whitespace-nowrap'>{item.idNumber}</td>
                   <td className='border border-r-2 px-[40px] py-[10px] whitespace-nowrap'>{item.contactNumber}</td>
+                  <td className='border border-r-2 px-[40px] py-[10px] whitespace-nowrap'>{item.email}</td>
                   <td className='border border-r-2 px-[40px] py-[10px] whitespace-nowrap'>{item.designation}</td>
                   <td className='border border-r-2 px-[40px] py-[10px] whitespace-nowrap'>{item.username}</td>
-                  <td className='px-[40px] py-[10px] border border-r-2'>
+                  <td className='border border-r-2 px-[40px] py-[10px]'>
                     <div className='flex justify-center'>
                       <button
-                        className='border bg-[#CC0000] text-white rounded-md px-3 font-montserrat text-[15px] cursor-pointer'
-                        onClick={() => handleDeleteClick(item.idNumber)}
+                        className='bg-red-500 text-white rounded-md px-3 py-1 font-montserrat text-[15px] hover:bg-red-700'
+                        onClick={() => handleDeleteClick(item.idNumber)} title="Delete Account Details"
                       >
-                        Delete
+                        <MdDelete/>
                       </button>
                     </div>
                   </td>

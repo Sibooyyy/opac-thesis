@@ -21,7 +21,8 @@ function ViewProfile() {
         firstname: user.firstname,
         lastname: user.lastname,
         contactNumber: user.contactNumber,
-        designation: user.designation
+        designation: user.designation,
+        email: user.email
     });
     const [editError, setEditError] = useState('');
     const [editSuccess, setEditSuccess] = useState('');
@@ -266,6 +267,15 @@ function ViewProfile() {
                                 <input
                                     type="text"
                                     value={user.contactNumber}
+                                    readOnly
+                                    className="mt-1 p-2 border border-gray-300 rounded-lg w-full"
+                                />
+                            </div>
+                            <div>
+                                <label className="font-montserrat text-md font-semibold">Email</label>
+                                <input
+                                    type="text"
+                                    value={user.email}
                                     readOnly
                                     className="mt-1 p-2 border border-gray-300 rounded-lg w-full"
                                 />
