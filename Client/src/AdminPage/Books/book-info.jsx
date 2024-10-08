@@ -299,6 +299,7 @@ const BookInfo = ({ selectedBook, onFormSubmit }) => {
                 onChange={handleTagChange} 
                 name="mark_tags" 
                 multiple
+                required
               >
                 {filteredTags.map((tag, index) => (
                   <option key={`${tag.id}-${index}`} value={tag.mark_tags}>

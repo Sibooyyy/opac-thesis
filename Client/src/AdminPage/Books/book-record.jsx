@@ -182,47 +182,52 @@ const BookRecord = ({ books, onEditClick }) => {
       </div>
       {showModal && selectedBook && (
         <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
-          <div className="bg-white rounded-lg shadow-lg p-6 w-[600px]">
-            <h2 className="text-lg font-bold mb-4 text-center">Book Details</h2>
-            <div className="grid grid-cols-2 gap-y-2 gap-x-4 text-left">
-              <div className="font-bold">Title:</div>
-              <div>{selectedBook.title}</div>
+          <div className="bg-white rounded-2xl shadow-xl p-8 w-[600px] max-w-full">
+            <h2 className="text-2xl font-semibold mb-6 text-center text-gray-800">Book Details</h2>
+            <div className="grid grid-cols-2 gap-y-4 gap-x-6 text-left text-gray-700">
+              <div className="font-medium">Title:</div>
+              <div className="text-gray-900">{selectedBook.title}</div>
 
-              <div className="font-bold">Category:</div>
-              <div>{selectedBook.category}</div>
+              <div className="font-medium">Category:</div>
+              <div className="text-gray-900">{selectedBook.category}</div>
 
-              <div className="font-bold">ISBN/ISSN:</div>
-              <div>{selectedBook.isbn_issn}</div>
+              <div className="font-medium">ISBN/ISSN:</div>
+              <div className="text-gray-900">{selectedBook.isbn_issn}</div>
 
-              <div className="font-bold">Author:</div>
-              <div>{selectedBook.author}</div>
+              <div className="font-medium">Author:</div>
+              <div className="text-gray-900">{selectedBook.author}</div>
 
-              <div className="font-bold">Subject:</div>
-              <div>{selectedBook.subject}</div>
+              <div className="font-medium">Subject:</div>
+              <div className="text-gray-900">{selectedBook.subject}</div>
 
-              <div className="font-bold">DDC Classification:</div>
-              <div>{selectedBook.ddc_class}</div>
+              <div className="font-medium">DDC Classification:</div>
+              <div className="text-gray-900">{selectedBook.ddc_class}</div>
 
-              <div className="font-bold">Accession Number:</div>
-              <div>{selectedBook.accession_number}</div>
+              <div className="font-medium">Accession Number:</div>
+              <div className="text-gray-900">{selectedBook.accession_number}</div>
 
-              <div className="font-bold">Publisher:</div>
-              <div>{selectedBook.publisher}</div>
+              <div className="font-medium">Publisher:</div>
+              <div className="text-gray-900">{selectedBook.publisher}</div>
 
-              <div className="font-bold">Tags:</div>
-              <div>{selectedBook.mark_tags}</div>
+              <div className="font-medium">Tags:</div>
+              <div className="text-gray-900">{selectedBook.mark_tags}</div>
 
-              <div className="font-bold">Date Published:</div>
-              <div>{moment(selectedBook.date_published).format("MMM Do YYYY")}</div>
+              <div className="font-medium">Date Published:</div>
+              <div className="text-gray-900">
+                {moment(selectedBook.date_published).format("MMM Do, YYYY")}
+              </div>
             </div>
-            <div className="text-center mt-4">
-              <button onClick={closeModal} className="bg-red-500 text-white px-4 py-2 rounded">
+            <div className="text-center mt-6">
+              <button
+                onClick={closeModal}
+                className="bg-red-500 hover:bg-red-600 text-white px-6 py-3 rounded-full transition duration-300 ease-in-out"
+              >
                 Close
               </button>
             </div>
           </div>
-        </div>
-      )}
+      </div>
+    )}
       {/* Delete Confirmation Modal */}
       {showDeleteConfirm && (
         <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">

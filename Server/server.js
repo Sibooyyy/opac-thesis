@@ -31,57 +31,91 @@ const hashPassword = (password, callback) => {
 app.post('/auth/register', (req, res) => {
     const { firstname, lastname, idNumber, contactNumber, email, designation, username, password } = req.body;
     let table = new DataTable(connection, "profile");
-  
-    table.findOne({ username }, (result) => {
-      if (result) return res.json({ status: false, message: "Username already exists" });
-  
-      hashPassword(password, (hash) => {
-        const datas = { firstname, lastname, idNumber, contactNumber, email, designation, username, password: hash };
-  
-        table.insert(datas, (result) => {
-          if (result) {
-            let transporter = nodemailer.createTransport({
-              service: 'gmail',
-              auth: {
-                user: 'eyce0x@gmail.com', 
-                pass: 'losq ejdn upgd vngt', 
-              },
+
+    table.findOne({ username }, (usernameResult) => {
+        if (usernameResult) return res.json({ status: false, message: "Username already exists" });
+
+        table.findOne({ idNumber }, (idNumberResult) => {
+            if (idNumberResult) return res.json({ status: false, message: "ID Number already exists" });
+
+            hashPassword(password, (hash) => {
+                const datas = { firstname, lastname, idNumber, contactNumber, email, designation, username, password: hash };
+
+                table.insert(datas, (insertResult) => {
+                    if (insertResult) {
+                        let transporter = nodemailer.createTransport({
+                            service: 'gmail',
+                            auth: {
+                                user: 'eyce0x@gmail.com',
+                                pass: 'losq ejdn upgd vngt',
+                            },
+                        });
+
+                        let mailOptions = {
+                            from: 'your-email@gmail.com',
+                            to: email,
+                            subject: 'Registration Successful for Online Public Access Catalog (OPAC)',
+                            html: `
+                                <div style="font-family: Arial, sans-serif; max-width: 600px; margin: auto; padding: 20px; border: 1px solid #ddd; border-radius: 8px;">
+                                    <h2 style="text-align: center; color: #4CAF50;">Registration Successful!</h2>
+                                    <p>Hi <strong>${firstname}</strong>,</p>
+                                    <p>Congratulations! You have successfully registered with the following details:</p>
+                                    <table style="width: 100%; border-collapse: collapse; margin-top: 10px;">
+                                        <tr>
+                                            <td style="padding: 8px; border: 1px solid #ddd;">First Name:</td>
+                                            <td style="padding: 8px; border: 1px solid #ddd;">${firstname}</td>
+                                        </tr>
+                                        <tr>
+                                            <td style="padding: 8px; border: 1px solid #ddd;">Last Name:</td>
+                                            <td style="padding: 8px; border: 1px solid #ddd;">${lastname}</td>
+                                        </tr>
+                                        <tr>
+                                            <td style="padding: 8px; border: 1px solid #ddd;">ID Number:</td>
+                                            <td style="padding: 8px; border: 1px solid #ddd;">${idNumber}</td>
+                                        </tr>
+                                        <tr>
+                                            <td style="padding: 8px; border: 1px solid #ddd;">Contact Number:</td>
+                                            <td style="padding: 8px; border: 1px solid #ddd;">${contactNumber}</td>
+                                        </tr>
+                                        <tr>
+                                            <td style="padding: 8px; border: 1px solid #ddd;">Designation:</td>
+                                            <td style="padding: 8px; border: 1px solid #ddd;">${designation}</td>
+                                        </tr>
+                                        <tr>
+                                            <td style="padding: 8px; border: 1px solid #ddd;">Username:</td>
+                                            <td style="padding: 8px; border: 1px solid #ddd;">${username}</td>
+                                        </tr>
+                                        <tr>
+                                            <td style="padding: 8px; border: 1px solid #ddd;">Password:</td>
+                                            <td style="padding: 8px; border: 1px solid #ddd;">${password}</td>
+                                        </tr>
+                                    </table>
+                                    <p style="margin-top: 20px;">Thank you for registering with OPAC. We look forward to serving you!</p>
+                                    <p style="text-align: center; color: #888;">&copy; 2024 OPAC. All rights reserved.</p>
+                                </div>`,
+                        };
+
+                        transporter.sendMail(mailOptions, (error, info) => {
+                            if (error) {
+                                console.error('Error sending email:', error);
+                            } else {
+                                console.log('Email sent: ' + info.response);
+                            }
+                        });
+
+                        return res.json({ status: true, message: "Registration successful", data: insertResult });
+                    } else {
+                        return res.json({ status: false, message: "Registration failed" });
+                    }
+                }, (error) => {
+                    console.error(error);
+                    return res.json({ status: false, message: "Registration failed" });
+                });
             });
-  
-            let mailOptions = {
-              from: 'your-email@gmail.com', 
-              to: email, 
-              subject: 'Registration Sucessful for Online Public Access Catalog (OPAC)',  
-              text: `Hi ${firstname},\n\nYou have successfully registered with the following details:\n
-                     First Name: ${firstname}
-                     Last Name: ${lastname}
-                     ID Number: ${idNumber}
-                     Contact Number: ${contactNumber}
-                     Designation: ${designation}
-                     Username: ${username}
-                     Password: ${password} 
-                     
-                     \n\nThank you for registering!`,
-            };
-            transporter.sendMail(mailOptions, (error, info) => {
-              if (error) {
-                console.error('Error sending email:', error);
-              } else {
-                console.log('Email sent: ' + info.response);
-              }
-            });
-  
-            return res.json({ status: true, message: "Registration successful", data: result });
-          } else {
-            return res.json({ status: false, message: "Registration failed" });
-          }
-        }, (error) => {
-          console.error(error);
-          return res.json({ status: false, message: "Registration failed" });
         });
-      });
     });
-  });
+});
+
 
 
 app.post('/auth/login', (req, res) => {
@@ -123,6 +157,63 @@ app.post('/user/update/password', (req, res) => {
         })
     })
 })
+
+
+app.post('/admin/reset-password', (req, res) => {
+    const { id, password } = req.body;
+    const table = new DataTable(connection, "profile");
+
+    hashPassword(password, (hash) => {
+        table.update({ password: hash }, { idNumber: id }, (result) => {
+            if (result) {
+                table.findOne({ idNumber: id }, (userResult) => {
+                    if (userResult) {
+                        const userEmail = userResult.email;
+                        const userFirstName = userResult.firstname;
+
+                        let transporter = nodemailer.createTransport({
+                            service: 'gmail',
+                            auth: {
+                                user: 'eyce0x@gmail.com',
+                                pass: 'losq ejdn upgd vngt',
+                            }
+                        });
+
+                        let mailOptions = {
+                            from: 'eyce0x@gmail.com',
+                            to: userEmail, 
+                            subject: 'Your Password Has Been Reset',
+                            html: `
+                                <div style="font-family: Arial, sans-serif; max-width: 600px; margin: auto; padding: 20px; border: 1px solid #ddd; border-radius: 8px;">
+                                    <h2 style="text-align: center; color: #4CAF50;">Password Reset Successfully</h2>
+                                    <p>Hi <strong>${userFirstName}</strong>,</p>
+                                    <p>Your password has been reset successfully. If this wasn't you, please contact support immediately.</p>
+                                    <p>Your Current Password is: ${password}</p>
+                                    <p>If you have any questions, please feel free to visit library.</p>
+                                    <p>Thank you!</p>
+                                    <p style="text-align: center; color: #888;">&copy; 2024 OPAC. All rights reserved.</p>
+                                </div>`,
+                        };
+                        transporter.sendMail(mailOptions, (error, info) => {
+                            if (error) {
+                                console.error('Error sending email:', error);
+                                return res.json({ status: false, message: "Password reset successfully, but failed to send email." });
+                            } else {
+                                console.log('Email sent: ' + info.response);
+                                return res.json({ status: true, message: "Password reset successfully, and email notification sent." });
+                            }
+                        });
+                    } else {
+                        return res.json({ status: true, message: "Password reset successfully, but user email not found." });
+                    }
+                });
+            } else {
+                return res.json({ status: false, message: "Failed to reset password!" });
+            }
+        });
+    });
+});
+
 
 app.post('/user/update/details', (req, res) => {
     const { id, firstname, lastname, contactNumber, designation } = req.body;
@@ -613,12 +704,12 @@ app.delete('/admin/notifications/delete', (req, res) => {
       }
       res.json({ status: true, message: 'Notification deleted successfully.' });
     });
-  });
+});
 
 
 
 
-  app.post('/user/update-status', (req, res) => {
+app.post('/user/update-status', (req, res) => {
     const { id, status } = req.body;
     const updateBorrowedBookQuery = `
         UPDATE borrowed_books SET status = ?, book_status = CASE  WHEN ? = 'Returned' THEN 'returned' ELSE book_status END  WHERE id = ?`;

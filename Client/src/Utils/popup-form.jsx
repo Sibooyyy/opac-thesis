@@ -69,7 +69,7 @@ function PopupForm({ closePopup }) {
     } catch (error) {
       console.error("Error booking the book:", error);
       alert("Error occurred. Please try again.");
-      setIsLoading(false); // Stop loading animation in case of error
+      setIsLoading(false); 
     }
   };
 

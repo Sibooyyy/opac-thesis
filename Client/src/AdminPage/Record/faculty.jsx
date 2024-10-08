@@ -8,7 +8,7 @@ import * as XLSX from 'xlsx';
 import { CiSearch } from "react-icons/ci";
 
 const StudentRecord = () => {
-  const defaultOptions = ['Pending', 'Returned', 'Overdue', 'Approved'];
+  const defaultOptions = ['Pending', 'Returned', 'Approved'];
   const [records, setRecords] = useState([]);
   const [editStatus, setEditStatus] = useState({});
   const [searchTerm, setSearchTerm] = useState(''); 
