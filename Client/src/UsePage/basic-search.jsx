@@ -121,8 +121,8 @@ const BasicSearch = () => {
                                 <div
                                     key={index}
                                     className="px-4 py-2 cursor-pointer hover:bg-gray-200"
-                                    onMouseEnter={() => setShowTable(true)} // Show table on hover
-                                    onMouseLeave={() => setShowTable(false)} // Hide table when not hovering
+                                    onMouseEnter={() => setShowTable(true)} 
+                                    onMouseLeave={() => setShowTable(false)} 
                                     onClick={() => handleSelectSuggestion(suggestion)}
                                 >
                                     {suggestion}
@@ -150,8 +150,6 @@ const BasicSearch = () => {
             </form>
 
             {error && <p className="text-red-500 font-montserrat mt-4">{error}</p>}
-
-            {/* Render table only if showTable is true */}
             {showTable && results.length > 0 && (
                 <div className='table-container mt-5 w-full'>
                     <table className='min-w-full bg-white rounded-lg overflow-hidden shadow-lg text-center'>
@@ -177,22 +175,36 @@ const BasicSearch = () => {
                                     <td className='py-2 px-5'>{book.publisher}</td>
                                     <td className='py-2 px-5'>{book.isbn_issn}</td>
                                     <td className='py-2 px-5'>{book.category}</td>
-                                    <td className='py-2 px-5'>
-                                        {book.book_status === 'available' ? (
-                                            <span className='bg-green-500 text-white px-3 py-1 rounded'>
-                                                Available
+                                    {book.status === 'active' && (
+                                        <td className='py-2 px-5'>
+                                            {book.book_status === 'available' ? (
+                                                <span className='bg-green-500 text-white px-3 py-1 rounded'>
+                                                    Available
+                                                </span>
+                                            ) : book.book_status === 'borrowed' ? (
+                                                <span className='bg-red-500 text-white px-3 py-1 rounded cursor-not-allowed'>
+                                                    Borrowed
+                                                </span>
+                                            ) : (
+                                                <span className='text-gray-500'>Unknown</span>
+                                            )}
+                                        </td>
+                                    )}
+                                    {book.status === 'inactive' && (
+                                        <td className='py-2 px-5'>
+                                            <span className='bg-gray-400 text-white px-3 py-1 rounded cursor-not-allowed'>
+                                                Inactive
                                             </span>
-                                        ) : (
-                                            <span className='bg-red-500 text-white px-3 py-1 rounded'>
-                                                Borrowed
-                                            </span>
-                                        )}
-                                    </td>
+                                        </td>
+                                    )}
                                     <td className='py-2 px-5'>
-                                        {book.book_status === 'available' && (
+                                        {book.status === 'active' && book.book_status === 'available' && (
                                             <button className='bg-[#0CA1E2] text-white px-3 py-1 rounded-md hover:bg-[#0A90D2]' onClick={() => handleReserveBook(book)}>
                                                 Reserve Book
                                             </button>
+                                        )}
+                                        {book.status === 'inactive' && (
+                                            <span className='text-gray-500'>Cannot Reserve</span>
                                         )}
                                     </td>
                                 </tr>

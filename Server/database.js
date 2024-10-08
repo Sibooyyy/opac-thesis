@@ -56,6 +56,7 @@ const initTables = () => {
             firstname VARCHAR(255) NOT NULL,
             lastname VARCHAR(255) NOT NULL,
             designation VARCHAR(255) NOT NULL,
+            email VARCHAR(255) NOT NULL,
             title VARCHAR(255) NOT NULL,
             author VARCHAR(255) NOT NULL,
             isbn_issn VARCHAR(50) NOT NULL,
