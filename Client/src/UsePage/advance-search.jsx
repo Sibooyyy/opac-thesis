@@ -3,7 +3,7 @@ import axios from "axios";
 import { AuthContext } from '../App';
 
 const AdvanceSearch = () => {
-    const options = ['Title', 'Author', 'Accession Number', 'Publisher', 'ISBN/ISSN', 'Category'];
+    const options = ['Title', 'Author', 'Accession Number', 'Publisher', 'ISBN/ISSN', 'Category', 'Tags', 'Subject', 'DDC Classification'];
     const operators = ['AND', 'OR', 'NOT'];
 
     const { addReservedBook } = useContext(AuthContext);
@@ -17,11 +17,47 @@ const AdvanceSearch = () => {
     });
 
     const [results, setResults] = useState([]);
+    const [suggestions1, setSuggestions1] = useState([]);
+    const [suggestions2, setSuggestions2] = useState([]);
     const [error, setError] = useState('');
 
-    const handleChange = (e) => {
+    const handleChange = async (e) => {
         const { name, value } = e.target;
         setSearchCriteria((prev) => ({ ...prev, [name]: value }));
+
+        if (name === 'expression1' && value.length > 1) {
+            try {
+                const response = await axios.get(`http://localhost:8081/suggestions?field=${options[searchCriteria.option1]}&query=${value}`);
+                setSuggestions1(response.data);
+            } catch (err) {
+                console.error("Error fetching suggestions:", err);
+            }
+        }
+
+        if (name === 'expression2' && value.length > 1) {
+            try {
+                const response = await axios.get(`http://localhost:8081/suggestions?field=${options[searchCriteria.option2]}&query=${value}`);
+                setSuggestions2(response.data);
+            } catch (err) {
+                console.error("Error fetching suggestions:", err);
+            }
+        }
+    };
+
+    const handleSelectSuggestion1 = (suggestion) => {
+        setSearchCriteria((prev) => ({
+            ...prev,
+            expression1: suggestion
+        }));
+        setSuggestions1([]);
+    };
+
+    const handleSelectSuggestion2 = (suggestion) => {
+        setSearchCriteria((prev) => ({
+            ...prev,
+            expression2: suggestion
+        }));
+        setSuggestions2([]);
     };
 
     const handleSearch = async (e) => {
@@ -66,97 +102,135 @@ const AdvanceSearch = () => {
             operator: ''
         });
         setResults([]);
+        setSuggestions1([]);
+        setSuggestions2([]);
         setError('');
     };
 
     const handleReserveBook = (book) => {
-        addReservedBook(book); 
+        addReservedBook(book);
     };
 
     return (
         <div className='w-[100%] h-screen p-[60px] bg-[#0CA1E2] flex flex-col items-center gap-5'>
             <h1 className='font-poppins text-[white] text-[25px] font-bold'>Advance Search</h1>
             <p className='font-poppins text-[white] text-[16px]'>Search the library's holdings for books, digital records, periodicals, and more</p>
-            <form className='flex gap-9 items-center mt-1' onSubmit={handleSearch}>
-                <div className='flex flex-col text-center gap-3'>
-                    <h1 className='text-[white] font-montserrat font-semibold text-[17px]'>Search Field</h1>
-                    <select
-                        className='py-2 pl-2 w-full md:w-56 rounded-lg font-montserrat text-md'
-                        name="option1"
-                        value={searchCriteria.option1}
-                        onChange={handleChange}
-                    >
-                        <option hidden>Select</option>
-                        {options.map((item, index) => (
-                            <option value={index} key={item}>{item}</option>
-                        ))}
-                    </select>
-                    <select
-                        className='py-2 pl-2 w-full md:w-56 rounded-lg font-montserrat text-md'
-                        name="option2"
-                        value={searchCriteria.option2}
-                        onChange={handleChange}
-                    >
-                        <option hidden>Select</option>
-                        {options.map((item, index) => (
-                            <option value={index} key={item}>{item}</option>
-                        ))}
-                    </select>
-                </div>
-                <div className='flex flex-col text-center gap-3'>
-                    <h1 className='text-[white] font-montserrat font-semibold text-[17px]'>Search Expression</h1>
-                    <input
-                        className="py-2 pl-2 rounded-lg w-full md:w-72 font-montserrat text-md"
-                        type="text"
-                        placeholder="Type Something ..."
-                        name="expression1"
-                        value={searchCriteria.expression1}
-                        onChange={handleChange}
-                    />
-                    <input
-                        className="py-2 pl-2 rounded-lg w-full md:w-72 font-montserrat text-md"
-                        type="text"
-                        placeholder="Type Something ..."
-                        name="expression2"
-                        value={searchCriteria.expression2}
-                        onChange={handleChange}
-                    />
-                </div>
-                <div className='flex flex-col text-center gap-3'>
-                    <h1 className='text-[white] font-montserrat font-semibold text-[17px]'>Operator</h1>
-                    <select
-                        className='py-2 pl-2 w-full md:w-56 rounded-lg font-montserrat text-md'
-                        name="operator"
-                        value={searchCriteria.operator}
-                        onChange={handleChange}
-                    >
-                        <option hidden>Select Operator</option>
-                        {operators.map((item, index) => (
-                            <option value={index} key={item}>{item}</option>
-                        ))}
-                    </select>
-                </div>
-                <div className='flex items-start gap-1 mt-4'>
-                        <button
-                            type="submit"
-                            className="bg-[#161D6F] text-white py-2 w-24 rounded-lg cursor-pointer font-montserrat text-xs md:text-sm hover:bg-[#161D6F]/70"
+            
+            <form className='flex flex-col gap-5 items-center mt-1' onSubmit={handleSearch}>
+                <div className='flex gap-9'>
+                    {/* Search Field Options */}
+                    <div className='flex flex-col gap-3'>
+                        <h1 className='text-[white] font-montserrat font-semibold text-[17px]'>Search Field</h1>
+                        <select
+                            className='py-2 pl-2 w-[200px] rounded-lg font-montserrat text-md'
+                            name="option1"
+                            value={searchCriteria.option1}
+                            onChange={handleChange}
                         >
-                            Search
-                        </button>
-                        <button
-                            type="button"
-                            className="bg-[#161D6F] text-white py-2 w-24 rounded-lg cursor-pointer font-montserrat text-xs md:text-sm hover:bg-[#161D6F]/70"
-                            onClick={handleClear}
+                            <option hidden>Select</option>
+                            {options.map((item, index) => (
+                                <option value={index} key={item}>{item}</option>
+                            ))}
+                        </select>
+                        <select
+                            className='py-2 pl-2 w-[200px] rounded-lg font-montserrat text-md'
+                            name="option2"
+                            value={searchCriteria.option2}
+                            onChange={handleChange}
                         >
-                            Clear
-                        </button>
+                            <option hidden>Select</option>
+                            {options.map((item, index) => (
+                                <option value={index} key={item}>{item}</option>
+                            ))}
+                        </select>
                     </div>
+                    <div className='flex flex-col gap-3'>
+                        <h1 className='text-[white] font-montserrat font-semibold text-[17px]'>Search Expression</h1>
+                        <div className='relative'>
+                            <input
+                                className="py-2 pl-2 w-[300px] rounded-lg font-montserrat text-md"
+                                type="text"
+                                placeholder="Type Something ..."
+                                name="expression1"
+                                value={searchCriteria.expression1}
+                                onChange={handleChange}
+                            />
+                            {suggestions1.length > 0 && (
+                                <div className="absolute top-[100%] left-0 right-0 bg-white shadow-lg rounded-lg z-10 max-h-40 overflow-y-auto font-montserrat">
+                                    {suggestions1.map((suggestion, index) => (
+                                        <div
+                                            key={index}
+                                            className="px-4 py-2 cursor-pointer hover:bg-gray-200"
+                                            onClick={() => handleSelectSuggestion1(suggestion)}
+                                        >
+                                            {suggestion}
+                                        </div>
+                                    ))}
+                                </div>
+                            )}
+                        </div>
+                        <div className='relative'>
+                            <input
+                                className="py-2 pl-2 w-[300px] rounded-lg font-montserrat text-md"
+                                type="text"
+                                placeholder="Type Something ..."
+                                name="expression2"
+                                value={searchCriteria.expression2}
+                                onChange={handleChange}
+                            />
+                            {suggestions2.length > 0 && (
+                                <div className="absolute top-[100%] left-0 right-0 bg-white shadow-lg rounded-lg z-10 max-h-40 overflow-y-auto font-montserrat">
+                                    {suggestions2.map((suggestion, index) => (
+                                        <div
+                                            key={index}
+                                            className="px-4 py-2 cursor-pointer hover:bg-gray-200"
+                                            onClick={() => handleSelectSuggestion2(suggestion)}
+                                        >
+                                            {suggestion}
+                                        </div>
+                                    ))}
+                                </div>
+                            )}
+                        </div>
+                    </div>
+
+                    <div className='flex flex-col gap-3'>
+                        <h1 className='text-[white] font-montserrat font-semibold text-[17px]'>Operator</h1>
+                        <select
+                            className='py-2 pl-2 w-[200px] rounded-lg font-montserrat text-md'
+                            name="operator"
+                            value={searchCriteria.operator}
+                            onChange={handleChange}
+                        >
+                            <option hidden>Select Operator</option>
+                            {operators.map((item, index) => (
+                                <option value={index} key={item}>{item}</option>
+                            ))}
+                        </select>
+                    </div>
+                </div>
+
+                <div className='flex gap-3'>
+                    <button
+                        type="submit"
+                        className="bg-[#161D6F] text-white py-2 px-5 rounded-lg cursor-pointer font-montserrat text-sm hover:bg-[#161D6F]/70"
+                    >
+                        Search
+                    </button>
+                    <button
+                        type="button"
+                        className="bg-[#161D6F] text-white py-2 px-5 rounded-lg cursor-pointer font-montserrat text-sm hover:bg-[#161D6F]/70"
+                        onClick={handleClear}
+                    >
+                        Clear
+                    </button>
+                </div>
             </form>
 
             {error && <p className="text-red-500 font-montserrat mt-4">{error}</p>}
 
             {results.length > 0 && (
-                <div className='mt-5 w-full'>
+                <div className='mt-5 w-full font-montserrat'>
                     <table className='min-w-full bg-white rounded-lg overflow-hidden shadow-lg'>
                         <thead className='bg-[#161D6F] text-white text-center'>
                             <tr>
@@ -222,4 +296,3 @@ const AdvanceSearch = () => {
 }
 
 export default AdvanceSearch;
-
