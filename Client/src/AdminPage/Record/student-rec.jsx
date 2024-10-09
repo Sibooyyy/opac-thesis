@@ -149,8 +149,6 @@ const StudentRecord = () => {
           </button>
         </div>
       </div>
-
-      {/* Success Message Popup */}
       {showSuccessMessage && (
         <div className="fixed top-10 right-10 bg-green-500 text-white p-3 rounded-md shadow-md">
           Status updated successfully!

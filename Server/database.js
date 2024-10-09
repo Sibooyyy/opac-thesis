@@ -24,7 +24,7 @@ const initTables = () => {
             lastname VARCHAR(255) NOT NULL,
             idNumber VARCHAR(255) NOT NULL,
             contactNumber VARCHAR(20) NOT NULL,
-            email VARCHAR(20) NOT NULL,
+            email VARCHAR(250) NOT NULL,
             designation VARCHAR(255) NOT NULL,
             username VARCHAR(255) NOT NULL,
             password VARCHAR(255) NOT NULL,

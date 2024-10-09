@@ -73,7 +73,10 @@ const BookRecord = ({ books, onEditClick }) => {
     book.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
     book.author.toLowerCase().includes(searchTerm.toLowerCase()) ||
     book.isbn_issn.toLowerCase().includes(searchTerm.toLowerCase()) ||
-    book.category.toLowerCase().includes(searchTerm.toLowerCase())
+    book.category.toLowerCase().includes(searchTerm.toLowerCase()) ||
+    book.subject.toLowerCase().includes(searchTerm.toLowerCase()) ||
+    book.ddc_class.toLowerCase().includes(searchTerm.toLowerCase()) ||
+    book.accession_number.toLowerCase().includes(searchTerm.toLowerCase()) 
   );
 
   // Pagination Logic
@@ -102,8 +105,8 @@ const BookRecord = ({ books, onEditClick }) => {
   }
 
   return (
-    <div className='w-[70%] font-montserrat'>
-      <div className='flex flex-row items-center gap-3 mb-3'>
+    <div className='w-[70%] font-montserrat '>
+      <div className='flex flex-row items-center gap-3 mb-3 font-montserrat'>
         <span>Search By</span>
         <div>
           <input 
@@ -115,8 +118,8 @@ const BookRecord = ({ books, onEditClick }) => {
           />
         </div>
       </div>
-      <table className='w-full font-poppins text-[15px]'>
-        <thead className='font-poppins text-[14px] border-2 h-[45px] bg-[#F2F2F2] py-2'>
+      <table className='w-full font-montserrat text-[15px]'>
+        <thead className='font-poppins text-[15px] border-2 h-[45px] bg-[#F2F2F2] py-2'>
           <tr className="text-center">
             <th className='border border-r-2 w-[80px]'>No</th>
             <th className='border border-r-2 w-[150px]'>Title</th>
@@ -230,7 +233,7 @@ const BookRecord = ({ books, onEditClick }) => {
     )}
       {/* Delete Confirmation Modal */}
       {showDeleteConfirm && (
-        <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
+        <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 font-montserrat">
           <div className="bg-white rounded-lg shadow-lg p-6 w-[300px] text-center">
             <p className="text-gray-700">Are you sure you want to delete this book?</p>
             <div className="mt-4 flex justify-center gap-4">
@@ -243,8 +246,8 @@ const BookRecord = ({ books, onEditClick }) => {
 
       {/* Success Modal */}
       {showSuccessModal && (
-        <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
-          <div className="bg-white rounded-lg shadow-lg p-6 w-[300px] text-center">
+        <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 font-montserrat">
+          <div className="bg-white rounded-lg shadow-lg p-6 w-[300px] text-center font-montserrat">
             <FaCheckCircle className="h-12 w-12 text-green-500 mx-auto" /> 
             <p className="text-gray-700 mt-3">{successMessage}</p>
           </div>

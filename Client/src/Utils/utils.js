@@ -64,3 +64,13 @@ export const fetchData = async (url, setData, setLoading, setError) => {
   export const formatDate = (date, fallback = 'No data') => {
     return date ? moment(date).format('MM-DD-YYYY') : fallback ? moment(date).format('YYYY-MM-DD') : fallback;
   };
+
+
+export const generateRandomPassword = (length = 10) => {
+  const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789!@#$%^&*()';
+  let password = '';
+  for (let i = 0; i < length; i++) {
+    password += chars.charAt(Math.floor(Math.random() * chars.length));
+  }
+  return password;
+};

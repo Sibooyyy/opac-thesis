@@ -77,7 +77,7 @@ const CategoryRec = ({ onEditClick }) => {
             />
           </div>
       </div>
-      <table className='w-full font-poppins text-[15px]'>
+      <table className='w-full font-montserrat text-[15px]'>
         <thead className='font-poppins text-[14px] border-2 h-[45px] bg-[#F2F2F2] py-2'>
           <tr>
             <th className='border border-r-2'>No</th>

@@ -97,7 +97,7 @@ const CategoryInfo = ({ formData, setFormData, onFormSubmit }) => {
       <div className="h-[55px] bg-[#0CA1E2] pt-4 pl-3">
         <h1 className="font-poppins text-white text-[15px]">Category Status</h1>
       </div>
-      <form className="flex flex-col pl-3 gap-2 pt-3" onSubmit={handleSubmit}>
+      <form className="flex flex-col pl-3 gap-2 pt-3 font-montserrat" onSubmit={handleSubmit}>
         <div className="flex flex-col w-[70%]">
           <label className="font-poppins text-[17px] font-semibold">Category Name</label>
           <input
@@ -146,7 +146,7 @@ const CategoryInfo = ({ formData, setFormData, onFormSubmit }) => {
 
       {/* Success Modal */}
       {showSuccessModal && (
-        <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
+        <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 font-montserrat">
           <div className="bg-white rounded-lg shadow-lg p-6 w-[300px] text-center">
             <h2 className="text-2xl font-semibold text-green-500 mb-2">Success!</h2>
             <p className="text-gray-700">{success}</p>
@@ -155,7 +155,7 @@ const CategoryInfo = ({ formData, setFormData, onFormSubmit }) => {
       )}
       {/* Inactive Status Confirmation Modal */}
       {showInactiveConfirm && (
-        <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
+        <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 font-montserrat">
           <div className="bg-white rounded-lg shadow-lg p-6 w-[300px] text-center">
             <p className="text-gray-700">Are you sure you want to set the status to Inactive?</p>
             <div className="mt-4 flex justify-center gap-4">
