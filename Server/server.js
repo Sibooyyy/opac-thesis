@@ -7,6 +7,8 @@ const bodyParser = require('body-parser');
 const bcrypt = require("bcrypt");
 const saltRounds = 10;
 const nodemailer = require('nodemailer');
+require('dotenv').config();
+const twilio = require('twilio');
 
 
 
@@ -20,6 +22,11 @@ app.use(bodyParser.json());
 
 
 database.connect();
+
+const accountSid = process.env.TWILIO_ACCOUNT_SID;
+const authToken = process.env.TWILIO_AUTH_TOKEN;
+const twilioPhoneNumber = process.env.TWILIO_PHONE_NUMBER;
+const client = new twilio(accountSid, authToken);
 
 const hashPassword = (password, callback) => {
     bcrypt.hash(password, saltRounds, (error, hash) => {
@@ -583,7 +590,13 @@ app.get('/suggestions', (req, res) => {
 });
 
 
-
+const formatPhoneNumber = (phoneNumber) => {
+    // Assuming the phone number is local (starting with 0), prepend the country code.
+    if (!phoneNumber.startsWith('+')) {
+        return `+63${phoneNumber.slice(1)}`; // +63 for the Philippines
+    }
+    return phoneNumber;
+};  
 
 app.post('/user/book', (req, res) => {
     const { 
@@ -598,6 +611,7 @@ app.post('/user/book', (req, res) => {
         booking_date, 
         contactNumber 
     } = req.body;
+
 
     const getBookIdQuery = `SELECT id FROM books WHERE isbn_issn = ? AND book_status = 'available' LIMIT 1`;
     
@@ -634,18 +648,34 @@ app.post('/user/book', (req, res) => {
                 }
 
                 const notificationMessage = `${firstname} ${lastname} with ID number ${idNumber} and the ${designation} has borrowed the book titled "${title}" for pickup on ${pickup_date}.`;
+                const smsMessage = `Hi ${firstname}, your book "${title}" has been pending for borrowing. Please wait until Admin approved up. Thank you!`;
                 const insertNotificationQuery = `INSERT INTO notification (idNumber, message) VALUES (?, ?)`;
+                const formattedPhoneNumber = formatPhoneNumber(contactNumber);
 
                 connection.query(insertNotificationQuery, [idNumber, notificationMessage], (notificationErr) => {
                     if (notificationErr) {
                         return res.status(500).json({ status: true, message: "Book borrowed successfully, but failed to create notification.", error: notificationErr });
                     }
-                    return res.status(200).json({ status: true, message: "Book borrowed successfully and notification created." });
+
+                    client.messages.create({
+                        body: smsMessage,
+                        from: twilioPhoneNumber, 
+                        to: formattedPhoneNumber 
+                    })
+                    .then(message => {
+                        console.log(`SMS sent with SID: ${message.sid}`);
+                        return res.status(200).json({ status: true, message: "Book borrowed successfully, notification created, and SMS sent." });
+                    })
+                    .catch(smsError => {
+                        console.error("Failed to send SMS:", smsError);
+                        return res.status(500).json({ status: true, message: "Book borrowed successfully, but failed to send SMS notification.", error: smsError });
+                    });
                 });
             });
         });
     });
 });
+
 
 
 app.post('/user/booked', (req, res) => {
@@ -711,42 +741,80 @@ app.delete('/admin/notifications/delete', (req, res) => {
 
 app.post('/user/update-status', (req, res) => {
     const { id, status } = req.body;
+
     const updateBorrowedBookQuery = `
         UPDATE borrowed_books SET status = ?, book_status = CASE  WHEN ? = 'Returned' THEN 'returned' ELSE book_status END  WHERE id = ?`;
+
     connection.query(updateBorrowedBookQuery, [status, status, id], (err, result) => {
         if (err) {
             console.error("Error updating borrowed book status:", err);
             return res.json({ status: false, message: "Failed to update borrowed book status" });
         }
+
         if (result.affectedRows === 0) {
             return res.json({ status: false, message: "No record found with the provided ID" });
         }
 
-        if (status === 'Returned') {
-            const getBookIdQuery = `SELECT book_id FROM borrowed_books WHERE id = ?`;
-            connection.query(getBookIdQuery, [id], (bookErr, bookResult) => {
-                if (bookErr || bookResult.length === 0) {
-                    console.error("Error retrieving book ID:", bookErr);
-                    return res.json({ status: false, message: "Failed to retrieve book ID" });
-                }
+        // Fetch user information to send SMS
+        const getUserInfoQuery = `SELECT contactNumber, firstname, lastname, title FROM borrowed_books WHERE id = ?`;
+        connection.query(getUserInfoQuery, [id], (userErr, userResult) => {
+            if (userErr || userResult.length === 0) {
+                console.error("Error retrieving user info:", userErr);
+                return res.json({ status: false, message: "Failed to retrieve user information" });
+            }
 
-                const book_id = bookResult[0].book_id;
+            const { contactNumber, firstname, lastname, title } = userResult[0];
+            const formattedPhoneNumber = formatPhoneNumber(contactNumber); 
 
-                const updateBookStatusQuery = `UPDATE books SET book_status = 'available' WHERE id = ?`;
-                connection.query(updateBookStatusQuery, [book_id], (updateErr) => {
-                    if (updateErr) {
-                        console.error("Error updating book status in books table:", updateErr);
-                        return res.json({ status: false, message: "Failed to update book status in books table" });
+            // Prepare the SMS message based on the status
+            let smsMessage;
+            if (status === 'Approved') {
+                smsMessage = `Hi ${firstname}, your book "${title}" has been ${status} and ready for pickup in Library. Thank you!`;
+            } else if (status === 'Returned') {
+                smsMessage = `Hi ${firstname}, your book "${title}" has been ${status}. Thank you!`;
+            }
+
+            if (status === 'Approved' || status === 'Returned') {
+                client.messages.create({
+                    body: smsMessage,
+                    from: twilioPhoneNumber, 
+                    to: formattedPhoneNumber
+                })
+                .then(message => {
+                    console.log(`SMS sent with SID: ${message.sid}`);
+                })
+                .catch(smsError => {
+                    console.error("Failed to send SMS:", smsError);
+                });
+            }
+            if (status === 'Returned') {
+                const getBookIdQuery = `SELECT book_id FROM borrowed_books WHERE id = ?`;
+                connection.query(getBookIdQuery, [id], (bookErr, bookResult) => {
+                    if (bookErr || bookResult.length === 0) {
+                        console.error("Error retrieving book ID:", bookErr);
+                        return res.json({ status: false, message: "Failed to retrieve book ID" });
                     }
 
-                    return res.json({ status: true, message: "Status updated successfully and book is now available" });
+                    const book_id = bookResult[0].book_id;
+
+                    const updateBookStatusQuery = `UPDATE books SET book_status = 'available' WHERE id = ?`;
+                    connection.query(updateBookStatusQuery, [book_id], (updateErr) => {
+                        if (updateErr) {
+                            console.error("Error updating book status in books table:", updateErr);
+                            return res.json({ status: false, message: "Failed to update book status in books table" });
+                        }
+
+                        return res.json({ status: true, message: "Status updated successfully and book is now available" });
+                    });
                 });
-            });
-        } else {
-            return res.json({ status: true, message: "Status updated successfully" });
-        }
+            } else {
+                return res.json({ status: true, message: "Status updated successfully" });
+            }
+        });
     });
 });
+
+
 
 app.post('/add/tag', (req, res) => {
     const { mark_tags } = req.body;  // Ensure you're sending the correct field from the front end

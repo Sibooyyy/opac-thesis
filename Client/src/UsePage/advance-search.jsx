@@ -230,7 +230,7 @@ const AdvanceSearch = () => {
             {error && <p className="text-red-500 font-montserrat mt-4">{error}</p>}
 
             {results.length > 0 && (
-                <div className='mt-5 w-full font-montserrat'>
+                <div className='mt-5 w-full'>
                     <table className='min-w-full bg-white rounded-lg overflow-hidden shadow-lg'>
                         <thead className='bg-[#161D6F] text-white text-center'>
                             <tr>

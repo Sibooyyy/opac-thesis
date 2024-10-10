@@ -33,8 +33,7 @@ function PopupForm({ closePopup }) {
       return;
     }
 
-    setIsLoading(true); // Start loading animation
-
+    setIsLoading(true); 
     try {
       const response = await axios.post('http://localhost:8081/user/book', {
         id: user.id,

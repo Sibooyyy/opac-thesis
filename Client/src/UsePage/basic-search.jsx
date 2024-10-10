@@ -151,7 +151,7 @@ const BasicSearch = () => {
 
             {error && <p className="text-red-500 font-montserrat mt-4">{error}</p>}
             {showTable && results.length > 0 && (
-                <div className='table-container mt-5 w-full font-montserrat'>
+                <div className='table-container mt-5 w-full'>
                     <table className='min-w-full bg-white rounded-lg overflow-hidden shadow-lg text-center'>
                         <thead className='bg-[#161D6F] text-white'>
                             <tr>
