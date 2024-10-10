@@ -30,74 +30,42 @@ const AdminHome = () => {
     const [loadingBooks, setLoadingBooks] = useState(true);
     const [loadingBorrows, setLoadingBorrows] = useState(true);
     const [loadingCategories, setLoadingCategories] = useState(true);
+    const [criticalError, setCriticalError] = useState(null); // handle errors
+
+    // Helper function for fetching data
+    const fetchData = async (url, setData, setLoading, setError) => {
+        try {
+            const response = await axios.get(url);
+            if (response.data.status) {
+                setData(response.data.data);
+            }
+        } catch (error) {
+            setError('Error fetching data');
+        } finally {
+            setLoading(false);
+        }
+    };
+
     // Fetch registered accounts
     useEffect(() => {
-        axios.get('http://localhost:8081/register/data')
-            .then(response => {
-                if (response.data.status) {
-                    setRecord(response.data.data);
-                }
-                setLoadingRecords(false);
-            })
-            .catch(error => {
-                setCriticalError('Error fetching registered users');
-                setLoadingRecords(false);
-            });
+        fetchData('http://localhost:8081/register/data', setRecord, setLoadingRecords, setCriticalError);
+        fetchData('http://localhost:8081/bookinfo/data', setBookList, setLoadingBooks, setCriticalError);
+        fetchData('http://localhost:8081/borrowed/data', setBorrowList, setLoadingBorrows, setCriticalError);
+        fetchData('http://localhost:8081/category/data', setCategoryList, setLoadingCategories, setCriticalError);
     }, []);
 
-    useEffect(() => {
-        axios.get('http://localhost:8081/bookinfo/data')
-            .then(response => {
-                if (response.data.status) {
-                    setBookList(response.data.data);
-                }
-                setLoadingBooks(false);
-            })
-            .catch(error => {
-                setCriticalError('Error fetching books');
-                setLoadingBooks(false);
-            });
-    }, []);
-
-    useEffect(() => {
-        axios.get('http://localhost:8081/borrowed/data')
-            .then(response => {
-                if (response.data.status) {
-                    setBorrowList(response.data.data);
-                }
-                setLoadingBorrows(false);
-            })
-            .catch(error => {
-                setCriticalError('Error fetching borrowed books');
-                setLoadingBorrows(false);
-            });
-    }, []);
-
-    useEffect(() => {
-        axios.get('http://localhost:8081/category/data')
-            .then(response => {
-                if (response.data.status) {
-                    setCategoryList(response.data.data);
-                }
-                setLoadingCategories(false);
-            })
-            .catch(error => {
-                setCriticalError('Error fetching categories');
-                setLoadingCategories(false);
-            });
-    }, []);
-
+    // Prepare dynamic chart data based on the fetch result
     const chartData = {
-        labels: ['January', 'February', 'March', 'April', 'May', 'June'],
+        labels: ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'],
         datasets: [
             {
                 label: 'Books Borrowed',
-                data: [30, 45, 60, 40, 70, 50],
+                data: borrowList.map(item => item.borrowedCount),  // Map actual borrow data
                 backgroundColor: '#17A300',
             },
             {
                 label: 'Books Returned',
-                data: [20, 35, 55, 30, 65, 45],
+                data: borrowList.map(item => item.returnedCount), // Map actual return data
                 backgroundColor: '#FFB800',
             },
         ],
@@ -105,9 +73,15 @@ const AdminHome = () => {
 
     // Export data to Excel
     const exportToExcel = () => {
-        const ws = XLSX.utils.json_to_sheet(record);
+        const wsUsers = XLSX.utils.json_to_sheet(record);
+        const wsBooks = XLSX.utils.json_to_sheet(bookList);
+        const wsBorrows = XLSX.utils.json_to_sheet(borrowList);
         const wb = XLSX.utils.book_new();
-        XLSX.utils.book_append_sheet(wb, ws, "Library Data");
+
+        XLSX.utils.book_append_sheet(wb, wsUsers, "Users");
+        XLSX.utils.book_append_sheet(wb, wsBooks, "Books");
+        XLSX.utils.book_append_sheet(wb, wsBorrows, "Borrows");
+
         XLSX.writeFile(wb, "LibraryAnalytics.xlsx");
     };
 
@@ -118,7 +92,7 @@ const AdminHome = () => {
                 <MdDashboard /><span>Dashboard</span>
             </div>
             <div className='flex flex-col items-center gap-5 h-screen mt-[50px]'>
-        
+
                 <div className='flex flex-row gap-10 h-[200px]'>
                     <div className="w-[200px] border-[2px] rounded-lg border-red-500 flex items-center justify-center flex-col gap-4 bg-white shadow-lg p-5">
                         <FaUser className="text-red-500 text-[40px]" />
@@ -191,9 +165,15 @@ const AdminHome = () => {
                 </div>
                 <div className='w-[60%] p-10 bg-white'>
                     <h2 className='text-lg font-bold mb-4'>Library Analytics</h2>
-                    <Bar data={chartData} />
+                    {loadingBorrows ? (
+                        <div>Loading Chart...</div>
+                    ) : (
+                        <Bar data={chartData} />
+                    )}
                 </div>
-                
+                <button className='bg-blue-500 text-white py-2 px-4 rounded' onClick={exportToExcel}>
+                    Export Data to Excel
+                </button>
             </div>
         </>
     );

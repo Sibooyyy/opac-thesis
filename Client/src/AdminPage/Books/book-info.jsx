@@ -257,7 +257,7 @@ const BookInfo = ({ selectedBook, onFormSubmit }) => {
             {/* Status Radio Buttons */}
             <div className='flex flex-col w-[400px]'>
               <label className='font-poppins text-[17px] font-semibold'>Status</label>
-              <div className='flex gap-1 font-poppins'>
+              <div className='flex gap-1 font-montserrat'>
                 <label>
                   <input 
                     type="radio" 
