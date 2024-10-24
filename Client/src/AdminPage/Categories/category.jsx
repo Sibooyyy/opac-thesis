@@ -32,7 +32,7 @@ const category = () => {
   return (
     <>
         <Navbar/>
-        <div className='flex flex-row pt-8 items-center pl-[250px] border-b font-montserrat font-bold text-[25px] p-5 gap-1 bg-white'> 
+        <div className='flex flex-row pt-8 items-center pl-[250px] border-b font-montserrat font-bold text-[25px] p-5 gap-1 bg-gradient-to-r from-blue-500 to-purple-600 text-white shadow-lg'> 
             <TbCategory2/><span>Categories</span>
         </div>
         <div className='h-screen flex justify-between w-[100%] p-[30px] gap-8'>

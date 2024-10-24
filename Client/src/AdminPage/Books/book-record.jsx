@@ -11,12 +11,11 @@ const BookRecord = ({ books, onEditClick }) => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(false); 
-  const [deleteAuthor, setDeleteAuthor] = useState(null); 
+  const [deleteBookId, setDeleteBookId] = useState(null); // Use deleteBookId instead of deleteAuthor
   const [successMessage, setSuccessMessage] = useState(''); 
   const [showSuccessModal, setShowSuccessModal] = useState(false); 
   const [searchTerm, setSearchTerm] = useState(''); 
 
-  // New state for modal
   const [showModal, setShowModal] = useState(false);
   const [selectedBook, setSelectedBook] = useState(null);
 
@@ -28,16 +27,16 @@ const BookRecord = ({ books, onEditClick }) => {
     setLoading(false);
   }, [books]);
 
-  const handleDeleteClick = (author) => {
-    setDeleteAuthor(author);
+  const handleDeleteClick = (bookId) => {
+    setDeleteBookId(bookId); // Store the book ID to be deleted
     setShowDeleteConfirm(true);
   };
 
   const confirmDelete = () => {
     axios
-      .delete(`http://localhost:8081/book/data/${deleteAuthor}`)
+      .delete(`http://localhost:8081/book/data/${deleteBookId}`) // Use book ID in the delete request
       .then((response) => {
-        setData(data.filter((book) => book.author !== deleteAuthor));
+        setData(data.filter((book) => book.id !== deleteBookId)); // Filter out deleted book by ID
         setShowDeleteConfirm(false);
         setSuccessMessage('Book deleted successfully!');
         setShowSuccessModal(true);
@@ -55,7 +54,7 @@ const BookRecord = ({ books, onEditClick }) => {
 
   const cancelDelete = () => {
     setShowDeleteConfirm(false);
-    setDeleteAuthor(null);
+    setDeleteBookId(null);
   };
 
   const handleViewClick = (book) => {
@@ -156,7 +155,7 @@ const BookRecord = ({ books, onEditClick }) => {
                     </button>
                     <button 
                       className="bg-red-500 text-white rounded-md px-3 py-1 font-montserrat text-[14px] hover:bg-red-700" 
-                      onClick={() => handleDeleteClick(book.author)} title="Delete Book">
+                      onClick={() => handleDeleteClick(book.id)} title="Delete Book">
                       <MdDelete />
                     </button>
                   </div>
@@ -231,7 +230,6 @@ const BookRecord = ({ books, onEditClick }) => {
           </div>
       </div>
     )}
-      {/* Delete Confirmation Modal */}
       {showDeleteConfirm && (
         <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 font-montserrat">
           <div className="bg-white rounded-lg shadow-lg p-6 w-[300px] text-center">
@@ -243,8 +241,6 @@ const BookRecord = ({ books, onEditClick }) => {
           </div>
         </div>
       )}
-
-      {/* Success Modal */}
       {showSuccessModal && (
         <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 font-montserrat">
           <div className="bg-white rounded-lg shadow-lg p-6 w-[300px] text-center font-montserrat">

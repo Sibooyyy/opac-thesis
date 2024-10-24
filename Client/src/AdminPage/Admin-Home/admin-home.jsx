@@ -25,14 +25,12 @@ const AdminHome = () => {
     const [borrowList, setBorrowList] = useState([]);
     const [categoryList, setCategoryList] = useState([]);
 
-    // Separate loading and error states for each fetch
     const [loadingRecords, setLoadingRecords] = useState(true);
     const [loadingBooks, setLoadingBooks] = useState(true);
     const [loadingBorrows, setLoadingBorrows] = useState(true);
     const [loadingCategories, setLoadingCategories] = useState(true);
-    const [criticalError, setCriticalError] = useState(null); // handle errors
+    const [criticalError, setCriticalError] = useState(null); 
 
-    // Helper function for fetching data
     const fetchData = async (url, setData, setLoading, setError) => {
         try {
             const response = await axios.get(url);
@@ -46,7 +44,6 @@ const AdminHome = () => {
         }
     };
 
-    // Fetch registered accounts
     useEffect(() => {
         fetchData('http://localhost:8081/register/data', setRecord, setLoadingRecords, setCriticalError);
         fetchData('http://localhost:8081/bookinfo/data', setBookList, setLoadingBooks, setCriticalError);
@@ -54,24 +51,52 @@ const AdminHome = () => {
         fetchData('http://localhost:8081/category/data', setCategoryList, setLoadingCategories, setCriticalError);
     }, []);
 
-    // Prepare dynamic chart data based on the fetch result
+    const dailyBorrowData = Array(30).fill(0).map((_, idx) => ({
+        day: idx + 1,
+        borrowed: Math.floor(Math.random() * 400) + 50 
+    }));
+
     const chartData = {
-        labels: ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'],
+        labels: dailyBorrowData.map(item => `Day ${item.day}`),
         datasets: [
             {
-                label: 'Books Borrowed',
-                data: borrowList.map(item => item.borrowedCount),  // Map actual borrow data
-                backgroundColor: '#17A300',
-            },
-            {
-                label: 'Books Returned',
-                data: borrowList.map(item => item.returnedCount), // Map actual return data
-                backgroundColor: '#FFB800',
-            },
+                label: 'Daily Visitors',
+                data: dailyBorrowData.map(item => item.borrowed),
+                backgroundColor: '#4f83cc', 
+                barThickness: 30, 
+            }
         ],
     };
 
-    // Export data to Excel
+    const chartOptions = {
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: {
+            legend: {
+                display: false, 
+            },
+            tooltip: {
+                enabled: true,
+            },
+        },
+        scales: {
+            x: {
+                grid: {
+                    display: false, 
+                }
+            },
+            y: {
+                grid: {
+                    color: '#e5e7eb', 
+                },
+                beginAtZero: true,
+                ticks: {
+                    stepSize: 100, 
+                }
+            }
+        }
+    };
+
     const exportToExcel = () => {
         const wsUsers = XLSX.utils.json_to_sheet(record);
         const wsBooks = XLSX.utils.json_to_sheet(bookList);
@@ -88,90 +113,98 @@ const AdminHome = () => {
     return (
         <>
             <HeaderOption />
-            <div className='flex flex-row pt-8 items-center pl-[250px] border-b font-montserrat font-bold text-[25px] p-5 gap-1 bg-white'>
+            <div className='flex flex-row pt-8 items-center pl-[250px] border-b font-montserrat font-bold text-[25px] p-5 gap-1 bg-gradient-to-r from-blue-500 to-purple-600 text-white shadow-lg'>
                 <MdDashboard /><span>Dashboard</span>
             </div>
-            <div className='flex flex-col items-center gap-5 h-screen mt-[50px]'>
+            <div className='flex flex-col items-center gap-5 pt-[50px] px-8 bg-gray-100 min-h-screen pb-10'>
 
-                <div className='flex flex-row gap-10 h-[200px]'>
-                    <div className="w-[200px] border-[2px] rounded-lg border-red-500 flex items-center justify-center flex-col gap-4 bg-white shadow-lg p-5">
-                        <FaUser className="text-red-500 text-[40px]" />
-                        {loadingRecords ? (
-                            <span className="text-red-500 text-lg">Loading...</span>
-                        ) : (
-                            <span className="text-red-500 text-[30px] font-bold">
-                                {record.length > 0 ? record.length : "0"}
+                <div className='grid grid-cols-3 gap-6 w-full'>
+
+                    <div className="w-full p-6 rounded-lg bg-white shadow-xl flex items-center justify-between ">
+                        <div className="bg-red-500 p-3 rounded-full">
+                            <FaUser className="text-white text-[30px]" />
+                        </div>
+                        <div className="m-auto">
+                            <span className="text-gray-600 font-medium text-[20px]">Registered Students</span>
+                            <span className="justify-center flex text-[20px] font-bold text-gray-900">
+                                {loadingRecords ? 'Loading...' : `${record.length > 0 ? record.length : '0'}`}
                             </span>
-                        )}
-                        <span className="text-red-500 text-lg font-montserrat text-nowrap">Registered Students</span>
+                        </div>
                     </div>
-                    <div className="w-[200px] border-[2px] rounded-lg border-green-500 flex items-center justify-center flex-col gap-4 bg-white shadow-lg p-5">
-                        <FaBookOpen className="text-green-500 text-[40px]" />
-                        {loadingBooks ? (
-                            <span className="text-green-500 text-lg">Loading...</span>
-                        ) : (
-                            <span className="text-green-500 text-[30px] font-bold">
-                                {bookList.length > 0 ? bookList.length : "0"}
+
+                    <div className="w-full p-6 rounded-lg bg-white shadow-xl flex items-center justify-between ">
+                        <div className="bg-green-500 p-3 rounded-full">
+                            <FaBookOpen className="text-white text-[30px]" />
+                        </div>
+                        <div className="m-auto">
+                            <span className="text-gray-600 font-medium text-[20px]">Books Listed</span>
+                            <span className="justify-center flex text-[20px] font-bold text-gray-900">
+                                {loadingBooks ? 'Loading...' : `${bookList.length > 0 ? bookList.length : '0'}`}
                             </span>
-                        )}
-                        <span className="text-green-500 text-lg font-montserrat">Books Listed</span>
+                        </div>
                     </div>
-                    <div className="w-[200px] border-[2px] rounded-lg border-blue-500 flex items-center justify-center flex-col gap-4 bg-white shadow-lg p-5">
-                        <FaClock className="text-blue-500 text-[40px]" />
-                        {loadingBorrows ? (
-                            <span className="text-blue-500 text-lg">Loading...</span>
-                        ) : (
-                            <span className="text-blue-500 text-[30px] font-bold">
-                                {borrowList.length > 0 ? borrowList.length : "0"}
+
+                    <div className="w-full p-6 rounded-lg bg-white shadow-xl flex items-center justify-between ">
+                        <div className="bg-blue-500 p-3 rounded-full">
+                            <FaClock className="text-white text-[30px]" />
+                        </div>
+                        <div className="m-auto">
+                            <span className="text-gray-600 font-medium text-[20px]">Times Book Issued</span>
+                            <span className="justify-center flex text-[20px] font-bold text-gray-900">
+                                {loadingBorrows ? 'Loading...' : `${borrowList.length}`}
                             </span>
-                        )}
-                        <span className="text-blue-500 text-lg font-montserrat text-nowrap">Times Book Issued</span>
+                        </div>
+                    </div>
+
+                    <div className="w-full p-6 rounded-lg bg-white shadow-xl flex items-center justify-between ">
+                        <div className="bg-green-500 p-3 rounded-full">
+                            <IoPeople className="text-white text-[30px]" />
+                        </div>
+                        <div className="m-auto">
+                            <span className="text-gray-600 font-medium text-[20px]">Authors Listed</span>
+                            <span className="justify-center flex text-[20px] font-bold text-gray-900">
+                                {loadingBooks ? 'Loading...' : `${[...new Set(bookList.map(book => book.author))].length}`}
+                            </span>
+                        </div>
+                    </div>
+
+                    <div className="w-full p-6 rounded-lg bg-white shadow-xl flex items-center justify-between ">
+                        <div className="bg-blue-500 p-3 rounded-full">
+                            <TbCategory2 className="text-white text-[30px]" />
+                        </div>
+                        <div className="m-auto">
+                            <span className="text-gray-600 font-medium text-[20px]">Categories</span>
+                            <span className="justify-center flex text-[20px] font-bold text-gray-900">
+                                {loadingCategories ? 'Loading...' : `${categoryList.length}`}
+                            </span>
+                        </div>
+                    </div>
+
+                    <div className="w-full p-6 rounded-lg bg-white shadow-xl flex items-center justify-between ">
+                        <div className="bg-yellow-500 p-3 rounded-full">
+                            <GrReturn className="text-white text-[30px]" />
+                        </div>
+                        <div className="m-auto">
+                            <span className="text-gray-600 font-medium text-[20px]">Books Returned</span>
+                            <span className="justify-center flex text-[20px] font-bold text-gray-900">
+                                {loadingBorrows ? 'Loading...' : `${borrowList.filter(b => b.status === 'Returned').length}`}
+                            </span>
+                        </div>
                     </div>
                 </div>
-                <div className='flex flex-row gap-10 h-[200px]'>
-                    <div className="w-[200px] border-[2px] rounded-lg border-green-500 flex items-center justify-center flex-col gap-4 bg-white shadow-lg p-5">
-                        <IoPeople className="text-green-500 text-[40px]" />
-                        {loadingBooks ? (
-                            <span className="text-green-500 text-lg">Loading...</span>
-                        ) : (
-                            <span className="text-green-500 text-[30px] font-bold">
-                                {bookList.length > 0 ? [...new Set(bookList.map(book => book.author))].length : "0"}
-                            </span>
-                        )}
-                        <span className="text-green-500 text-lg font-montserrat">Authors Listed</span>
-                    </div>
-                    <div className="w-[200px] border-[2px] rounded-lg border-blue-500 flex items-center justify-center flex-col gap-4 bg-white shadow-lg p-5">
-                        <TbCategory2 className="text-blue-500 text-[40px]" />
-                        {loadingCategories ? (
-                            <span className="text-blue-500 text-lg">Loading...</span>
-                        ) : (
-                            <span className="text-blue-500 text-[30px] font-bold">
-                                {categoryList.length > 0 ? categoryList.length : "0"}
-                            </span>
-                        )}
-                        <span className="text-blue-500 text-lg font-montserrat">Categories</span>
-                    </div>
-                    <div className="w-[200px] border-[2px] rounded-lg border-yellow-500 flex items-center justify-center flex-col gap-4 bg-white shadow-lg p-5">
-                        <GrReturn className="text-yellow-500 text-[40px]" />
-                        {loadingBorrows ? (
-                            <span className="text-yellow-500 text-lg">Loading...</span>
-                        ) : (
-                            <span className="text-yellow-500 text-[30px] font-bold">
-                                {borrowList.length > 0 ? borrowList.filter(b => b.status === 'Returned').length : "0"}
-                            </span>
-                        )}
-                        <span className="text-yellow-500 text-lg font-montserrat">Books Returned</span>
-                    </div>
-                </div>
-                <div className='w-[60%] p-10 bg-white'>
-                    <h2 className='text-lg font-bold mb-4'>Library Analytics</h2>
+
+                <div className='w-full mt-8 p-10 bg-white shadow-xl rounded-lg'>
+                    <h2 className='text-lg font-bold mb-4'>Visitors Analytics</h2>
                     {loadingBorrows ? (
                         <div>Loading Chart...</div>
                     ) : (
-                        <Bar data={chartData} />
+                        <div className='h-[400px]'>
+                            <Bar data={chartData} options={chartOptions} />
+                        </div>
                     )}
                 </div>
-                <button className='bg-blue-500 text-white py-2 px-4 rounded' onClick={exportToExcel}>
+
+                <button className='bg-blue-600 text-white py-3 px-5 mt-6 rounded shadow-lg hover:bg-blue-700 transition duration-300' onClick={exportToExcel}>
                     Export Data to Excel
                 </button>
             </div>

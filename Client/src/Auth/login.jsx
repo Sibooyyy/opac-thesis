@@ -7,6 +7,7 @@ import { ADMIN, PASSWORD } from '../utils/credential';
 import { useNavigate } from "react-router-dom";
 import { AuthContext } from "../App";
 import { FaSpinner } from 'react-icons/fa';
+import backgroundImage from '../assets/output.png'; 
 
 function Login() {
     const { handleLogin } = useContext(AuthContext);
@@ -72,10 +73,16 @@ function Login() {
     }
 
     return (
-        <>
+        <>  
+            <div style={{
+                        backgroundImage: `url(${backgroundImage})`,
+                        backgroundSize: 'cover',
+                        backgroundPosition: 'center',
+                        minHeight: '100vh'
+            }}>
             <Header />
-            <div
-                className="flex justify-center flex-col items-center border-2 w-[40%] max-w-[600px] mx-auto my-16 p-8 rounded-2xl gap-8 shadow-lg bg-white">
+            <div 
+                className="flex justify-center flex-col items-center border-2 w-[35%] max-w-[600px] mx-auto my-16 p-6 rounded-2xl gap-6 shadow-lg bg-white">
                 <div>
                     <img
                         src={candaleria}
@@ -85,11 +92,11 @@ function Login() {
                 <div className="text-center">
                     <h1 className="font-poppins font-bold text-3xl text-[#001377]">Library Online Public Catalog</h1>
                 </div>
-                <form className="flex flex-col gap-4 w-[80%]" onSubmit={handleSubmit}>
+                <form className="flex flex-col gap-4 w-[75%]" onSubmit={handleSubmit}>
                     <div className="flex flex-col gap-2">
                         <label className="font-montserrat text-md font-semibold">Username</label>
                         <input
-                            className="p-3 border border-gray-300 rounded-md shadow-sm focus:border-blue-500 focus:outline-none w-full"
+                            className="p-2 border border-gray-300 rounded-md shadow-sm focus:border-blue-500 focus:outline-none w-full"
                             value={formData.username}
                             onChange={handleChange}
                             type="text"
@@ -100,7 +107,7 @@ function Login() {
                     <div className="flex flex-col gap-2">
                         <label className="font-montserrat text-md font-semibold">Password</label>
                         <input
-                            className="p-3 border border-gray-300 rounded-md shadow-sm focus:border-blue-500 focus:outline-none w-full"
+                            className="p-2 border border-gray-300 rounded-md shadow-sm focus:border-blue-500 focus:outline-none w-full"
                             value={formData.password}
                             onChange={handleChange}
                             type="password"
@@ -108,9 +115,9 @@ function Login() {
                             placeholder="Enter your password"
                         />
                     </div>
-                    <div className="flex justify-center mt-4">
+                    <div className="flex justify-center mt-3">
                         <button
-                            className="bg-[#0CA1E2] text-white py-3 px-6 rounded-lg cursor-pointer font-montserrat text-sm flex items-center justify-center gap-2"
+                            className="bg-[#0CA1E2] text-white py-2 px-4 md:px-6 rounded-lg cursor-pointer font-montserrat text-xs md:text-sm"
                             type="submit"
                             disabled={loading}
                         >
@@ -134,9 +141,9 @@ function Login() {
                     </div>
                 )}
             </div>
-
+        </div>
         </>
-    );
+    );    
 }
 
 export default Login;

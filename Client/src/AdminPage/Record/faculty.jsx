@@ -5,7 +5,7 @@ import axios from 'axios';
 import moment from 'moment';
 import { MdNavigateNext, MdNavigateBefore } from "react-icons/md";
 import * as XLSX from 'xlsx'; 
-import { CiSearch } from "react-icons/ci";
+
 
 const StudentRecord = () => {
   const defaultOptions = ['Pending', 'Returned', 'Approved'];
@@ -15,7 +15,7 @@ const StudentRecord = () => {
   const [showSuccessMessage, setShowSuccessMessage] = useState(false); 
 
   const [currentPage, setCurrentPage] = useState(1);
-  const recordsPerPage = 10;
+  const recordsPerPage = 5;
   const indexOfLastRecord = currentPage * recordsPerPage;
   const indexOfFirstRecord = indexOfLastRecord - recordsPerPage;
 
@@ -125,7 +125,7 @@ const StudentRecord = () => {
   return (
     <>
       <Navbar />
-      <div className='flex flex-row pt-8 items-center justify-start pl-[250px] border-b font-montserrat font-bold text-[25px] p-5 gap-1 bg-white'>
+      <div className='flex flex-row pt-8 items-center pl-[250px] border-b font-montserrat font-bold text-[25px] p-5 gap-1 bg-gradient-to-r from-blue-500 to-purple-600 text-white shadow-lg'>
         <FaUser /><span>Faculty Record</span>
       </div>
       <div className='flex justify-between w-[80%] mx-auto mt-5 mb-3  font-montserrat'>
