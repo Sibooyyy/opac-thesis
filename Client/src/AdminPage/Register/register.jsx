@@ -2,7 +2,7 @@ import Header from '../../Components/navbar';
 import candaleria from '../../assets/candaleria.png';
 import { useState } from 'react';
 import { FaEyeSlash, FaEye, FaCheckCircle } from "react-icons/fa"; // Import the checkmark icon for success message
-import { registrationForm } from '../../utils/utils';
+import { registrationForm  } from '../../utils/utils';
 import axios from 'axios';
 
 const Register = () => {
@@ -91,8 +91,7 @@ const Register = () => {
   return (
     <>
       <Header />
-      <div className='flex flex-row justify-center items-start border border-gray-200 rounded-lg shadow-lg w-full max-w-[1200px] mx-auto my-[70px] p-8 bg-white'>
-        {/* Left side with logo and title */}
+      <div className='flex flex-row justify-center items-start border border-gray-200 rounded-lg shadow-lg w-full max-w-[1200px] mx-auto my-[70px] p-8  bg-white'>
         <div className='flex flex-col justify-center items-center w-[20%] mt-12'>
           <img src={candaleria} alt="Candelaria" className='w-32 h-32' />
           <h1 className='font-poppins font-bold text-3xl text-[#001377] mt-6'>Register Form</h1>

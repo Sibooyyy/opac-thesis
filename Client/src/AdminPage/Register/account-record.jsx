@@ -10,9 +10,9 @@ const AccountRecord = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [currentPage, setCurrentPage] = useState(1);
-  const recordsPerPage = 10;
+  const recordsPerPage = 5;
 
-  const [searchTerm, setSearchTerm] = useState(""); // State for the search term
+  const [searchTerm, setSearchTerm] = useState(""); 
   const [isPasswordPopupVisible, setIsPasswordPopupVisible] = useState(false);
   const [currentUser, setCurrentUser] = useState({});
   const [newPassword, setNewPassword] = useState("");
@@ -141,7 +141,7 @@ const AccountRecord = () => {
   return (
     <>
       <Navbar />
-      <div className='flex flex-row pt-8 items-center pl-[250px] border-b font-montserrat font-bold text-[25px] p-5 gap-1 bg-white'>
+      <div className='flex flex-row pt-8 items-center pl-[250px] border-b font-montserrat font-bold text-[25px] p-5 gap-1 bg-gradient-to-r from-blue-500 to-purple-600 text-white shadow-lg'>
         <FaUser /><span>Account Record</span>
       </div>
       <div className='flex flex-col items-center mt-5 w-full '>

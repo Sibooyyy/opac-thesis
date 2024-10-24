@@ -379,10 +379,10 @@ app.get('/categories/data', (req, res) => {
 })
 
 
-app.delete('/book/data/:author', (req, res) => {
-    const author = req.params.author;
+app.delete('/book/data/:id', (req, res) => {
+    const id = req.params.id;
     const table = new DataTable(connection, "books");
-    table.delete({ author }, (result) => {
+    table.delete({ id }, (result) => {
         if (result) {
             return res.json({ status: true, message: "Data deleted successfully" });
         } else {
@@ -769,9 +769,9 @@ app.post('/user/update-status', (req, res) => {
             // Prepare the SMS message based on the status
             let smsMessage;
             if (status === 'Approved') {
-                smsMessage = `Hi ${firstname}, your book "${title}" has been ${status} and ready for pickup in Library. Thank you!`;
+                smsMessage = `Hi ${firstname} ${lastname}, your book "${title}" has been ${status} and ready for pickup in Library. Thank you!`;
             } else if (status === 'Returned') {
-                smsMessage = `Hi ${firstname}, your book "${title}" has been ${status}. Thank you!`;
+                smsMessage = `Hi ${firstname} ${lastname}, your book "${title}" has been ${status}. Thank you!`;
             }
 
             if (status === 'Approved' || status === 'Returned') {
@@ -811,7 +811,7 @@ app.post('/user/update-status', (req, res) => {
                 return res.json({ status: true, message: "Status updated successfully" });
             }
         });
-    });
+    })
 });
 
 

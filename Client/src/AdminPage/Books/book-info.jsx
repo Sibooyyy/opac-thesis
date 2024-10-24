@@ -131,7 +131,7 @@ const BookInfo = ({ selectedBook, onFormSubmit }) => {
 
   return (
         <div className='border-2 border-[#C2FFB8] h-[900px] w-[35%] flex flex-col gap-1 bg-white'>
-          <div className='bg-[#C2FFB8] pt-5 pl-4 h-[55px] font-poppins'>
+          <div className='bg-[#C2FFB8] pt-5 pl-4 h-[55px] font-poppins  text-[15px]'>
             <h1>Add Book Information</h1>
           </div>
           <form className='pl-[10px] flex flex-col gap-2' onSubmit={handleSubmit}>
