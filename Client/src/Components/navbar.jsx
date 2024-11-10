@@ -102,7 +102,6 @@ const HeaderOption = () => {
 
   return (
     <>
-      <Header />
       <div className="drop-shadow-md bg-[#F1F1F1] w-full font-poppins uppercase p-8 flex justify-center font-bold">
         <div className="flex items-center justify-between w-full max-w-screen-lg">
           <ul className="flex flex-wrap list-none gap-8 md:gap-16 lg:gap-20 items-center">

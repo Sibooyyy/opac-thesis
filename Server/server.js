@@ -46,7 +46,7 @@ app.post('/auth/register', (req, res) => {
             if (idNumberResult) return res.json({ status: false, message: "ID Number already exists" });
 
             hashPassword(password, (hash) => {
-                const datas = { firstname, lastname, idNumber, contactNumber, email, designation, username, password: hash };
+                const datas = { firstname, lastname, idNumber, contactNumber, email, designation, username, password: hash, created_at: new Date() };
 
                 table.insert(datas, (insertResult) => {
                     if (insertResult) {
@@ -123,6 +123,140 @@ app.post('/auth/register', (req, res) => {
     });
 });
 
+app.post('/auth/staff', (req, res) => {
+    const { firstname, lastname, idNumber, contactNumber, email, designation, username, password } = req.body;
+    let table = new DataTable(connection, "staff");
+
+    table.findOne({ username }, (usernameResult) => {
+        if (usernameResult) return res.json({ status: false, message: "Username already exists" });
+
+        table.findOne({ idNumber }, (idNumberResult) => {
+            if (idNumberResult) return res.json({ status: false, message: "ID Number already exists" });
+
+            hashPassword(password, (hash) => {
+                const datas = { firstname, lastname, idNumber, contactNumber, email, designation, username, password: hash, created_at: new Date() };
+
+                table.insert(datas, (insertResult) => {
+                    if (insertResult) {
+                        let transporter = nodemailer.createTransport({
+                            service: 'gmail',
+                            auth: {
+                                user: 'eyce0x@gmail.com',
+                                pass: 'losq ejdn upgd vngt',
+                            },
+                        });
+
+                        let mailOptions = {
+                            from: 'your-email@gmail.com',
+                            to: email,
+                            subject: 'Registration Successful for Online Public Access Catalog (OPAC)',
+                            html: `
+                                <div style="font-family: Arial, sans-serif; max-width: 600px; margin: auto; padding: 20px; border: 1px solid #ddd; border-radius: 8px;">
+                                    <h2 style="text-align: center; color: #4CAF50;">Registration Successful!</h2>
+                                    <p>Hi <strong>${firstname}</strong>,</p>
+                                    <p>Congratulations! You have successfully registered with the following details:</p>
+                                    <table style="width: 100%; border-collapse: collapse; margin-top: 10px;">
+                                        <tr>
+                                            <td style="padding: 8px; border: 1px solid #ddd;">First Name:</td>
+                                            <td style="padding: 8px; border: 1px solid #ddd;">${firstname}</td>
+                                        </tr>
+                                        <tr>
+                                            <td style="padding: 8px; border: 1px solid #ddd;">Last Name:</td>
+                                            <td style="padding: 8px; border: 1px solid #ddd;">${lastname}</td>
+                                        </tr>
+                                        <tr>
+                                            <td style="padding: 8px; border: 1px solid #ddd;">ID Number:</td>
+                                            <td style="padding: 8px; border: 1px solid #ddd;">${idNumber}</td>
+                                        </tr>
+                                        <tr>
+                                            <td style="padding: 8px; border: 1px solid #ddd;">Contact Number:</td>
+                                            <td style="padding: 8px; border: 1px solid #ddd;">${contactNumber}</td>
+                                        </tr>
+                                        <tr>
+                                            <td style="padding: 8px; border: 1px solid #ddd;">Designation:</td>
+                                            <td style="padding: 8px; border: 1px solid #ddd;">${designation}</td>
+                                        </tr>
+                                        <tr>
+                                            <td style="padding: 8px; border: 1px solid #ddd;">Username:</td>
+                                            <td style="padding: 8px; border: 1px solid #ddd;">${username}</td>
+                                        </tr>
+                                        <tr>
+                                            <td style="padding: 8px; border: 1px solid #ddd;">Password:</td>
+                                            <td style="padding: 8px; border: 1px solid #ddd;">${password}</td>
+                                        </tr>
+                                    </table>
+                                    <p style="margin-top: 20px;">Thank you for registering with OPAC. We look forward to serving you!</p>
+                                    <p style="text-align: center; color: #888;">&copy; 2024 OPAC. All rights reserved.</p>
+                                </div>`,
+                        };
+
+                        transporter.sendMail(mailOptions, (error, info) => {
+                            if (error) {
+                                console.error('Error sending email:', error);
+                            } else {
+                                console.log('Email sent: ' + info.response);
+                            }
+                        });
+
+                        return res.json({ status: true, message: "Registration successful", data: insertResult });
+                    } else {
+                        return res.json({ status: false, message: "Registration failed" });
+                    }
+                }, (error) => {
+                    console.error(error);
+                    return res.json({ status: false, message: "Registration failed" });
+                });
+            });
+        });
+    });
+});
+
+app.get('/api/registration-trends', (req, res) => {
+    const { userType, period } = req.query;
+    const table = userType === 'librarian' ? 'staff' : 'profile';
+    let dateGroup;
+
+    if (period === 'month') {
+        dateGroup = "DATE_FORMAT(created_at, '%Y-%m')";
+    } else if (period === 'week') {
+        dateGroup = "YEARWEEK(created_at, 1)";
+    } else if (period === 'year') {
+        dateGroup = "YEAR(created_at)";
+    } else {
+        return res.status(400).json({ error: "Invalid period parameter" });
+    }
+
+    let designationFilter = '';
+    if (table === 'profile') {
+        if (userType === 'student') {
+            designationFilter = "AND designation = 'Student'";
+        } else if (userType === 'faculty') {
+            designationFilter = "AND designation = 'Faculty'";
+        }
+    }
+
+
+        const query = `
+            SELECT 
+            ${period === 'week' ? "CONCAT(LEFT(YEARWEEK(created_at, 1), 4), ' - Week ', RIGHT(YEARWEEK(created_at, 1), 2))" : dateGroup} AS period, 
+            COUNT(*) AS count 
+            FROM ${table}
+            WHERE created_at IS NOT NULL ${designationFilter}
+            GROUP BY period
+            ORDER BY period ASC
+        `;
+
+
+    connection.query(query, (error, results) => {
+        if (error) {
+            console.error("Database query failed:", error);
+            return res.status(500).json({ error: "Database query failed" });
+        }
+        res.json(results);
+    });
+});
+
+
 
 
 app.post('/auth/login', (req, res) => {
@@ -150,6 +284,33 @@ app.post('/auth/login', (req, res) => {
         });
     });
 });
+
+app.post('/auth/login/staff', (req, res) => {
+    const { username, password } = req.body;
+    const table = new DataTable(connection, "staff");
+    table.findOne({ username }, (result) => {
+        if (!result) {
+            return res.json({
+                status: false,
+                message: "Username not registered"
+            });
+        }
+        bcrypt.compare(password, result.password, (error, data) => {
+            if (error) {throw error;}if (!data) {
+                return res.json({
+                    status: false,
+                    message: "Invalid Password"
+                });
+            }
+            res.json({
+                status: true,
+                message: "Login successful",
+                data: result
+            });
+        });
+    });
+});
+
 
 app.post('/user/update/password', (req, res) => {
     const {id, password} = req.body;
@@ -221,6 +382,61 @@ app.post('/admin/reset-password', (req, res) => {
     });
 });
 
+app.post('/admin/reset-password/staff', (req, res) => {
+    const { id, password } = req.body;
+    const table = new DataTable(connection, "staff");
+
+    hashPassword(password, (hash) => {
+        table.update({ password: hash }, { idNumber: id }, (result) => {
+            if (result) {
+                table.findOne({ idNumber: id }, (userResult) => {
+                    if (userResult) {
+                        const userEmail = userResult.email;
+                        const userFirstName = userResult.firstname;
+
+                        let transporter = nodemailer.createTransport({
+                            service: 'gmail',
+                            auth: {
+                                user: 'eyce0x@gmail.com',
+                                pass: 'losq ejdn upgd vngt',
+                            }
+                        });
+
+                        let mailOptions = {
+                            from: 'eyce0x@gmail.com',
+                            to: userEmail, 
+                            subject: 'Your Password Has Been Reset',
+                            html: `
+                                <div style="font-family: Arial, sans-serif; max-width: 600px; margin: auto; padding: 20px; border: 1px solid #ddd; border-radius: 8px;">
+                                    <h2 style="text-align: center; color: #4CAF50;">Password Reset Successfully</h2>
+                                    <p>Hi <strong>${userFirstName}</strong>,</p>
+                                    <p>Your password has been reset successfully. If this wasn't you, please contact support immediately.</p>
+                                    <p>Your Current Password is: ${password}</p>
+                                    <p>If you have any questions, please feel free to visit library.</p>
+                                    <p>Thank you!</p>
+                                    <p style="text-align: center; color: #888;">&copy; 2024 OPAC. All rights reserved.</p>
+                                </div>`,
+                        };
+                        transporter.sendMail(mailOptions, (error, info) => {
+                            if (error) {
+                                console.error('Error sending email:', error);
+                                return res.json({ status: false, message: "Password reset successfully, but failed to send email." });
+                            } else {
+                                console.log('Email sent: ' + info.response);
+                                return res.json({ status: true, message: "Password reset successfully, and email notification sent." });
+                            }
+                        });
+                    } else {
+                        return res.json({ status: true, message: "Password reset successfully, but user email not found." });
+                    }
+                });
+            } else {
+                return res.json({ status: false, message: "Failed to reset password!" });
+            }
+        });
+    });
+});
+
 
 app.post('/user/update/details', (req, res) => {
     const { id, firstname, lastname, contactNumber, designation } = req.body;
@@ -237,6 +453,17 @@ app.post('/user/update/details', (req, res) => {
 // Display Register Account
 app.get('/account/data', (req, res) => {
     const table = new DataTable(connection, "profile");
+    table.findAll((result) => {
+        if (result && result.length > 0) {
+            return res.json({ status: true, message: "Data fetched successfully", data: result });
+        } else {
+            return res.json({ status: false, message: "No data found" });
+        }
+    });
+});
+
+app.get('/account/staff/data', (req, res) => {
+    const table = new DataTable(connection, "staff");
     table.findAll((result) => {
         if (result && result.length > 0) {
             return res.json({ status: true, message: "Data fetched successfully", data: result });
@@ -340,6 +567,19 @@ app.delete('/account/data/:idNumber', (req, res) => {
     })
 })
 
+app.delete('/account/data/staff/:idNumber', (req, res) => {
+    const idNUmber = req.params.idNumber;
+    const table = new DataTable(connection, "staff");
+    table.delete({ idNUmber }, (result) => {
+        if (result) {
+            return res.json({ status: true, message: "Data deleted successfully" });
+        } else {
+            return res.json({ status: false, message: "Data not found" });
+        }
+    })
+})
+
+
 
 app.post('/add/book', (req, res) => {
     const { title, category, isbn_issn, author, publisher, accession_number, date_published, mark_tags, subject, ddc_class } = req.body;
@@ -354,6 +594,34 @@ app.post('/add/book', (req, res) => {
     })
 
 })
+
+app.get('/api/books', (req, res) => {
+    const { genre, publicationYear, author } = req.query;
+
+    let query = "SELECT * FROM books WHERE status = 'active'";
+    const params = [];
+
+    if (genre) {
+        query += " AND category = ?";
+        params.push(genre);
+    }
+    if (publicationYear) {
+        query += " AND YEAR(date_published) = ?";
+        params.push(publicationYear);
+    }
+    if (author) {
+        query += " AND author = ?";
+        params.push(author);
+    }
+
+    connection.query(query, params, (error, results) => {
+        if (error) {
+            return res.status(500).json({ error: "Database query failed" });
+        }
+        res.json(results);
+    });
+});
+
 
 
 app.get('/book/data', (req, res) => {
@@ -602,6 +870,7 @@ app.post('/user/book', (req, res) => {
     const { 
         firstname, 
         lastname, 
+        category,
         designation, 
         title, 
         idNumber, 
@@ -627,13 +896,13 @@ app.post('/user/book', (req, res) => {
 
         const insertBorrowedBookQuery = `
             INSERT INTO borrowed_books (
-                book_id, firstname, lastname, designation, title, idNumber, 
+                book_id, firstname, lastname, category, designation, title, idNumber, 
                 pickup_date, author, isbn_issn, booking_date, contactNumber, 
                 status, book_status
-            ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, 'Pending', 'borrowed')`;
+            ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, 'Pending', 'borrowed')`;
 
         connection.query(insertBorrowedBookQuery, [
-            book_id, firstname, lastname, designation, title, idNumber,
+            book_id, firstname, lastname, category, designation, title, idNumber,
             pickup_date, author, isbn_issn, booking_date, contactNumber
         ], (insertErr) => {
             if (insertErr) {
@@ -675,6 +944,54 @@ app.post('/user/book', (req, res) => {
         });
     });
 });
+
+app.get('/api/borrowed-books-activity', (req, res) => {
+    const { period, category, designation } = req.query;
+
+    // Determine the grouping format based on the time period
+    let dateGroup;
+    if (period === 'month') {
+        dateGroup = "DATE_FORMAT(pickup_date, '%Y-%m')";
+    } else if (period === 'week') {
+        dateGroup = "YEARWEEK(pickup_date, 1)";
+    } else if (period === 'year') {
+        dateGroup = "YEAR(pickup_date)";
+    } else {
+        return res.status(400).json({ error: "Invalid period parameter" });
+    }
+
+    // Set up designation filter
+    let designationFilter = '';
+    if (designation) {
+        designationFilter = `AND borrowed_books.designation = '${designation}'`;
+    }
+
+    // Set up category filter
+    let categoryFilter = '';
+    if (category) {
+        categoryFilter = `AND books.category = '${category}'`;
+    }
+
+    const query = `
+        SELECT ${dateGroup} AS period, borrowed_books.designation, COUNT(*) AS count 
+        FROM borrowed_books 
+        INNER JOIN books ON borrowed_books.book_id = books.id
+        WHERE (borrowed_books.book_status = 'borrowed' OR borrowed_books.book_status = 'returned') 
+        ${designationFilter} ${categoryFilter}
+        GROUP BY period, borrowed_books.designation
+        ORDER BY period ASC
+    `;
+
+    connection.query(query, (error, results) => {
+        if (error) {
+            console.error("Database query failed:", error);
+            return res.status(500).json({ error: "Database query failed" });
+        }
+        res.json(results);
+    });
+});
+
+
 
 
 

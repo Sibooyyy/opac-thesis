@@ -14,6 +14,9 @@ export default {
       backgroundImage: {
         'custom-bg': "url('/Client/assets/output.png')",
       },
+      boxShadow: {
+          '3xl': '0 4px 12px rgba(0, 0, 0, 0.15)',
+      },
     },
   },
   plugins: [],

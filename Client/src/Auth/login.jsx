@@ -10,6 +10,7 @@ import { FaSpinner } from 'react-icons/fa';
 import backgroundImage from '../assets/output.png'; 
 
 function Login() {
+
     const { handleLogin } = useContext(AuthContext);
     const navigate = useNavigate();
     const [formData, setFormData] = useState(loginForm());
@@ -19,6 +20,9 @@ function Login() {
     const [welcomePopup, setWelcomePopup] = useState(false);
     const [error, setError] = useState('');
 
+    const handleClick = (link) => {
+        navigate(link);
+      };
     const handleChange = (e) => {
         const { name, value } = e.target;
         setFormData({ ...formData, [name]: value });
@@ -41,7 +45,7 @@ function Login() {
                     setLoading(false); 
                     setWelcomePopup(false);
                     handleLogin(formData);
-                    navigate('/admin/home');
+                    navigate('/admin/home/dashboard');
                 }, 3000);
             }, 1000);
         } else {
@@ -74,12 +78,6 @@ function Login() {
 
     return (
         <>  
-            <div style={{
-                        backgroundImage: `url(${backgroundImage})`,
-                        backgroundSize: 'cover',
-                        backgroundPosition: 'center',
-                        minHeight: '100vh'
-            }}>
             <Header />
             <div 
                 className="flex justify-center flex-col items-center border-2 w-[35%] max-w-[600px] mx-auto my-16 p-6 rounded-2xl gap-6 shadow-lg bg-white">
@@ -125,6 +123,9 @@ function Login() {
                         </button>
                     </div>
                 </form>
+                <div>
+                    <span className='underline text-[blue] cursor-pointer font-montserrat text-[15px]' onClick={() => handleClick('/login/librarian')}>Login as Librarian</span>
+                </div>
                 {welcomePopup && (
                     <div className="bg-green-500 text-black p-4 rounded-md shadow-md">
                         <p>Welcome, {formData.username === ADMIN ? 'Admin' : 'User'}!</p>
@@ -141,7 +142,6 @@ function Login() {
                     </div>
                 )}
             </div>
-        </div>
         </>
     );    
 }

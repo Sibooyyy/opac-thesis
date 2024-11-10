@@ -114,7 +114,7 @@ const AdminHome = () => {
         <>
             <HeaderOption />
             <div className='flex flex-row pt-8 items-center pl-[250px] border-b font-montserrat font-bold text-[25px] p-5 gap-1 bg-gradient-to-r from-blue-500 to-purple-600 text-white shadow-lg'>
-                <MdDashboard /><span>Dashboard</span>
+                <MdDashboard /><span>Admin Dashboard</span>
             </div>
             <div className='flex flex-col items-center gap-5 pt-[50px] px-8 bg-gray-100 min-h-screen pb-10'>
 

@@ -45,6 +45,7 @@ function PopupForm({ closePopup }) {
         booking_date: new Date().toISOString().split('T')[0],
         contactNumber: user.contactNumber,
         title: reservedBooks.map(book => book.title).join(', '),
+        category: reservedBooks.map(book => book.category).join(', '),
         author: reservedBooks.map(book => book.author).join(', '),
         isbn_issn: reservedBooks.map(book => book.isbn_issn).join(', ')
       });
