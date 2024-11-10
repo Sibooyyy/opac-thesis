@@ -28,6 +28,22 @@ const initTables = () => {
             designation VARCHAR(255) NOT NULL,
             username VARCHAR(255) NOT NULL,
             password VARCHAR(255) NOT NULL,
+            created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+            PRIMARY KEY (id)
+        )`
+    )
+    const staff = (
+        `CREATE TABLE IF NOT EXISTS staff (
+            id INT AUTO_INCREMENT,
+            firstname VARCHAR(255) NOT NULL,
+            lastname VARCHAR(255) NOT NULL,
+            idNumber VARCHAR(255) NOT NULL,
+            contactNumber VARCHAR(20) NOT NULL,
+            email VARCHAR(250) NOT NULL,
+            designation VARCHAR(255) NOT NULL,
+            username VARCHAR(255) NOT NULL,
+            password VARCHAR(255) NOT NULL,
+            created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
             PRIMARY KEY (id)
         )`
     )
@@ -55,6 +71,7 @@ const initTables = () => {
             book_id INT,
             firstname VARCHAR(255) NOT NULL,
             lastname VARCHAR(255) NOT NULL,
+            category VARCHAR(255) NOT NULL,
             designation VARCHAR(255) NOT NULL,
             title VARCHAR(255) NOT NULL,
             author VARCHAR(255) NOT NULL,
@@ -98,6 +115,9 @@ const initTables = () => {
 
     
     connection.query(profile, (error) => {
+        if(error) throw error;
+    });
+    connection.query(staff, (error) => {
         if(error) throw error;
     });
     connection.query(books, (error) => {

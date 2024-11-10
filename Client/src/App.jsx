@@ -1,20 +1,25 @@
-import { BrowserRouter, json, Route, Routes } from "react-router-dom"
+import { BrowserRouter, Route, Routes } from "react-router-dom"
 import { createContext, useState, useEffect } from "react";
 import Login from "./Auth/login.jsx"
-import Register from "./AdminPage/Register/register.jsx"
 import AdvanceSearch from './UsePage/advance.jsx'
 import Borrow from './UsePage/borrow.jsx'
-import AdminHome from './AdminPage/Admin-Home/admin-home.jsx'
-import Category from './AdminPage/Categories/category.jsx'
-import Books from './AdminPage/Books/books.jsx'
-import StudentRecord from './AdminPage/Record/student-rec.jsx'
-import FacultyRecord from './AdminPage/Record/faculty.jsx'
-import AccountRecord from './AdminPage/Register/account-record.jsx'
 import Profile from "./UsePage/profile.jsx";
 import PrivateRoute from "./utils/privateroute.jsx";
 import HomePage from "./UsePage/homepage.jsx";
-import BookRecord from "./AdminPage/Books/book-record.jsx";
-
+import Dashboard from "./SuperAdmin/Dashboard/dashboard.jsx";
+import StudentRegister from './SuperAdmin/Register/student-register.jsx'
+import StaffRegister from "./SuperAdmin/Register/staff-register.jsx";
+import CategoryRegister from "./SuperAdmin/Category/cat.jsx";
+import BookRegister from "./SuperAdmin/Books/book.jsx";
+import StaffDashboard from './LibraryStaff/Dashboard/staffdashboard.jsx'
+import UserTable from './SuperAdmin/Register/usertable.jsx'
+import StaffTable from './SuperAdmin/Register/stafftable.jsx'
+import ClientTable from './LibraryStaff/Record/student-rec.jsx'
+import FacultyTable from './LibraryStaff/Record/faculty-rec.jsx'
+import StaffLogin from './Auth/staff.jsx'
+import Category from './LibraryStaff/Categories/Category.jsx'
+import Book from './LibraryStaff/Books/book.jsx'
+import ScrollToTop from "../src/utils/scroll.jsx";
 
 
 
@@ -82,6 +87,7 @@ const App = () => {
   };
 
   const addReservedBook = (book) => {
+    if(!user) return;
     setReservedBooks((prevBooks) => {
       const updatedBooks = [...prevBooks, book];
       localStorage.setItem(`reservedBooks_${user.id}`, JSON.stringify(updatedBooks)); 
@@ -100,6 +106,7 @@ const App = () => {
   const forceUpdate = useState()[1].bind(null, {});
   const updateBookStatus = (bookId, newStatus) => {
     setReservedBooks((prevBooks) => {
+      if(!user) return;
       const updatedBooks = prevBooks.map((book) =>
         book.id === bookId ? { ...book, book_status: newStatus } : book
       );
@@ -120,30 +127,40 @@ const App = () => {
 
 return (
   <AuthContext.Provider value={{ isLoggedIn, handleLogin, handleLogout, user, reservedBooks, addReservedBook, removeReservedBook, bookingSuccess, triggerBookingSuccess, setReservedBooks, updateUser, updateBookStatus }}>
+    
     <BrowserRouter>
+    <ScrollToTop />
         <Routes>
           {/* Public routes */}
           <Route path="/" element={<HomePage />} />
           <Route path="/login" element={<Login />} />
+          <Route path="/login/librarian" element={<StaffLogin />} />
           <Route path="/home" element={<HomePage />} />
           <Route path="/home/advance" element={<AdvanceSearch />} />
           <Route path="/home/borrow"element={<Borrow/>}/>
-  
 
-        
-          {/* Client protected routes */}
+         {/* Super Admin */}
+         <Route path="/admin/home/dashboard" element={<Dashboard />} />
+          <Route path="/admin/register/client" element={<StudentRegister />} />
+          <Route path="/admin/register/staff" element={<StaffRegister />} />
+          <Route path="/admin/home/category" element={<CategoryRegister />} />
+          <Route path="/admin/home/books" element={<BookRegister />} />
+          <Route path="/admin/home/client/table" element={<UserTable />} />
+          <Route path="/admin/home/staff/table" element={<StaffTable />} />
+
+          {/* Library Staff */}
+          <Route path="/home/dashboard" element={<StaffDashboard />} />
+          <Route path="/home/student/borrowing" element={<ClientTable />} />
+          <Route path="/home/faculty/borrowing" element={<FacultyTable />} />
+          <Route path="/home/staff/category" element={<Category />} />
+          <Route path="/home/staff/book" element={<Book />} />
+
+
 
           <Route path="/home/profile" element={<PrivateRoute><Profile /></PrivateRoute>}/>
             
-          {/* Admin protected routes */}
-          <Route path="/admin/home"element={<PrivateRoute><AdminHome /></PrivateRoute>}/>
-          <Route path="/admin/register"element={<PrivateRoute><Register /></PrivateRoute>}/>
-          <Route path="/admin/category"element={<PrivateRoute><Category /></PrivateRoute>}/>
-          <Route path="/admin/books" element={<PrivateRoute><Books /></PrivateRoute>}/>
-          <Route path="/admin/books/record" element={<PrivateRoute><BookRecord /></PrivateRoute>}/>
-          <Route path="/admin/student/record" element={<PrivateRoute><StudentRecord /></PrivateRoute> }/>
-          <Route path="/admin/faculty/record"element={<PrivateRoute><FacultyRecord /></PrivateRoute>}/>
-          <Route path="/admin/account/record" element={<PrivateRoute><AccountRecord /></PrivateRoute>}/>
+
+
 
         </Routes>
       </BrowserRouter> 
