@@ -79,6 +79,7 @@ const initTables = () => {
             idNumber VARCHAR(255) NOT NULL,
             pickup_date DATE NOT NULL,
             booking_date DATE NOT NULL,
+            estimated_date DATE NOT NULL,
             contactNumber VARCHAR(20) NOT NULL,
             status VARCHAR(255) NOT NULL,
             book_status ENUM('reserved', 'borrowed', 'returned') NOT NULL,

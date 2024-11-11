@@ -1,10 +1,10 @@
 import React from "react";
 import Navigation from "../../Components/navigation";
 import { FaRegUser } from "react-icons/fa";
-import BookCollectionOverview from "../../ChartComponent/pie"; 
-import UserRegistrationTrends  from '../../ChartComponent/UserRegistrationTrends';
-import Chart from '../../ChartComponent/chart';
-import BorrowingPatternsHeatmap from "../../ChartComponent/heatmap";
+import BookCollectionOverview from "../../ChartComponent/AdminChart/pie"; 
+import UserRegistrationTrends  from '../../ChartComponent/AdminChart/UserRegistrationTrends';
+import Chart from '../../ChartComponent/AdminChart/chart';
+import BorrowingPatternsHeatmap from "../../ChartComponent/AdminChart/heatmap";
 
 
 function Dashboard() {
