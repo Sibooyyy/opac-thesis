@@ -90,7 +90,7 @@ const StaffRegister = () => {
 
   return (
     <>
-      <div className='bg-[#EFF6FC] h-screen'>
+      <div className='bg-[#EFF6FC] min-h-screen'>
       <Header />
       <div className='flex flex-row justify-center items-start border border-gray-200 rounded-lg shadow-3xl w-full max-w-[1200px] mx-auto my-[70px] p-8  bg-white'>
         <div className='flex flex-col justify-center items-center w-[30%] mt-12'>

@@ -2,11 +2,9 @@ import { useState, useEffect } from 'react';
 import axios from 'axios';
 import Navigation from "../../Components/navigation";
 import { LuDownloadCloud } from "react-icons/lu";
-import { CiSearch } from "react-icons/ci";
-import { FaAngleDown, FaEdit, FaCheckCircle } from "react-icons/fa";
-import { MdDelete, MdNavigateNext, MdNavigateBefore } from "react-icons/md";
+import {  FaEdit, FaCheckCircle } from "react-icons/fa";
+import { MdDelete,  } from "react-icons/md";
 import { generateRandomPassword } from '../../utils/utils';
-import { IoFilter } from "react-icons/io5";
 
 
 const UserTable = () => {
@@ -142,11 +140,11 @@ const UserTable = () => {
 
   return (
     <>
-    <div className='bg-[#F5F6FE] h-screen'>
+    <div className='bg-[#ECF3F9] min-h-screen overflow-y-auto'>
       <Navigation />
-      <div className="m-5 w-full sm:w-[90%] h-[650px] mt-16 shadow-3xl mx-auto border bg-[#F6FBFD] rounded-md  font-montserrat">
+      <div className="m-5 w-full sm:w-[90%]   mb-10 mt-16 shadow-3xl mx-auto border bg-[#F6FBFD] rounded-md  font-montserrat ">
         <div className="flex justify-between h-[70px] items-center p-5 bg-[#EDF3F7]">
-          <h1 className="font-bold text-xl sm:text-2xl">Client List</h1>
+          <h1 className="font-bold text-xl sm:text-2xl text-gray-600">Client List</h1>
           <button className="bg-blue-600 text-white w-[150px] h-8 rounded-lg shadow-md flex items-center justify-center gap-2 text-sm font-semibold hover:bg-blue-700">
             Export Data <LuDownloadCloud />
           </button>
@@ -160,7 +158,7 @@ const UserTable = () => {
           onChange={(e) => setSearchTerm(e.target.value)}
         />
       </div>
-
+        <div className='h-[400px]'>
         <table className="w-[95%] mx-auto font-montserrat text-sm sm:text-md cursor-pointer">
           <thead className='text-xs sm:text-sm md:text-md font-semibold h-[45px] text-gray-700'>
             <tr className="border-b-2 border-gray-500">
@@ -211,8 +209,9 @@ const UserTable = () => {
             )}
           </tbody>
         </table>
-
-        <div className="flex justify-end mt-[300px] items-center gap-1 pr-10">
+        </div>
+        
+        <div className="flex justify-end mt-16 mb-12 items-center gap-1 pr-10">
         <button
           onClick={previousPage}
           disabled={currentPage === 1}
@@ -242,6 +241,8 @@ const UserTable = () => {
           Next
         </button>
       </div>
+
+        
 
         {isPasswordPopupVisible && (
           <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 font-montserrat">

@@ -30,7 +30,7 @@ const cat = () => {
 
   return (
     <>
-        <div className='bg-[#EFF6FC] h-screen '>
+        <div className='bg-[#EFF6FC] min-h-screen '>
           <Navbar/>
           <div className='flex justify-between w-[100%] p-[30px] gap-4'>
               <CategoryInfo formData={formData} setFormData={setFormData} onFormSubmit={handleFormSubmit} />
