@@ -4,6 +4,7 @@ import { FaRegUser } from "react-icons/fa";
 import BookCollectionOverview from "../../ChartComponent/pie"; 
 import UserRegistrationTrends  from '../../ChartComponent/UserRegistrationTrends';
 import Chart from '../../ChartComponent/chart';
+import BorrowingPatternsHeatmap from "../../ChartComponent/heatmap";
 
 
 function Dashboard() {
@@ -38,6 +39,11 @@ function Dashboard() {
           <div className="w-full border shadow-3xl rounded-lg h-[700px] bg-[#FBFDFF]">
             <div>
               <Chart/>
+            </div>
+          </div>
+          <div className="w-full border shadow-3xl rounded-lg h-[700px] bg-[#FBFDFF]">
+            <div>
+              <BorrowingPatternsHeatmap/>
             </div>
           </div>
         </div>

@@ -991,6 +991,49 @@ app.get('/api/borrowed-books-activity', (req, res) => {
     });
 });
 
+app.get('/api/borrowing-patterns', (req, res) => {
+    const { timeGrouping, category, title } = req.query;
+
+    // Determine the grouping format based on the timeGrouping parameter
+    let dateGroup;
+    if (timeGrouping === 'day') {
+        dateGroup = "DAYNAME(pickup_date)";
+    } else if (timeGrouping === 'month') {
+        dateGroup = "MONTH(pickup_date)";
+    } else {
+        return res.status(400).json({ error: "Invalid time grouping parameter. Use 'day' or 'month'." });
+    }
+
+    // Category and title filters
+    let categoryFilter = '';
+    if (category) {
+        categoryFilter = `AND category = '${category}'`;
+    }
+
+    let titleFilter = '';
+    if (title) {
+        titleFilter = `AND title LIKE '%${title}%'`;
+    }
+
+    const query = `
+        SELECT ${dateGroup} AS time_period, category, COUNT(*) AS borrow_count
+        FROM borrowed_books
+        WHERE book_status = 'borrowed'
+        ${categoryFilter} ${titleFilter}
+        GROUP BY time_period, category
+        ORDER BY time_period ASC;
+    `;
+
+    connection.query(query, (error, results) => {
+        if (error) {
+            console.error("Database query failed:", error);
+            return res.status(500).json({ error: "Database query failed" });
+        }
+        res.json(results);
+    });
+});
+
+
 
 
 
