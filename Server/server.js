@@ -874,7 +874,8 @@ app.post('/user/book', (req, res) => {
         designation, 
         title, 
         idNumber, 
-        pickup_date, 
+        pickup_date,
+        estimated_date,
         author, 
         isbn_issn, 
         booking_date, 
@@ -897,13 +898,13 @@ app.post('/user/book', (req, res) => {
         const insertBorrowedBookQuery = `
             INSERT INTO borrowed_books (
                 book_id, firstname, lastname, category, designation, title, idNumber, 
-                pickup_date, author, isbn_issn, booking_date, contactNumber, 
+                pickup_date, estimated_date, author, isbn_issn, booking_date, contactNumber, 
                 status, book_status
-            ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, 'Pending', 'borrowed')`;
+            ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, 'Pending', 'borrowed')`;
 
         connection.query(insertBorrowedBookQuery, [
             book_id, firstname, lastname, category, designation, title, idNumber,
-            pickup_date, author, isbn_issn, booking_date, contactNumber
+            pickup_date, estimated_date, author, isbn_issn, booking_date, contactNumber
         ], (insertErr) => {
             if (insertErr) {
                 return res.status(500).json({ status: false, message: "Failed to borrow book.", error: insertErr });
@@ -944,6 +945,54 @@ app.post('/user/book', (req, res) => {
         });
     });
 });
+
+app.get('/api/due-books', (req, res) => {
+    const { designation, title, overdueDays } = req.query;
+    
+    // Date logic to calculate "today", "upcoming" (next 7 days), and "overdue"
+    const today = new Date();
+    const upcomingDate = new Date(today);
+    upcomingDate.setDate(upcomingDate.getDate() + 7);
+
+    let overdueFilter = '';
+    if (overdueDays) {
+        overdueFilter = `AND DATEDIFF(NOW(), estimated_date) >= ${overdueDays}`;
+    }
+
+    let designationFilter = '';
+    if (designation) {
+        designationFilter = `AND designation = '${designation}'`;
+    }
+
+    let titleFilter = '';
+    if (title) {
+        titleFilter = `AND title LIKE '%${title}%'`;
+    }
+
+    const query = `
+        SELECT firstname, lastname, category, designation, title, estimated_date, 
+               CASE 
+                   WHEN estimated_date = CURDATE() THEN 'Due Today'
+                   WHEN estimated_date BETWEEN CURDATE() AND '${upcomingDate.toISOString().slice(0, 10)}' THEN 'Upcoming'
+                   WHEN estimated_date < CURDATE() THEN 'Overdue'
+                   ELSE 'On Time'
+               END AS due_status,
+               DATEDIFF(CURDATE(), estimated_date) AS overdue_days
+        FROM borrowed_books
+        WHERE book_status = 'borrowed'
+        ${designationFilter} ${titleFilter} ${overdueFilter}
+        ORDER BY estimated_date ASC;
+    `;
+
+    connection.query(query, (error, results) => {
+        if (error) {
+            console.error("Database query failed:", error);
+            return res.status(500).json({ error: "Database query failed" });
+        }
+        res.json(results);
+    });
+});
+
 
 app.get('/api/borrowed-books-activity', (req, res) => {
     const { period, category, designation } = req.query;
@@ -994,7 +1043,7 @@ app.get('/api/borrowed-books-activity', (req, res) => {
 app.get('/api/borrowing-patterns', (req, res) => {
     const { timeGrouping, category, title } = req.query;
 
-    // Determine the grouping format based on the timeGrouping parameter
+
     let dateGroup;
     if (timeGrouping === 'day') {
         dateGroup = "DAYNAME(pickup_date)";
@@ -1023,6 +1072,47 @@ app.get('/api/borrowing-patterns', (req, res) => {
         GROUP BY time_period, category
         ORDER BY time_period ASC;
     `;
+
+    connection.query(query, (error, results) => {
+        if (error) {
+            console.error("Database query failed:", error);
+            return res.status(500).json({ error: "Database query failed" });
+        }
+        res.json(results);
+    });
+});
+
+app.get('/api/borrowing-patterns/calendar', (req, res) => {
+    const { day, timeRange, category } = req.query;
+
+
+    let dayFilter = '';
+    if (day) {
+        dayFilter = `AND DAYNAME(pickup_date) = '${day}'`;
+    }
+
+
+    let timeFilter = '';
+    if (timeRange) {
+        const [start, end] = timeRange.split('-');
+        timeFilter = `AND HOUR(pickup_date) BETWEEN ${start} AND ${end}`;
+    }
+
+    let categoryFilter = '';
+    if (category) {
+        categoryFilter = `AND category = '${category}'`;
+    }
+
+
+    const query = `
+        SELECT pickup_date, COUNT(*) AS borrow_count
+        FROM borrowed_books
+        WHERE book_status = 'borrowed'
+        ${dayFilter} ${timeFilter} ${categoryFilter}
+        GROUP BY pickup_date
+        ORDER BY pickup_date ASC;
+    `;
+
 
     connection.query(query, (error, results) => {
         if (error) {

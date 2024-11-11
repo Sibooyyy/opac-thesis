@@ -5,6 +5,7 @@ import axios from 'axios';
 function PopupForm({ closePopup }) {
   const { user, reservedBooks, triggerBookingSuccess, setReservedBooks } = useContext(AuthContext);
   const [pickupDate, setPickupDate] = useState("");
+  const [returnDate, setReturnDate] = useState("");
   const [currentDate, setCurrentDate] = useState("");
   const [isLoading, setIsLoading] = useState(false); 
   const [showSuccessMessage, setShowSuccessMessage] = useState(false); 
@@ -43,6 +44,7 @@ function PopupForm({ closePopup }) {
         idNumber: user.idNumber,
         pickup_date: pickupDate,
         booking_date: new Date().toISOString().split('T')[0],
+        estimated_date: returnDate,
         contactNumber: user.contactNumber,
         title: reservedBooks.map(book => book.title).join(', '),
         category: reservedBooks.map(book => book.category).join(', '),
@@ -114,6 +116,14 @@ function PopupForm({ closePopup }) {
             type="date"
             value={pickupDate}
             onChange={(e) => setPickupDate(e.target.value)}
+            required
+          />
+          <label className="font-poppins font-semibold text-lg">Estimated Book Returned Date:</label>
+          <input
+            className="mt-1 p-2 border border-gray-300 rounded-md w-full md:w-3/4 lg:w-1/2 cursor-pointer"
+            type="date"
+            value={returnDate}
+            onChange={(e) => setReturnDate(e.target.value)}
             required
           />
         </div>

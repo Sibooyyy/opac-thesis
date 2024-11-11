@@ -171,8 +171,8 @@ function StudentRecord() {
                   <td className='border-b-2 px-4 py-2 whitespace-nowrap'>{record.title}</td>
                   <td className='border-b-2 px-4 py-2 whitespace-nowrap'>{record.author}</td>
                   <td className='border-b-2 px-4 py-2 whitespace-nowrap'>{record.isbn_issn}</td>
-                  <td className='border-b-2 px-4 py-2 whitespace-nowrap'>{moment(record.booking_date).format("MMM Do YYYY")}</td>
                   <td className='border-b-2 px-4 py-2 whitespace-nowrap'>{moment(record.pickup_date).format("MMM Do YYYY")}</td>
+                  <td className='border-b-2 px-4 py-2 whitespace-nowrap'>{moment(record.estimated_date).format("MMM Do YYYY")}</td>
                   <td className='border-b-2 px-4 py-2 whitespace-nowrap'>
                     <select
                       name="status"

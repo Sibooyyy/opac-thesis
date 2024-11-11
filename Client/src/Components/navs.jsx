@@ -29,11 +29,11 @@ const Navs = () => {
   };
 
   return (
-    <div className="flex flex-col md:flex-row items-center bg-[#F6F8F9] border-b-2 shadow-3xl rounded-lg gap-4 md:gap-8 w-full p-4 font-montserrat text-lg font-medium cursor-pointer">
-      <div className="flex gap-2 items-center cursor-pointer" onClick={() => handleClick('/home/dashboard')}>
-        <img src={Logo} alt="Logo" className="h-10 w-10 md:h-16 md:w-16 rounded-full" /> 
-        <span className="hidden md:block">Library Staff</span>
-      </div>
+    <div className="flex flex-col md:flex-row items-center bg-[#F6F8F9] border-b-2 shadow-lg rounded-lg gap-4 md:gap-8 w-full p-4 font-montserrat text-lg font-medium cursor-pointer">
+    <div className="flex gap-2 items-center cursor-pointer" onClick={() => handleClick('/home/dashboard')}>
+      <img src={Logo} alt="Logo" className="h-12 w-12 md:h-10 md:w-10 rounded-full" /> 
+      <span className="hidden md:block text-sm md:text-[18px]">Library Staff</span>
+    </div>
       <div className="flex flex-1 justify-center items-center mt-2 md:mt-0">
         <ul className="flex flex-col md:flex-row gap-4 md:gap-10 items-center text-center text-sm md:text-lg">
           <li className="hover:text-blue-500 transition duration-300" onClick={() => handleClick('/home/dashboard')}>Dashboard</li>

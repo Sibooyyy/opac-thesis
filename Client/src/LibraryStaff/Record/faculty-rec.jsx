@@ -157,8 +157,8 @@ function FacultyRec() {
                   <th className="px-10 py-4">Designation</th>
                   <th className="px-10 py-4">Title</th>
                   <th className="px-10 py-4">Author</th>
-                  <th className="hidden sm:table-cell px-4 py-4">Booking Date</th>
-                  <th className="hidden sm:table-cell px-4 py-4">Pick-Up Date</th>
+                  <th className="hidden sm:table-cell px-4 py-4">Pick Up Date</th>
+                  <th className="hidden sm:table-cell px-4 py-4">Estimated Returned</th>
                   <th className="px-10 py-4">Status</th>
                   <th className="px-10 py-4">Action</th>
                 </tr>
@@ -172,8 +172,8 @@ function FacultyRec() {
                   <td className='border-b-2 px-4 py-2 whitespace-nowrap'>{record.designation}</td>
                   <td className='border-b-2 px-4 py-2 whitespace-nowrap'>{record.title}</td>
                   <td className='border-b-2 px-4 py-2 whitespace-nowrap'>{record.author}</td>
-                  <td className='border-b-2 px-4 py-2 whitespace-nowrap'>{moment(record.booking_date).format("MMM Do YYYY")}</td>
                   <td className='border-b-2 px-4 py-2 whitespace-nowrap'>{moment(record.pickup_date).format("MMM Do YYYY")}</td>
+                  <td className='border-b-2 px-4 py-2 whitespace-nowrap'>{moment(record.estimated_date).format("MMM Do YYYY")}</td>
                   <td className='border-b-2 px-4 py-2 whitespace-nowrap'>
                     <select
                       name="status"
