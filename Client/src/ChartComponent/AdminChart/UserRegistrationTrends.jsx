@@ -20,7 +20,17 @@ const UserRegistrationTrends = () => {
             const response = await axios.get('http://localhost:8081/api/registration-trends', {
                 params: { userType, period }
             });
-            setData(response.data);
+            const realData = response.data;
+            const mockData = [
+                { period: '2024-05', count: 10 },
+                { period: '2024-06', count: 12 },
+                { period: '2024-07', count: 8 },
+                { period: '2024-08', count: 15 },
+                { period: '2024-09', count: 10 },
+                { period: '2024-10', count: 13 }
+            ];
+            const combinedData = [...mockData, ...realData];
+            setData(combinedData);
         } catch (error) {
             console.error("Error fetching registration data:", error);
         }
@@ -38,10 +48,8 @@ const UserRegistrationTrends = () => {
     };
 
     return (
-        <div>
-            <h2 className="text-lg font-semibold text-gray-600 mb-2">User Registration Trends</h2>
-            
-            <div className="mb-4">
+        <div className='flex flex-col justify-center items-center'>
+            <div className="mb-10">
                 <label className="mr-2">
                     User Type:
                     <select value={userType} onChange={(e) => setUserType(e.target.value)} className="ml-2 p-1 border rounded">
@@ -60,8 +68,9 @@ const UserRegistrationTrends = () => {
                     </select>
                 </label>
             </div>
-
-            <Line data={chartData} />
+            <div style={{ width: '500px', height: '500px', margin: '0 auto' }}>       
+                <Line data={chartData} />
+            </div>
         </div>
     );
 };

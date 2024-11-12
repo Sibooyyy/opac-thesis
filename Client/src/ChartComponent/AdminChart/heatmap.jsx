@@ -22,13 +22,37 @@ const BorrowingPatternsHeatmap = () => {
             const response = await axios.get('http://localhost:8081/api/borrowing-patterns', {
                 params: { timeGrouping, category, title }
             });
-            setData(response.data);
+            const realData = response.data;
+
+            // Generate mock data for the past 6 months
+            const mockData = generateMockData();
+
+            // Combine real data with mock data
+            const combinedData = [...mockData, ...realData];
+            setData(combinedData);
         } catch (error) {
             console.error("Error fetching data:", error);
         }
     };
 
-    // Prepare data for heatmap
+    const generateMockData = () => {
+        const months = ['2024-05', '2024-06', '2024-07', '2024-08', '2024-09', '2024-10'];
+        const categories = ['Fiction', 'Science', 'History', 'Art', 'Technology'];
+        const mockData = [];
+
+        months.forEach(month => {
+            categories.forEach(category => {
+                mockData.push({
+                    time_period: month,
+                    category: category,
+                    borrow_count: Math.floor(Math.random() * 50) + 1 // Random borrow count between 1 and 50
+                });
+            });
+        });
+
+        return mockData;
+    };
+
     const chartData = {
         datasets: [
             {
@@ -40,10 +64,10 @@ const BorrowingPatternsHeatmap = () => {
                 })),
                 backgroundColor(context) {
                     const value = context.dataset.data[context.dataIndex]?.v || 0;
-                    return `rgba(30, 144, 255, ${value / 10})`; // Adjust alpha based on value
+                    return `rgba(30, 144, 255, ${value / 50})`; // Adjust alpha based on value (max 50)
                 },
                 width: ({ chart }) => (chart.chartArea || {}).width / 7,
-                height: ({ chart }) => (chart.chartArea || {}).height / 12,
+                height: ({ chart }) => (chart.chartArea || {}).height / 20, // Reduced height for each matrix element
             },
         ],
     };
@@ -74,10 +98,8 @@ const BorrowingPatternsHeatmap = () => {
     };
 
     return (
-        <div>
-            <h2 className="text-lg font-semibold text-gray-600 mb-2">Borrowing Patterns by Category</h2>
-
-            <div className="mb-4">
+        <div className='flex flex-col items-center justify-center'>
+            <div className="mb-10">
                 <label className="mr-2">
                     Time Grouping:
                     <select value={timeGrouping} onChange={(e) => setTimeGrouping(e.target.value)} className="ml-2 p-1 border rounded">
@@ -97,7 +119,9 @@ const BorrowingPatternsHeatmap = () => {
                 </label>
             </div>
 
+            <div style={{ width: '1150px', height: '550px' }}> 
             <Chart type="matrix" data={chartData} options={options} />
+            </div>
         </div>
     );
 };
