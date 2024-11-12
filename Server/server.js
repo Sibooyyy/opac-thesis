@@ -622,6 +622,40 @@ app.get('/api/books', (req, res) => {
     });
 });
 
+app.get('/api/books/filters', (req, res) => {
+    const genreQuery = "SELECT DISTINCT category AS genre FROM books WHERE status = 'active'";
+    const yearQuery = "SELECT DISTINCT YEAR(date_published) AS year FROM books WHERE status = 'active'";
+    const authorQuery = "SELECT DISTINCT author FROM books WHERE status = 'active'";
+
+    // Execute all queries in parallel
+    Promise.all([
+        new Promise((resolve, reject) => {
+            connection.query(genreQuery, (error, results) => {
+                if (error) reject(error);
+                else resolve(results.map(row => row.genre));
+            });
+        }),
+        new Promise((resolve, reject) => {
+            connection.query(yearQuery, (error, results) => {
+                if (error) reject(error);
+                else resolve(results.map(row => row.year));
+            });
+        }),
+        new Promise((resolve, reject) => {
+            connection.query(authorQuery, (error, results) => {
+                if (error) reject(error);
+                else resolve(results.map(row => row.author));
+            });
+        })
+    ])
+    .then(([genres, years, authors]) => {
+        res.json({ genres, years, authors });
+    })
+    .catch(error => {
+        res.status(500).json({ error: "Failed to retrieve filter options" });
+    });
+});
+
 
 
 app.get('/book/data', (req, res) => {

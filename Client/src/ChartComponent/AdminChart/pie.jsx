@@ -11,9 +11,13 @@ const BookCollectionOverview = () => {
     const [genre, setGenre] = useState('');
     const [publicationYear, setPublicationYear] = useState('');
     const [author, setAuthor] = useState('');
+    const [genres, setGenres] = useState([]);
+    const [years, setYears] = useState([]);
+    const [authors, setAuthors] = useState([]);
 
     useEffect(() => {
         fetchBooks();
+        fetchFilters();
     }, [genre, publicationYear, author]);
 
     const fetchBooks = async () => {
@@ -35,6 +39,17 @@ const BookCollectionOverview = () => {
         }
     };
 
+    const fetchFilters = async () => {
+        try {
+            const response = await axios.get('http://localhost:8081/api/books/filters');
+            setGenres(response.data.genres || []);
+            setYears(response.data.years || []);
+            setAuthors(response.data.authors || []);
+        } catch (error) {
+            console.error("Error fetching filters", error);
+        }
+    };
+
     const chartData = {
         labels: categories.map(([category]) => category),
         datasets: [{
@@ -44,22 +59,39 @@ const BookCollectionOverview = () => {
     };
 
     return (
-        <div>
+        <div className='flex flex-col justify-center items-center'>
             <div className="mb-4">
                 <label className="mr-2">
                     Genre:
-                    <input value={genre} onChange={(e) => setGenre(e.target.value)} className="ml-2 p-1 border rounded" />
+                    <select value={genre} onChange={(e) => setGenre(e.target.value)} className="ml-2 p-1 border rounded">
+                        <option value="">All</option>
+                        {genres.map((g, index) => (
+                            <option key={index} value={g}>{g}</option>
+                        ))}
+                    </select>
                 </label>
                 <label className="mr-2">
                     Publication Year:
-                    <input value={publicationYear} onChange={(e) => setPublicationYear(e.target.value)} className="ml-2 p-1 border rounded" />
+                    <select value={publicationYear} onChange={(e) => setPublicationYear(e.target.value)} className="ml-2 p-1 border rounded">
+                        <option value="">All</option>
+                        {years.map((year, index) => (
+                            <option key={index} value={year}>{year}</option>
+                        ))}
+                    </select>
                 </label>
                 <label className="mr-2">
                     Author:
-                    <input value={author} onChange={(e) => setAuthor(e.target.value)} className="ml-2 p-1 border rounded" />
+                    <select value={author} onChange={(e) => setAuthor(e.target.value)} className="ml-2 p-1 border rounded">
+                        <option value="">All</option>
+                        {authors.map((a, index) => (
+                            <option key={index} value={a}>{a}</option>
+                        ))}
+                    </select>
                 </label>
             </div>
-            <Pie data={chartData} />
+            <div style={{ width: '400px', height: '400px', margin: '0 auto' }}>
+                <Pie data={chartData} />
+            </div>
         </div>
     );
 };
