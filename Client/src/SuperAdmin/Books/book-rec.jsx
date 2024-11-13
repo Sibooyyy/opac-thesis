@@ -4,6 +4,8 @@ import moment from "moment";
 import { FaCheckCircle, FaEdit, FaEye, FaSortAmountDown, FaSortAmountUp } from "react-icons/fa"; 
 import { MdDelete } from "react-icons/md";
 import { LuDownloadCloud } from "react-icons/lu";
+import * as XLSX from 'xlsx'; // Import the xlsx library
+
 
 const BookRec = ({ books, onEditClick }) => {
   const [data, setData] = useState([]);
@@ -18,8 +20,7 @@ const BookRec = ({ books, onEditClick }) => {
   const [selectedBook, setSelectedBook] = useState(null);
   const [currentPage, setCurrentPage] = useState(1);
   const [sortConfig, setSortConfig] = useState({ key: null, direction: "asc" });
-  const recordsPerPage = 5;
-
+  const recordsPerPage = 3;
 
   useEffect(() => {
     setData(books);
@@ -30,22 +31,6 @@ const BookRec = ({ books, onEditClick }) => {
     setDeleteBookId(bookId);
     setShowDeleteConfirm(true);
   };
-
-  const handleSort = (key) => {
-    let direction = "asc";
-    if (sortConfig.key === key && sortConfig.direction === "asc") {
-      direction = "desc";
-    }
-    setSortConfig({ key, direction });
-  };
-
-  const sortedData = [...data].sort((a, b) => {
-    if (sortConfig.key) {
-      const isAscending = sortConfig.direction === "asc" ? 1 : -1;
-      return a[sortConfig.key].localeCompare(b[sortConfig.key]) * isAscending;
-    }
-    return 0;
-  });
 
   const confirmDelete = () => {
     axios
@@ -82,14 +67,30 @@ const BookRec = ({ books, onEditClick }) => {
     setSelectedBook(null);
   };
 
-  const filteredData = data.filter(book =>
+  const handleSort = (key) => {
+    let direction = "asc";
+    if (sortConfig.key === key && sortConfig.direction === "asc") {
+      direction = "desc";
+    }
+    setSortConfig({ key, direction });
+  };
+
+  const sortedData = [...data].sort((a, b) => {
+    if (sortConfig.key) {
+      const isAscending = sortConfig.direction === "asc" ? 1 : -1;
+      return a[sortConfig.key].localeCompare(b[sortConfig.key]) * isAscending;
+    }
+    return 0;
+  });
+
+  const filteredData = sortedData.filter((book) =>
     book.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
     book.author.toLowerCase().includes(searchTerm.toLowerCase()) ||
     book.isbn_issn.toLowerCase().includes(searchTerm.toLowerCase()) ||
     book.category.toLowerCase().includes(searchTerm.toLowerCase()) ||
     book.subject.toLowerCase().includes(searchTerm.toLowerCase()) ||
     book.ddc_class.toLowerCase().includes(searchTerm.toLowerCase()) ||
-    book.accession_number.toLowerCase().includes(searchTerm.toLowerCase()) 
+    book.accession_number.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
   const indexOfLastRecord = currentPage * recordsPerPage;
@@ -108,6 +109,14 @@ const BookRec = ({ books, onEditClick }) => {
     }
   };
 
+  // Export to Excel function
+  const exportToExcel = () => {
+    const worksheet = XLSX.utils.json_to_sheet(data);
+    const workbook = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(workbook, worksheet, "Books");
+    XLSX.writeFile(workbook, "Books.xlsx");
+  };
+
   if (loading) {
     return <div>Loading...</div>;
   }
@@ -118,11 +127,16 @@ const BookRec = ({ books, onEditClick }) => {
 
   return (
     <div className="m-5 w-[80%] h-[800px] mt-16 rounded-2xl border bg-[#F6FBFD] font-montserrat shadow-3xl">
-      <div className='flex justify-between h-[70px] items-center p-5 bg-[#EDF3F7] rounded-t-2xl'>
-        <h1 className='font-bold text-xl text-gray-900'>Book List</h1>
-        <button className='bg-blue-600 text-white w-[150px] h-8 rounded-lg shadow-md flex items-center justify-center gap-2 text-sm font-semibold hover:bg-blue-700'>Export Data <LuDownloadCloud /></button>
+      <div className="flex justify-between h-[70px] items-center p-5 bg-[#EDF3F7] rounded-t-2xl">
+        <h1 className="font-bold text-xl text-gray-900">Book List</h1>
+        <button
+          onClick={exportToExcel} // Call the export function on click
+          className="bg-blue-600 text-white w-[150px] h-8 rounded-lg shadow-md flex items-center justify-center gap-2 text-sm font-semibold hover:bg-blue-700"
+        >
+          Export Data <LuDownloadCloud />
+        </button>
       </div>
-      <div className=" w-full sm:w-[30%] mb-3 p-5 mt-3">
+      <div className="w-full sm:w-[30%] mb-3 p-5 mt-3">
         <input
           type="text"
           placeholder="Search a list"
@@ -202,7 +216,9 @@ const BookRec = ({ books, onEditClick }) => {
           ))}
         </tbody>
       </table>
-      <div className="flex justify-end mt-[450px] items-center gap-1 pr-10">
+
+      {/* Pagination Controls */}
+      <div className="flex justify-end mt-[400px] items-center gap-1 pr-10">
         <button
           onClick={previousPage}
           disabled={currentPage === 1}
@@ -232,6 +248,8 @@ const BookRec = ({ books, onEditClick }) => {
           Next
         </button>
       </div>
+
+      {/* Modals for View, Delete, and Success Notifications */}
       {showModal && selectedBook && (
         <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
           <div className="bg-white rounded-2xl shadow-xl p-6 w-full max-w-lg mx-4">
@@ -293,5 +311,4 @@ const BookRec = ({ books, onEditClick }) => {
     </div>
   );
 };
-
 export default BookRec;

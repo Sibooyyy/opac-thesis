@@ -43,7 +43,7 @@ function Dashboard() {
               <Chart/>
             </div>
           </div>
-          <div className="w-full border shadow-3xl rounded-lg h-[760px] bg-[#FBFDFF]">
+          <div className="w-full border shadow-3xl rounded-lg h-[760px] bg-[#F6FBFD]">
             <div>
             <h2 className="p-4 text-lg font-semibold text-gray-600 mb-4 bg-[#EDF3F7]">Borrowing Patterns by Category</h2>
               <BorrowingPatternsHeatmap/>

@@ -23,10 +23,8 @@ const DueBooksTable = () => {
     };
 
     return (
-        <div>
-            <h2 className="text-lg font-semibold text-gray-600 mb-4">Due Dates and Overdue Books</h2>
-            
-            <div className="flex gap-4 mb-4">
+        <div className='flex flex-col justify-center items-center'>
+            <div className="flex gap-4 mb-10">
                 <div>
                     <label>User Type:</label>
                     <select value={designation} onChange={(e) => setDesignation(e.target.value)} className="ml-2 p-1 border rounded">
@@ -59,30 +57,30 @@ const DueBooksTable = () => {
                 </div>
             </div>
 
-            <table className="min-w-full border">
-                <thead>
-                    <tr className="bg-gray-200 text-gray-600">
-                        <th className="border p-2">First Name</th>
-                        <th className="border p-2">Last Name</th>
-                        <th className="border p-2">Category</th>
-                        <th className="border p-2">Designation</th>
-                        <th className="border p-2">Title</th>
-                        <th className="border p-2">Estimated Date</th>
-                        <th className="border p-2">Due Status</th>
-                        <th className="border p-2">Days Overdue</th>
+            <table className="w-[95%] mx-auto font-montserrat text-sm sm:text-md cursor-pointer">
+                <thead className='text-xs sm:text-sm md:text-md font-semibold h-[45px] text-gray-700'>
+                    <tr className="border-b-2 border-gray-500">
+                        <th className="p-2">First Name</th>
+                        <th className="p-2">Last Name</th>
+                        <th className="p-2">Category</th>
+                        <th className="p-2">Designation</th>
+                        <th className="p-2">Title</th>
+                        <th className="p-2">Estimated Date</th>
+                        <th className="p-2">Due Status</th>
+                        <th className="p-2">Days Overdue</th>
                     </tr>
                 </thead>
                 <tbody>
                     {books.map((book, index) => (
-                        <tr key={index} className={`text-center ${book.due_status === 'Overdue' ? 'bg-red-100' : book.due_status === 'Due Today' ? 'bg-yellow-100' : ''}`}>
-                            <td className="border p-2">{book.firstname}</td>
-                            <td className="border p-2">{book.lastname}</td>
-                            <td className="border p-2">{book.category}</td>
-                            <td className="border p-2">{book.designation}</td>
-                            <td className="border p-2">{book.title}</td>
-                            <td className="border p-2">{new Date(book.estimated_date).toLocaleDateString()}</td>
-                            <td className="border p-2">{book.due_status}</td>
-                            <td className="border p-2">{book.overdue_days > 0 ? book.overdue_days : '-'}</td>
+                        <tr key={index} className={`text-center hover:bg-gray-200 ${book.due_status === 'Overdue' ? 'bg-red-100' : book.due_status === 'Due Today' ? 'bg-yellow-100' : ''}`}>
+                            <td className="border-b-2 p-2">{book.firstname}</td>
+                            <td className="border-b-2 p-2">{book.lastname}</td>
+                            <td className="border-b-2 p-2">{book.category}</td>
+                            <td className="border-b-2 p-2">{book.designation}</td>
+                            <td className="border-b-2 p-2">{book.title}</td>
+                            <td className="border-b-2 p-2">{new Date(book.estimated_date).toLocaleDateString()}</td>
+                            <td className="border-b-2 p-2">{book.due_status}</td>
+                            <td className="border-b-2 p-2">{book.overdue_days > 0 ? book.overdue_days : '-'}</td>
                         </tr>
                     ))}
                 </tbody>

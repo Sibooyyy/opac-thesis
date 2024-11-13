@@ -17,7 +17,7 @@ const Borrow = () => {
     };
 
     return (
-        <div className='w-[100%] h-screen p-[60px] bg-[#0CA1E2] flex flex-col items-center'>
+        <div className='w-[100%] h-[800px] p-[60px] bg-[#0CA1E2] flex flex-col items-center'>
             <h1 className='font-poppins text-[white] text-[25px] font-bold'>Borrow Book</h1>
             {reservedBooks.length > 0 ? (
                 <table className='min-w-full bg-white rounded-lg overflow-hidden shadow-lg text-center mt-5'>

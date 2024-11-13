@@ -1101,7 +1101,7 @@ app.get('/api/borrowing-patterns', (req, res) => {
     const query = `
         SELECT ${dateGroup} AS time_period, category, COUNT(*) AS borrow_count
         FROM borrowed_books
-        WHERE book_status = 'borrowed'
+        WHERE book_status = 'returned'
         ${categoryFilter} ${titleFilter}
         GROUP BY time_period, category
         ORDER BY time_period ASC;

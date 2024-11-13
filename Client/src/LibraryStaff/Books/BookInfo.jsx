@@ -134,8 +134,8 @@ const BookInfo = ({ selectedBook, onFormSubmit }) => {
       <h1>Book Form Information</h1>
     </div>
     <form className='pl-[10px] flex flex-col gap-2 mt-2' onSubmit={handleSubmit}>
-      <div className='flex flex-col w-[400px]'>
-        <label className='font-montserrat text-[17px] font-semibold'>Title</label>
+      <div className='flex flex-col w-[75%]'>
+        <label className='font-montserrat text-[17px] font-md'>Title</label>
         <input 
           className='p-1 border border-black rounded-md drop-shadow-sm cursor-pointer font-montserrat' 
           value={formData.title} 
@@ -145,8 +145,8 @@ const BookInfo = ({ selectedBook, onFormSubmit }) => {
           required 
         />
       </div>
-      <div className='flex flex-col w-[70%]'>
-        <label className='font-montserrat text-[17px] font-semibold'>Author</label>
+      <div className='flex flex-col w-[75%]'>
+        <label className='font-montserrat text-[17px] font-md'>Author</label>
         <input 
           className='p-1 border border-black rounded-md drop-shadow-sm cursor-pointer font-montserrat' 
           value={formData.author} 
@@ -156,8 +156,8 @@ const BookInfo = ({ selectedBook, onFormSubmit }) => {
           required 
         />
       </div>
-      <div className='flex flex-col w-[70%]'>
-        <label className='font-montserrat text-[17px] font-semibold'>Subject</label>
+      <div className='flex flex-col w-[75%]'>
+        <label className='font-montserrat text-[17px] font-md'>Subject</label>
         <input 
           className='p-1 border border-black rounded-md drop-shadow-sm cursor-pointer font-montserrat' 
           value={formData.subject} 
@@ -167,8 +167,8 @@ const BookInfo = ({ selectedBook, onFormSubmit }) => {
           required 
         />
       </div>
-      <div className='flex flex-col w-[70%]'>
-        <label className='font-montserrat text-[17px] font-semibold'>DDC Classification</label>
+      <div className='flex flex-col w-[75%]'>
+        <label className='font-montserrat text-[17px] font-md'>DDC Classification</label>
         <input 
           className='p-1 border border-black rounded-md drop-shadow-sm cursor-pointer font-montserrat' 
           value={formData.ddc_class} 
@@ -178,8 +178,8 @@ const BookInfo = ({ selectedBook, onFormSubmit }) => {
           required 
         />
       </div>
-      <div className='flex flex-col w-[70%]'>
-        <label className='font-montserrat text-[17px] font-semibold'>Publisher</label>
+      <div className='flex flex-col w-[75%]'>
+        <label className='font-montserrat text-[17px] font-md'>Publisher</label>
         <input 
           className='p-1 border border-black rounded-md drop-shadow-sm cursor-pointer font-montserrat' 
           value={formData.publisher} 
@@ -191,7 +191,7 @@ const BookInfo = ({ selectedBook, onFormSubmit }) => {
       </div>
       <div className='flex flex-row gap-3'>
         <div className='flex flex-col'>
-          <label className='font-montserrat text-[17px] font-semibold'>Location</label>
+          <label className='font-montserrat text-[17px] font-md'>Location</label>
           <select 
             className='p-1 border border-black rounded-md drop-shadow-sm cursor-pointer font-montserrat' 
             value={formData.category} 
@@ -208,7 +208,7 @@ const BookInfo = ({ selectedBook, onFormSubmit }) => {
           </select>
         </div>
         <div className='flex flex-col'>
-          <label className='font-montserrat text-[17px] font-semibold'>ISBN/ISSN</label>
+          <label className='font-montserrat text-[17px] font-md'>ISBN/ISSN</label>
           <input 
             className='p-1 border border-black rounded-md drop-shadow-sm cursor-pointer font-montserrat' 
             value={formData.isbn_issn} 
@@ -221,7 +221,7 @@ const BookInfo = ({ selectedBook, onFormSubmit }) => {
       </div>
       <div className='flex flex-row gap-2'>
         <div className='flex flex-col'>
-          <label className='font-montserrat text-[17px] font-semibold'>Accession Number</label>
+          <label className='font-montserrat text-[17px] font-md'>Accession Number</label>
           <div className='flex'>
             <input 
               className='p-1 border border-black rounded-md drop-shadow-sm cursor-pointer font-montserrat w-[70%]' 
@@ -241,7 +241,7 @@ const BookInfo = ({ selectedBook, onFormSubmit }) => {
           </div>
         </div>
         <div className='flex flex-col pr-5'>
-          <label className='font-montserrat text-[17px] font-semibold'>Date Published</label>
+          <label className='font-montserrat text-[17px] font-md'>Date Published</label>
           <input 
             className='p-1 border border-black rounded-md drop-shadow-sm cursor-pointer' 
             value={formData.date_published} 
