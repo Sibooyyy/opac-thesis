@@ -119,7 +119,7 @@ const BorrowingPatternsHeatmap = () => {
                 </label>
             </div>
 
-            <div style={{ width: '1150px', height: '550px' }}> 
+            <div style={{ width: '1000px', height: '600px' }}> 
             <Chart type="matrix" data={chartData} options={options} />
             </div>
         </div>

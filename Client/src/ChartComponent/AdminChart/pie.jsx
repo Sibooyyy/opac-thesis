@@ -60,7 +60,7 @@ const BookCollectionOverview = () => {
 
     return (
         <div className='flex flex-col justify-center items-center'>
-            <div className="mb-4">
+            <div className="mb-4 flex flex-row items-center w-[300px] gap-10 justify-center">
                 <label className="mr-2">
                     Genre:
                     <select value={genre} onChange={(e) => setGenre(e.target.value)} className="ml-2 p-1 border rounded">

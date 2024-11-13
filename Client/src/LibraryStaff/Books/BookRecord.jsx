@@ -4,6 +4,7 @@ import moment from "moment";
 import { FaCheckCircle, FaEdit, FaEye, FaSortAmountDown, FaSortAmountUp } from "react-icons/fa"; 
 import { MdDelete } from "react-icons/md";
 import { LuDownloadCloud } from "react-icons/lu";
+import * as XLSX from 'xlsx'; // Import the xlsx library
 
 const BookRecord = ({ books, onEditClick }) => {
   const [data, setData] = useState([]);
@@ -107,6 +108,14 @@ const BookRecord = ({ books, onEditClick }) => {
     }
   };
 
+  // Export to Excel function
+  const exportToExcel = () => {
+    const worksheet = XLSX.utils.json_to_sheet(data);
+    const workbook = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(workbook, worksheet, "Books");
+    XLSX.writeFile(workbook, "Books.xlsx");
+  };
+
   if (loading) {
     return <div>Loading...</div>;
   }
@@ -119,7 +128,10 @@ const BookRecord = ({ books, onEditClick }) => {
     <div className="m-5 w-[80%] h-[800px] mt-16 rounded-2xl border bg-[#F6FBFD] font-montserrat shadow-3xl">
       <div className="flex justify-between h-[70px] items-center p-5 bg-[#EDF3F7] rounded-t-2xl">
         <h1 className="font-bold text-xl text-gray-900">Book List</h1>
-        <button className="bg-blue-600 text-white w-[150px] h-8 rounded-lg shadow-md flex items-center justify-center gap-2 text-sm font-semibold hover:bg-blue-700">
+        <button
+          onClick={exportToExcel} // Call the export function on click
+          className="bg-blue-600 text-white w-[150px] h-8 rounded-lg shadow-md flex items-center justify-center gap-2 text-sm font-semibold hover:bg-blue-700"
+        >
           Export Data <LuDownloadCloud />
         </button>
       </div>
@@ -132,78 +144,80 @@ const BookRecord = ({ books, onEditClick }) => {
         />
       </div>
       <table className="w-[95%] mx-auto font-montserrat text-sm sm:text-md cursor-pointer">
-  <thead className="text-xs sm:text-sm md:text-md font-semibold h-[45px] text-gray-700">
-    <tr className="border-b-2 border-gray-500">
-      <th className="px-2 py-2 text-center">No</th>
-      <th className="px-2 py-2 text-center cursor-pointer" onClick={() => handleSort("title")}>
-        <div className="inline-flex items-center gap-1">
-          Title {sortConfig.key === "title" ? (sortConfig.direction === "asc" ? <FaSortAmountDown /> : <FaSortAmountUp />) : <FaSortAmountDown />}
-        </div>
-      </th>
-      <th className="px-2 py-2 text-center cursor-pointer" onClick={() => handleSort("category")}>
-        <div className="inline-flex items-center gap-1">
-          Category {sortConfig.key === "category" ? (sortConfig.direction === "asc" ? <FaSortAmountDown /> : <FaSortAmountUp />) : <FaSortAmountDown />}
-        </div>
-      </th>
-      <th className="px-2 py-2 text-center cursor-pointer" onClick={() => handleSort("author")}>
-        <div className="inline-flex items-center gap-1">
-          Author {sortConfig.key === "author" ? (sortConfig.direction === "asc" ? <FaSortAmountDown /> : <FaSortAmountUp />) : <FaSortAmountDown />}
-        </div>
-      </th>
-      <th className="px-2 py-2 text-center cursor-pointer" onClick={() => handleSort("accession_number")}>
-        <div className="inline-flex items-center gap-1">
-          Accession Number {sortConfig.key === "accession_number" ? (sortConfig.direction === "asc" ? <FaSortAmountDown /> : <FaSortAmountUp />) : <FaSortAmountDown />}
-        </div>
-      </th>
-      <th className="px-2 py-2 text-center">Status</th>
-      <th className="px-2 py-2 text-center">Action</th>
-    </tr>
-  </thead>
-  <tbody>
-    {currentRecords.map((book, index) => (
-      <tr key={book.accession_number} className="text-center hover:bg-gray-200">
-        <td className="px-2 py-2 border-b-2 text-center">{indexOfFirstRecord + index + 1}</td>
-        <td className="px-2 py-2 border-b-2 text-center">{book.title}</td>
-        <td className="px-2 py-2 border-b-2 text-center">{book.category}</td>
-        <td className="px-2 py-2 border-b-2 text-center">{book.author}</td>
-        <td className="px-2 py-2 border-b-2 text-center">{book.accession_number}</td>
-        <td
-          className={`px-2 py-2 my-4 text-center ${
-            book.status.toLowerCase() === "active" ? "bg-green-400 text-black" : "bg-red-100 text-red-800"
-          } rounded-3xl w-[120px] border-b-2`}
-        >
-          {book.status}
-        </td>
-        <td className="px-2 py-2 border-b-2 text-center">
-          <div className="flex gap-1 justify-center">
-            <button
-              className="bg-green-500 text-white rounded-md px-2 py-1 hover:bg-green-700"
-              onClick={() => handleViewClick(book)}
-              title="View Book Details"
-            >
-              <FaEye />
-            </button>
-            <button
-              className="bg-blue-500 text-white rounded-md px-2 py-1 hover:bg-blue-700"
-              onClick={() => onEditClick(book)}
-              title="Edit Book Details"
-            >
-              <FaEdit />
-            </button>
-            <button
-              className="bg-red-500 text-white rounded-md px-2 py-1 hover:bg-red-700"
-              onClick={() => handleDeleteClick(book.id)}
-              title="Delete Book"
-            >
-              <MdDelete />
-            </button>
-          </div>
-        </td>
-      </tr>
-    ))}
-  </tbody>
-</table>
-<div className="flex justify-end mt-[450px] items-center gap-1 pr-10">
+        <thead className="text-xs sm:text-sm md:text-md font-semibold h-[45px] text-gray-700">
+          <tr className="border-b-2 border-gray-500">
+            <th className="px-2 py-2 text-center">No</th>
+            <th className="px-2 py-2 text-center cursor-pointer" onClick={() => handleSort("title")}>
+              <div className="inline-flex items-center gap-1">
+                Title {sortConfig.key === "title" ? (sortConfig.direction === "asc" ? <FaSortAmountDown /> : <FaSortAmountUp />) : <FaSortAmountDown />}
+              </div>
+            </th>
+            <th className="px-2 py-2 text-center cursor-pointer" onClick={() => handleSort("category")}>
+              <div className="inline-flex items-center gap-1">
+                Category {sortConfig.key === "category" ? (sortConfig.direction === "asc" ? <FaSortAmountDown /> : <FaSortAmountUp />) : <FaSortAmountDown />}
+              </div>
+            </th>
+            <th className="px-2 py-2 text-center cursor-pointer" onClick={() => handleSort("author")}>
+              <div className="inline-flex items-center gap-1">
+                Author {sortConfig.key === "author" ? (sortConfig.direction === "asc" ? <FaSortAmountDown /> : <FaSortAmountUp />) : <FaSortAmountDown />}
+              </div>
+            </th>
+            <th className="px-2 py-2 text-center cursor-pointer" onClick={() => handleSort("accession_number")}>
+              <div className="inline-flex items-center gap-1">
+                Accession Number {sortConfig.key === "accession_number" ? (sortConfig.direction === "asc" ? <FaSortAmountDown /> : <FaSortAmountUp />) : <FaSortAmountDown />}
+              </div>
+            </th>
+            <th className="px-2 py-2 text-center">Status</th>
+            <th className="px-2 py-2 text-center">Action</th>
+          </tr>
+        </thead>
+        <tbody>
+          {currentRecords.map((book, index) => (
+            <tr key={book.accession_number} className="text-center hover:bg-gray-200">
+              <td className="px-2 py-2 border-b-2 text-center">{indexOfFirstRecord + index + 1}</td>
+              <td className="px-2 py-2 border-b-2 text-center">{book.title}</td>
+              <td className="px-2 py-2 border-b-2 text-center">{book.category}</td>
+              <td className="px-2 py-2 border-b-2 text-center">{book.author}</td>
+              <td className="px-2 py-2 border-b-2 text-center">{book.accession_number}</td>
+              <td
+                className={`px-2 py-2 my-4 text-center ${
+                  book.status.toLowerCase() === "active" ? "bg-green-400 text-black" : "bg-red-100 text-red-800"
+                } rounded-3xl w-[120px] border-b-2`}
+              >
+                {book.status}
+              </td>
+              <td className="px-2 py-2 border-b-2 text-center">
+                <div className="flex gap-1 justify-center">
+                  <button
+                    className="bg-green-500 text-white rounded-md px-2 py-1 hover:bg-green-700"
+                    onClick={() => handleViewClick(book)}
+                    title="View Book Details"
+                  >
+                    <FaEye />
+                  </button>
+                  <button
+                    className="bg-blue-500 text-white rounded-md px-2 py-1 hover:bg-blue-700"
+                    onClick={() => onEditClick(book)}
+                    title="Edit Book Details"
+                  >
+                    <FaEdit />
+                  </button>
+                  <button
+                    className="bg-red-500 text-white rounded-md px-2 py-1 hover:bg-red-700"
+                    onClick={() => handleDeleteClick(book.id)}
+                    title="Delete Book"
+                  >
+                    <MdDelete />
+                  </button>
+                </div>
+              </td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+
+      {/* Pagination Controls */}
+      <div className="flex justify-end mt-[400px] items-center gap-1 pr-10">
         <button
           onClick={previousPage}
           disabled={currentPage === 1}
@@ -233,6 +247,8 @@ const BookRecord = ({ books, onEditClick }) => {
           Next
         </button>
       </div>
+
+      {/* Modals for View, Delete, and Success Notifications */}
       {showModal && selectedBook && (
         <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
           <div className="bg-white rounded-2xl shadow-xl p-6 w-full max-w-lg mx-4">

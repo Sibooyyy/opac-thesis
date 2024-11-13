@@ -1,5 +1,5 @@
-import Header from "../Components/header";
-import candaleria from '../assets/candaleria.png';
+import { IoMdArrowBack } from "react-icons/io";
+import Logo from '../assets/candaleria.png';
 import { useState, useContext } from 'react';
 import axios from "axios";
 import { loginForm } from '../utils/utils';
@@ -7,49 +7,46 @@ import { ADMIN, PASSWORD } from '../utils/credential';
 import { useNavigate } from "react-router-dom";
 import { AuthContext } from "../App";
 import { FaSpinner } from 'react-icons/fa';
-import backgroundImage from '../assets/output.png'; 
 
-function staff() {
-    const { handleLogin } = useContext(AuthContext);
-    const navigate = useNavigate();
-    const [formData, setFormData] = useState(loginForm());
-    const [loading, setLoading] = useState(false);
-    const [successPopUp, setSuccessPopUp] = useState(false);
-    const [failedPopup, setFailedPopup] = useState(false);
-    const [welcomePopup, setWelcomePopup] = useState(false);
-    const [error, setError] = useState('');
+const Login = () => {
+  const { handleLogin } = useContext(AuthContext);
+  const navigate = useNavigate();
+  const [formData, setFormData] = useState(loginForm());
+  const [loading, setLoading] = useState(false);
+  const [failedPopup, setFailedPopup] = useState(false);
+  const [welcomePopup, setWelcomePopup] = useState(false);
+  const [error, setError] = useState('');
 
-    const handleClick = (link) => {
-        navigate(link);
-    }
+  const handleClick = (link) => {
+      navigate(link);
+    };
+  const handleChange = (e) => {
+      const { name, value } = e.target;
+      setFormData({ ...formData, [name]: value });
+      setError(''); 
+      setFailedPopup(false); 
+  }
 
-    const handleChange = (e) => {
-        const { name, value } = e.target;
-        setFormData({ ...formData, [name]: value });
-        setError(''); 
-        setFailedPopup(false); 
-    }
+  const handleSubmit = (e) => {
+      e.preventDefault();
+      if (!formData.username || !formData.password) {
+          alert("Please fill all fields!");
+          return;
+      }
+      setLoading(true); 
 
-    const handleSubmit = (e) => {
-        e.preventDefault();
-        if (!formData.username || !formData.password) {
-            alert("Please fill all fields!");
-            return;
-        }
-        setLoading(true); 
-
-        if (formData.username === ADMIN && formData.password === PASSWORD) {
-            setTimeout(() => {
-                setWelcomePopup(true); 
-                setTimeout(() => {
-                    setLoading(false); 
-                    setWelcomePopup(false);
-                    handleLogin(formData);
-                    navigate('/admin/home/dashboard');
-                }, 3000);
-            }, 1000);
-        } else {
-            const url = 'http://localhost:8081/auth/login/staff';
+      if (formData.username === ADMIN && formData.password === PASSWORD) {
+          setTimeout(() => {
+              setWelcomePopup(true); 
+              setTimeout(() => {
+                  setLoading(false); 
+                  setWelcomePopup(false);
+                  handleLogin(formData);
+                  navigate('/admin/home/dashboard');
+              }, 3000);
+          }, 1000);
+      } else {
+        const url = 'http://localhost:8081/auth/login/staff';
             axios.post(url, formData)
                 .then((res) => {
                     const { status, message, data } = res.data;
@@ -76,73 +73,58 @@ function staff() {
         }
     }
 
-    return (
-        <>  
-            <Header />
-            <div 
-                className="flex justify-center flex-col items-center border-2 w-[35%] max-w-[600px] mx-auto my-16 p-6 rounded-2xl gap-6 shadow-lg bg-white">
-                <div>
-                    <img
-                        src={candaleria}
-                        alt="Candelaria"
-                    />
-                </div>
-                <div className="text-center">
-                    <h1 className="font-poppins font-bold text-3xl text-[#001377]">Library Staff</h1>
-                </div>
-                <form className="flex flex-col gap-4 w-[75%]" onSubmit={handleSubmit}>
-                    <div className="flex flex-col gap-2">
-                        <label className="font-montserrat text-md font-semibold">Username</label>
-                        <input
-                            className="p-2 border border-gray-300 rounded-md shadow-sm focus:border-blue-500 focus:outline-none w-full"
-                            value={formData.username}
-                            onChange={handleChange}
-                            type="text"
-                            name="username"
-                            placeholder="Enter your username"
-                        />
-                    </div>
-                    <div className="flex flex-col gap-2">
-                        <label className="font-montserrat text-md font-semibold">Password</label>
-                        <input
-                            className="p-2 border border-gray-300 rounded-md shadow-sm focus:border-blue-500 focus:outline-none w-full"
-                            value={formData.password}
-                            onChange={handleChange}
-                            type="password"
-                            name="password"
-                            placeholder="Enter your password"
-                        />
-                    </div>
-                    <div className="flex justify-center mt-3">
-                        <button
-                            className="bg-[#0CA1E2] text-white py-2 px-4 md:px-6 rounded-lg cursor-pointer font-montserrat text-xs md:text-sm"
-                            type="submit"
-                            disabled={loading}
-                        >
-                            {loading ? <FaSpinner className="animate-spin" /> : "Login"}
-                        </button>
-                    </div>
-                </form>
-                <span className='underline text-[blue] cursor-pointer font-montserrat text-[15px]' onClick={() => handleClick('/login')}>Login as User</span>
-                
-                {welcomePopup && (
-                    <div className="bg-green-500 text-black p-4 rounded-md shadow-md">
-                        <p>Welcome, {formData.username === ADMIN ? 'Admin' : 'User'}!</p>
-                    </div>
-                )}
-                {successPopUp && (
-                    <div className="bg-green-500 text-black p-2 rounded-md">
-                        <p>Login successful</p>
-                    </div>
-                )}
-                {failedPopup && (
-                    <div className="bg-red-500 text-black p-2 rounded-md">
-                        <p>{error}</p>
-                    </div>
-                )}
-            </div>
-        </>
-    );    
-}
+  return (
+    <div className="bg-[#EFF6FC] min-h-screen flex justify-center items-center overflow-y-auto">
+      <div className="flex flex-col justify-center mx-4 sm:mx-8 md:mx-auto w-full sm:w-[80%] md:w-[60%] lg:w-[40%] max-w-md border shadow-2xl rounded-lg p-6 bg-[#FBFDFF] font-montserrat">
+        
 
-export default staff;
+        <div className="flex justify-between w-full mb-6 cursor-pointer">
+          <div className="flex items-center gap-1 hover:text-blue-300 text-[#4EBCFF] text-[13px]" onClick={() => handleClick("/home")}>
+            <IoMdArrowBack /> Back to Homepage
+          </div>
+          <div className="hover:text-blue-300 text-[#4EBCFF] text-[14px]" onClick={() => handleClick("/login")}>
+            Login As User 
+          </div>
+        </div>
+
+
+        <div className="flex flex-col justify-center items-center gap-2 w-full mb-6">
+          <img src={Logo} alt="Logo" className="w-24 h-24" />
+          <h1 className="text-[#4EBCFF] font-bold text-2xl text-center">Library Staff</h1>
+        </div>
+
+        <form onSubmit={handleSubmit}>
+          <div className="flex flex-col gap-4 w-full">
+            <div className="flex flex-row gap-2">
+              <label className="font-md text-lg">Username</label>
+              <input type="text" className="border-2 w-[80%] rounded-md cursor-pointer border-black py-1 px-2  text-[15px]"                          
+                value={formData.username}
+                onChange={handleChange}
+                name="username" />
+            </div>
+            <div className="flex flex-row gap-2">
+              <label className="font-md text-lg">Password</label>
+              <input type="password" className="border-2 w-[80%] rounded-md cursor-pointer border-black text-[15px] py-1 px-2"                           
+                value={formData.password}
+                onChange={handleChange}
+                name="password" />
+            </div>
+            <button className="w-full bg-[#4EBCFF] h-[40px] text-black rounded-md hover:text-blue-500 mt-4 mb-2 flex justify-center items-center"                            
+                    type="submit"
+                    disabled={loading}
+                    >
+                    {loading ? <FaSpinner className="animate-spin text-xl" /> : "Login"}
+            </button>
+          </div>
+        </form>
+        {failedPopup && (
+          <div className="mt-4 text-red-500 text-center font-semibold">
+            {error}
+          </div>
+        )}
+      </div>
+    </div>
+  );
+};
+
+export default Login;

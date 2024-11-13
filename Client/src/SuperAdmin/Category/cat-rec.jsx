@@ -4,6 +4,7 @@ import moment from 'moment';
 import { FaEdit } from "react-icons/fa";
 import { LuDownloadCloud } from "react-icons/lu";
 import { FaSortAmountDown, FaSortAmountUp } from "react-icons/fa";
+import * as XLSX from 'xlsx'; // Import the xlsx library
 
 const CatRec = ({ onEditClick }) => {
   const [data, setData] = useState([]);
@@ -70,6 +71,14 @@ const CatRec = ({ onEditClick }) => {
     }
   };
 
+  // Export to Excel function
+  const exportToExcel = () => {
+    const worksheet = XLSX.utils.json_to_sheet(data);
+    const workbook = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(workbook, worksheet, "Categories");
+    XLSX.writeFile(workbook, "Categories.xlsx");
+  };
+
   if (loading) {
     return <div>Loading...</div>;
   }
@@ -82,7 +91,11 @@ const CatRec = ({ onEditClick }) => {
     <div className="m-5 w-[80%] h-[550px] mt-16 rounded-2xl border bg-[#F6FBFD] font-montserrat shadow-3xl">
       <div className='flex justify-between h-[70px] items-center p-5 bg-[#EDF3F7] rounded-t-2xl'>
         <h1 className='font-bold text-xl text-gray-900'>Category List</h1>
-        <button className='bg-blue-600 text-white w-[150px] h-8 rounded-lg shadow-md flex items-center justify-center gap-2 text-sm font-semibold hover:bg-blue-700'>Export Data <LuDownloadCloud /></button>
+        <button 
+          onClick={exportToExcel} // Call the export function on click
+          className='bg-blue-600 text-white w-[150px] h-8 rounded-lg shadow-md flex items-center justify-center gap-2 text-sm font-semibold hover:bg-blue-700'>
+          Export Data <LuDownloadCloud />
+        </button>
       </div>
       <div className=" w-full sm:w-[30%] mb-3 p-5 mt-3">
         <input

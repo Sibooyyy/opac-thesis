@@ -140,9 +140,9 @@ const UserTable = () => {
 
   return (
     <>
-    <div className='bg-[#ECF3F9] min-h-screen overflow-y-auto'>
+    <div className='bg-[#EFF6FC] min-h-screen overflow-y-auto'>
       <Navigation />
-      <div className="m-5 w-full sm:w-[90%]   mb-10 mt-16 shadow-3xl mx-auto border bg-[#F6FBFD] rounded-md  font-montserrat ">
+      <div className="m-5 w-full sm:w-[90%] mb-10 mt-16 shadow-3xl mx-auto border bg-[#F6FBFD] rounded-md  font-montserrat ">
         <div className="flex justify-between h-[70px] items-center p-5 bg-[#EDF3F7]">
           <h1 className="font-bold text-xl sm:text-2xl text-gray-600">Client List</h1>
           <button className="bg-blue-600 text-white w-[150px] h-8 rounded-lg shadow-md flex items-center justify-center gap-2 text-sm font-semibold hover:bg-blue-700">

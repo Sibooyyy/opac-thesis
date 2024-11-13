@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { useContext, useState, useEffect, useRef } from "react";
 import { AuthContext } from '../App'; 
 import { FaUserCircle } from 'react-icons/fa';
+import {FaPowerOff } from "react-icons/fa";
 
 
 
@@ -54,9 +55,9 @@ function Header() {
               <div className='absolute right-0 mt-2 w-48 bg-white rounded-lg shadow-lg z-50'>
                 <ul className='py-2'>
                   <li 
-                    className='px-4 py-2 hover:bg-gray-100 cursor-pointer'
+                    className='p-2 hover:bg-gray-200 cursor-pointer text-sm md:text-[15px] flex items-center gap-2 font-montserrat'
                     onClick={logout}>
-                    Logout
+                    <FaPowerOff /> Sign Out
                   </li>
                 </ul>
               </div>

@@ -98,7 +98,7 @@ const CatInfo = ({ formData, setFormData, onFormSubmit }) => {
     </div>
     <form className="flex flex-col pl-3 gap-2 pt-3 font-montserrat" onSubmit={handleSubmit}>
       <div className="flex flex-col w-[70%]">
-        <label className="font-montserrat text-[17px] font-semibold">Category Name</label>
+        <label className="font-montserrat text-[17px] font-md">Category Name</label>
         <input
           type="text"
           name="category"
@@ -108,7 +108,7 @@ const CatInfo = ({ formData, setFormData, onFormSubmit }) => {
           required
         />
       </div>
-      <h1 className="font-montserrat text-[17px] font-semibold pt-3">Status</h1>
+      <h1 className="font-montserrat text-[17px] font-md pt-3">Status</h1>
       <div className="flex gap-1">
         <input
           type="radio"
