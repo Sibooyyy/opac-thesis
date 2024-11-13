@@ -6,24 +6,26 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import moment from 'moment';
 import { MdNavigateNext, MdNavigateBefore } from "react-icons/md";
-import * as XLSX from 'xlsx'; 
+import * as XLSX from 'xlsx';
 
 function FacultyRec() {
   const defaultOptions = ['Pending', 'Returned', 'Approved', 'OverDue'];
   const [records, setRecords] = useState([]);
   const [editStatus, setEditStatus] = useState({});
-  const [searchTerm, setSearchTerm] = useState(''); 
-  const [showSuccessMessage, setShowSuccessMessage] = useState(false); 
+  const [searchTerm, setSearchTerm] = useState('');
+  const [statusFilter, setStatusFilter] = useState(''); // State for status filter
+  const [showSuccessMessage, setShowSuccessMessage] = useState(false);
   const [currentPage, setCurrentPage] = useState(1);
   const recordsPerPage = 5;
   const indexOfLastRecord = currentPage * recordsPerPage;
   const indexOfFirstRecord = indexOfLastRecord - recordsPerPage;
 
-  const filteredRecords = records.filter(record => 
-    record.firstname.toLowerCase().includes(searchTerm.toLowerCase()) ||
+  const filteredRecords = records.filter(record =>
+    (record.firstname.toLowerCase().includes(searchTerm.toLowerCase()) ||
     record.lastname.toLowerCase().includes(searchTerm.toLowerCase()) ||
     record.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
-    record.isbn_issn.toLowerCase().includes(searchTerm.toLowerCase())
+    record.isbn_issn.toLowerCase().includes(searchTerm.toLowerCase())) &&
+    (statusFilter === '' || record.status === statusFilter) // Apply status filter
   );
 
   const currentRecords = filteredRecords.slice(indexOfFirstRecord, indexOfLastRecord);
@@ -56,7 +58,7 @@ function FacultyRec() {
         status: editStatus[id]
       });
       if (response.data.status) {
-        setShowSuccessMessage(true); 
+        setShowSuccessMessage(true);
         setTimeout(() => setShowSuccessMessage(false), 3000);
         setRecords(records.map(record => record.id === id ? { ...record, status: editStatus[id] } : record));
       } else {
@@ -124,25 +126,40 @@ function FacultyRec() {
   return (
     <>
       <div className='bg-[#EFF6FC] min-h-screen overflow-y-auto'>
-        <Navigation/>
-        <div className="m-5 w-full sm:w-[95%]  mt-16 shadow-3xl mx-auto border bg-[#F6FBFD] rounded-md font-montserrat">
+        <Navigation />
+        <div className="m-5 w-full sm:w-[95%] mt-16 shadow-3xl mx-auto border bg-[#F6FBFD] rounded-md font-montserrat">
           <div className="flex justify-between h-[70px] items-center p-5 bg-[#EDF3F7]">
             <h1 className="font-bold text-xl sm:text-2xl">Faculty Borrowing List</h1>
             <button 
-              onClick={exportToExcel} // Call export function on button click
+              onClick={exportToExcel}
               className="bg-blue-600 text-white w-[150px] h-8 rounded-lg shadow-md flex items-center justify-center gap-2 text-sm font-semibold hover:bg-blue-700"
             >
               Export Data <LuDownloadCloud />
             </button>
           </div>
-
-          <div className="w-full sm:w-[30%] mb-3 p-5 mt-3">
-            <input
-              type="text"
-              placeholder="Search a list"
-              className="pl-10 pr-2 py-2 border rounded-md w-[60%] focus:outline-none focus:border-blue-500"
-              onChange={(e) => setSearchTerm(e.target.value)}
-            />
+          
+          <div className="flex justify-between">
+            <div className="w-full sm:w-[30%] mb-3 p-5 mt-3">
+              <input
+                type="text"
+                placeholder="Search a list"
+                className="pl-10 pr-2 py-2 border rounded-md w-[60%] focus:outline-none focus:border-blue-500"
+                onChange={(e) => setSearchTerm(e.target.value)}
+              />
+            </div>
+            <div className="flex flex-row items-center mr-10 gap-3">
+              <h1>Filter by</h1>
+              <select
+                className="border rounded-md p-2"
+                value={statusFilter}
+                onChange={(e) => setStatusFilter(e.target.value)}
+              >
+                <option value="">All Status</option>
+                {defaultOptions.map((option) => (
+                  <option value={option} key={option}>{option}</option>
+                ))}
+              </select>
+            </div>
           </div>
 
           {showSuccessMessage && (
@@ -165,7 +182,7 @@ function FacultyRec() {
                   <th className="px-10 py-4">Status</th>
                   <th className="px-10 py-4">Action</th>
                 </tr>
-              </thead> 
+              </thead>
               <tbody>
                 {currentRecords.length > 0 ? (
                   currentRecords.map((record, index) => (
