@@ -1,10 +1,10 @@
 import React from "react";
 import Navigation from "../../Components/navigation";
-import { FaRegUser } from "react-icons/fa";
 import BookCollectionOverview from "../../ChartComponent/AdminChart/pie"; 
 import UserRegistrationTrends  from '../../ChartComponent/AdminChart/UserRegistrationTrends';
 import Chart from '../../ChartComponent/AdminChart/chart';
 import BorrowingPatternsHeatmap from "../../ChartComponent/AdminChart/heatmap";
+
 
 
 function Dashboard() {
@@ -15,17 +15,6 @@ function Dashboard() {
         <div className="flex flex-col p-[50px] mx-[150px] mt-[30px] font-montserrat gap-10">
           <div className="text-3xl font-bold">
             <h1 className="text-gray-600">Welcome, <span className="text-[#4EBCFF]">Admin!</span> </h1>
-          </div>
-          <div className="border w-full shadow-3xl rounded-lg h-[150px] bg-[#FBFDFF] flex flex-row justify-center items-center ">
-            <div className="border w-[50%] flex items-center gap-1 rounded-md h-[50px] bg-[#EDF3F7]">
-              <FaRegUser/> <span>Student</span>
-            </div>
-            <div className="border w-[50%] flex items-center gap-1 rounded-md h-[50px] bg-[#EDF3F7]">
-              <FaRegUser/> <span>Faculty</span>
-            </div>
-            <div className="border w-[50%] flex items-center gap-1 rounded-md h-[50px] bg-[#EDF3F7]">
-              <FaRegUser/> <span>Staff</span>
-            </div>
           </div>
           <div className="flex justify-between gap-4 ">
             <div className="border w-full shadow-3xl rounded-lg bg-[#FBFDFF] h-[600px]">
