@@ -86,7 +86,7 @@ const BasicSearch = () => {
 
     return (   
 
-        <div className='w-[100%] h-[800px] p-[60px] bg-[#0CA1E2] flex flex-col items-center gap-5'>
+        <div className='w-[100%] h-[1000px] p-[60px] bg-[#0CA1E2] flex flex-col items-center gap-5'>
             <h1 className='font-poppins text-[white] text-[25px] font-bold'>Basic Search</h1>
             <p className='font-poppins text-[white] text-[16px]'>Search the library's holdings for books, digital records, periodicals, and more</p>
 

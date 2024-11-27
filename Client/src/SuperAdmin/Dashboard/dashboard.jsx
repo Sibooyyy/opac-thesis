@@ -18,23 +18,23 @@ function Dashboard() {
           </div>
           <div className="flex justify-between gap-4 ">
             <div className="border w-full shadow-3xl rounded-lg bg-[#FBFDFF] h-[600px]">
-              <h2 className="p-4 text-lg font-semibold text-gray-600 mb-4 bg-[#EDF3F7]">Book Collection Overview</h2>
+              <h2 className="p-4 text-lg font-semibold text-white mb-4 bg-[#343689]">Book Collection Overview</h2>
               <BookCollectionOverview  />
             </div>
             <div className="border w-full shadow-3xl rounded-lg bg-[#FBFDFF] h-[500px]">
-            <h2 className="p-4 text-lg font-semibold text-gray-600 mb-4 bg-[#EDF3F7]">User Registration Trend</h2>
+            <h2 className="p-4 text-lg font-semibold text-white mb-4 bg-[#343689]">User Registration Trend</h2>
               <UserRegistrationTrends/>
             </div>
           </div>
           <div className="w-full border shadow-3xl rounded-lg h-[700px] bg-[#FBFDFF]">
             <div>
-              <h2 className="p-4 text-lg font-semibold text-gray-600 mb-4 bg-[#EDF3F7]">User Registration Trend</h2>
+              <h2 className="p-4 text-lg font-semibold text-white mb-4 bg-[#343689]">Borrwing Chart</h2>
               <Chart/>
             </div>
           </div>
           <div className="w-full border shadow-3xl rounded-lg h-[760px] bg-[#F6FBFD]">
             <div>
-            <h2 className="p-4 text-lg font-semibold text-gray-600 mb-4 bg-[#EDF3F7]">Borrowing Patterns by Category</h2>
+            <h2 className="p-4 text-lg font-semibold text-white mb-4 bg-[#343689]">Borrowing Patterns by Category</h2>
               <BorrowingPatternsHeatmap/>
             </div>
           </div>

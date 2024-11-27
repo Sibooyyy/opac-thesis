@@ -20,6 +20,7 @@ import StaffLogin from './Auth/staff.jsx'
 import Category from './LibraryStaff/Categories/Category.jsx'
 import Book from './LibraryStaff/Books/book.jsx'
 import ScrollToTop from "../src/utils/scroll.jsx";
+import StaffRec from './LibraryStaff/Record/staff-rec.jsx'
 
 
 
@@ -153,6 +154,7 @@ return (
           <Route path="/home/dashboard" element={<StaffDashboard />} />
           <Route path="/home/student/borrowing" element={<ClientTable />} />
           <Route path="/home/faculty/borrowing" element={<FacultyTable />} />
+          <Route path="/home/staff/borrowing" element={<StaffRec />} />
           <Route path="/home/staff/category" element={<Category />} />
           <Route path="/home/staff/book" element={<Book />} />
 

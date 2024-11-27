@@ -36,7 +36,7 @@ const hashPassword = (password, callback) => {
 }
 
 app.post('/auth/register', (req, res) => {
-    const { firstname, lastname, idNumber, contactNumber, email, designation, username, password } = req.body;
+    const { firstname, lastname, idNumber, contactNumber, email, designation, position, username, password } = req.body;
     let table = new DataTable(connection, "profile");
 
     table.findOne({ username }, (usernameResult) => {
@@ -46,7 +46,7 @@ app.post('/auth/register', (req, res) => {
             if (idNumberResult) return res.json({ status: false, message: "ID Number already exists" });
 
             hashPassword(password, (hash) => {
-                const datas = { firstname, lastname, idNumber, contactNumber, email, designation, username, password: hash, created_at: new Date() };
+                const datas = { firstname, lastname, idNumber, contactNumber, email, designation, position: position || "N/A", username, password: hash, created_at: new Date() };
 
                 table.insert(datas, (insertResult) => {
                     if (insertResult) {

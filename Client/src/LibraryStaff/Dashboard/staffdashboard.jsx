@@ -13,13 +13,13 @@ const staffdashboard = () => {
           </div>
           <div className="flex justify-between gap-5 h-[450px]">
             <div className="border w-[70%] shadow-3xl rounded-lg bg-[#FBFDFF] m-4"> 
-              <h2 className="p-4 text-lg font-semibold text-gray-600 mb-4 bg-[#EDF3F7]">Daily and Weekly Borrowing Patterns</h2>
+              <h2 className="p-4 text-lg font-semibold text-white mb-4 bg-[#292A84]">Daily and Weekly Borrowing Patterns</h2>
               <HeatMap/>
             </div>
           </div>
           <div className="w-full border shadow-3xl rounded-lg h-[700px] bg-[#F6FBFD]">
             <div> 
-              <h2 className="p-4 text-lg font-semibold text-gray-600 mb-4 bg-[#EDF3F7]">Due Dates and Overdue Books</h2>
+              <h2 className="p-4 text-lg font-semibold text-white mb-4 bg-[#292A84]">Due Dates and Overdue Books</h2>
               <DueDate/>
             </div>
           </div>
