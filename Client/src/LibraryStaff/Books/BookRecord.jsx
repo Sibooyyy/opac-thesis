@@ -126,8 +126,8 @@ const BookRecord = ({ books, onEditClick }) => {
 
   return (
     <div className="m-5 w-[80%] h-[800px] mt-16 rounded-2xl border bg-[#F6FBFD] font-montserrat shadow-3xl">
-      <div className="flex justify-between h-[70px] items-center p-5 bg-[#EDF3F7] rounded-t-2xl">
-        <h1 className="font-bold text-xl text-gray-900">Book List</h1>
+      <div className="flex justify-between h-[70px] items-center p-5 bg-[#292A84] rounded-t-2xl">
+        <h1 className="font-bold text-xl text-white">Book List</h1>
         <button
           onClick={exportToExcel} // Call the export function on click
           className="bg-blue-600 text-white w-[150px] h-8 rounded-lg shadow-md flex items-center justify-center gap-2 text-sm font-semibold hover:bg-blue-700"

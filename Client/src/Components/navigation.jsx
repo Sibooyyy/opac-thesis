@@ -34,7 +34,7 @@ const Navigation = () => {
   };
 
   return (
-    <div className="flex flex-col md:flex-row items-center bg-[#F6F8F9] border-b-2 shadow-lg rounded-lg gap-4 md:gap-8 w-full p-4 font-montserrat text-lg font-medium cursor-pointer">
+    <div className="flex flex-col md:flex-row items-center bg-[#292A84] text-white shadow-lg rounded-md gap-4 md:gap-8 w-full p-4 font-montserrat text-lg font-medium cursor-pointer ">
       <div className="flex gap-2 items-center cursor-pointer" onClick={() => handleClick('/admin/home/dashboard')}>
         <img src={Logo} alt="Logo" className="h-12 w-12 md:h-10 md:w-10 rounded-full" /> 
         <span className="hidden md:block text-sm md:text-[18px]">Admin</span>
@@ -50,15 +50,15 @@ const Navigation = () => {
               Account Record <FaAngleDown />
             </div>
             {isDropdownOpen && (
-              <ul className="absolute bg-white border rounded shadow-lg mt-2 p-2 w-40 md:w-48 text-sm z-10">
+              <ul className="absolute bg-white border rounded shadow-lg mt-2 p-2 w-40 md:w-48 text-sm z-10 text-black">
                 <li
                   className="p-2 hover:bg-gray-200 cursor-pointer flex justify-between items-center"
                   onClick={() => toggleSubmenu('addAccount')}
                 >
                   Add Account <FaAngleRight />
                   {activeSubmenu === 'addAccount' && (
-                    <ul className="absolute left-full top-0 ml-1 w-36 md:w-40 bg-white border rounded shadow-lg text-xs md:text-sm">
-                      <li className="px-4 py-2 hover:bg-gray-200 cursor-pointer" onClick={() => handleClick('/admin/register/client')}>Add Client Account</li>
+                    <ul className="absolute left-full top-0 ml-1 w-36 md:w-40 bg-white border rounded shadow-lg text-xs md:text-sm ">
+                      <li className="px-4 py-2 hover:bg-gray-200 cursor-pointer " onClick={() => handleClick('/admin/register/client')}>Add Client Account</li>
                       <li className="px-4 py-2 hover:bg-gray-200 cursor-pointer" onClick={() => handleClick('/admin/register/staff')}>Add Library Staff Account</li>
                     </ul>
                   )}
@@ -86,7 +86,7 @@ const Navigation = () => {
             <FaRegUserCircle size={24} />
           </button>
           {isUserDropdownOpen && (
-            <ul className="absolute bg-white border rounded shadow-lg mt-2 md:mt-[100px] p-2 right-0 w-32 md:w-40 z-10">
+            <ul className="absolute bg-white border rounded shadow-lg mt-2 md:mt-[100px] p-2 right-0 w-32 md:w-40 z-10 text-black">
               <li
                 className="p-2 hover:bg-gray-200 cursor-pointer text-sm md:text-[15px] flex items-center gap-2"
                 onClick={logout}

@@ -38,8 +38,8 @@ function Header() {
 
   return (
     <div className='flex flex-wrap justify-between items-center gap-2 bg-[#161D6F] w-full px-4 py-2'>
-      <div className='w-1/4'>
-        <img src={Logo} alt="Logo" className='max-w-full h-auto'/>
+      <div className='w-1/1'>
+        <img src={Logo} alt="Logo" className='w-[80%] h-auto'/>
       </div>
       <div className='flex items-center text-center'>
         <li className='list-none text-white font-poppins text-md md:text-bas pr-[300px]'>Online Public Access Catalog (OPAC)</li>
@@ -47,7 +47,7 @@ function Header() {
       <div className='relative flex items-center mr-3' ref={dropdownRef}> {/* Ref added here */}
         {user ? (
           <div className='relative'>
-            <FaUserCircle 
+            <FaUserCircle size={27} 
               onClick={toggleDropdown}  
               className='text-white text-2xl cursor-pointer mr-7 text-[35px]'
             />

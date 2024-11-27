@@ -26,6 +26,7 @@ const initTables = () => {
             contactNumber VARCHAR(20) NOT NULL,
             email VARCHAR(250) NOT NULL,
             designation VARCHAR(255) NOT NULL,
+            position VARCHAR(255) NOT NULL,
             username VARCHAR(255) NOT NULL,
             password VARCHAR(255) NOT NULL,
             created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,

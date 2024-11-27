@@ -10,6 +10,7 @@ export const registrationForm = () => {
         contactNumber: "",
         email: "",
         designation: "",
+        position: "",
         username: "",
         password: "",
         confirm_password: ""

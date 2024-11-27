@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import StudentRecord from './student-rec'; 
 import FacultyRecord from './faculty-rec'; 
+import StaffRecord from './staff-rec'
 const Records = () => {
   const [designation, setDesignation] = useState('');
 
@@ -31,6 +32,7 @@ const Records = () => {
     <div>
       {designation === 'student' && <StudentRecord />}
       {designation === 'faculty' && <FacultyRecord />}
+      {designation === 'staff' && <StaffRecord />}
     </div>
   );
 };
