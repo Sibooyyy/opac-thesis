@@ -115,9 +115,9 @@ function StaffRec() {
       }));
       const worksheet = XLSX.utils.json_to_sheet(data);
       const workbook = XLSX.utils.book_new();
-      XLSX.utils.book_append_sheet(workbook, worksheet, "StudentRecords");
+      XLSX.utils.book_append_sheet(workbook, worksheet, "StaffRecord");
   
-      XLSX.writeFile(workbook, "StudentDataRecord.xlsx");
+      XLSX.writeFile(workbook, "StaffRecord.xlsx");
     };
   
     return (
