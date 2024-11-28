@@ -4,6 +4,8 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import moment from 'moment';
 import * as XLSX from 'xlsx';
+import { FaSortAmountDown } from "react-icons/fa";
+
 
 function StaffRec() {
     const defaultOptions = ['Pending', 'Returned', 'Approved', 'Overdue'];

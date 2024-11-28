@@ -7,6 +7,8 @@ import { ADMIN, PASSWORD } from '../utils/credential';
 import { useNavigate } from "react-router-dom";
 import { AuthContext } from "../App";
 import { FaSpinner } from 'react-icons/fa';
+import BackgroundImage from '../assets/output.png';
+
 
 const Login = () => {
   const { handleLogin } = useContext(AuthContext);
@@ -73,48 +75,53 @@ const Login = () => {
       }
   }
 
-
   return (
-    <div className="bg-[#EFF6FC] min-h-screen flex justify-center items-center overflow-y-auto">
-      <div className="flex flex-col justify-center mx-4 sm:mx-8 md:mx-auto w-full sm:w-[80%] md:w-[60%] lg:w-[40%] max-w-md border shadow-2xl rounded-lg p-6 bg-[#FBFDFF] font-montserrat">
+    <div style={{ backgroundImage: `url(${BackgroundImage})` }}
+    className="bg-custom-bg min-h-screen flex justify-center items-center overflow-y-auto">
+      <div className="flex flex-col justify-center mx-4 h-[470px] sm:mx-8 md:mx-auto w-full sm:w-[80%] md:w-[80%] lg:w-[40%] max-w-lg border shadow-3xl rounded-lg p-6 bg-[#FBFDFF] font-montserrat">
         
-
         <div className="flex justify-between w-full mb-6 cursor-pointer">
-          <div className="flex items-center gap-1 hover:text-blue-300 text-[#4EBCFF] text-[13px]" onClick={() => handleClick("/home")}>
+          <div className="flex items-center gap-1 hover:text-blue-300 text-[#292A84] text-[17px]" onClick={() => handleClick("/home")}>
             <IoMdArrowBack /> Back to Homepage
           </div>
-          <div className="hover:text-blue-300 text-[#4EBCFF] text-[14px]" onClick={() => handleClick("/login/librarian")}>
+          <div className="hover:text-blue-300 text-[#292A84] text-[17px]" onClick={() => handleClick("/login/librarian")}>
             Login As Staff 
           </div>
         </div>
 
-
         <div className="flex flex-col justify-center items-center gap-2 w-full mb-6">
           <img src={Logo} alt="Logo" className="w-24 h-24" />
-          <h1 className="text-[#4EBCFF] font-bold text-2xl text-center">Online Public Access Catalog</h1>
+          <h1 className="text-[#292A84] font-bold text-2xl text-center">Online Public Access Catalog</h1>
         </div>
 
         <form onSubmit={handleSubmit}>
           <div className="flex flex-col gap-4 w-full">
             <div className="flex flex-row gap-2">
               <label className="font-md text-lg">Username</label>
-              <input type="text" className="border-2 w-[80%] rounded-md cursor-pointer border-black py-1 px-2  text-[15px]"                          
+              <input 
+                type="text" 
+                className="border-2 w-full sm:w-[90%] rounded-md cursor-pointer border-black py-1 px-2 text-[15px]"                          
                 value={formData.username}
                 onChange={handleChange}
-                name="username" />
+                name="username" 
+              />
             </div>
             <div className="flex flex-row gap-2">
               <label className="font-md text-lg">Password</label>
-              <input type="password" className="border-2 w-[80%] rounded-md cursor-pointer border-black text-[15px] py-1 px-2"                           
+              <input 
+                type="password" 
+                className="border-2 w-full sm:w-[90%] rounded-md cursor-pointer border-black text-[15px] py-1 px-2"                           
                 value={formData.password}
                 onChange={handleChange}
-                name="password" />
+                name="password" 
+              />
             </div>
-            <button className="w-full bg-[#4EBCFF] h-[40px] text-black rounded-md hover:text-blue-500 mt-4 mb-2 flex justify-center items-center"                            
-                    type="submit"
-                    disabled={loading}
-                    >
-                    {loading ? <FaSpinner className="animate-spin text-xl" /> : "Login"}
+            <button 
+              className="w-full bg-[#4EBCFF] h-[40px] text-white rounded-md hover:text-blue-500 mt-4 mb-2 flex justify-center items-center"                            
+              type="submit"
+              disabled={loading}
+            >
+              {loading ? <FaSpinner className="animate-spin text-xl" /> : "Login"}
             </button>
           </div>
         </form>
