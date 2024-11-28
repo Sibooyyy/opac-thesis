@@ -8,6 +8,7 @@ import { useNavigate } from "react-router-dom";
 import { AuthContext } from "../App";
 import { FaSpinner } from 'react-icons/fa';
 
+
 const Login = () => {
   const { handleLogin } = useContext(AuthContext);
   const navigate = useNavigate();
@@ -74,15 +75,16 @@ const Login = () => {
     }
 
   return (
-    <div className="bg-[#EFF6FC] min-h-screen flex justify-center items-center overflow-y-auto">
-      <div className="flex flex-col justify-center mx-4 sm:mx-8 md:mx-auto w-full sm:w-[80%] md:w-[60%] lg:w-[40%] max-w-md border shadow-2xl rounded-lg p-6 bg-[#FBFDFF] font-montserrat">
+    <div 
+    className="bg-[#EFF6FC] min-h-screen flex justify-center items-center overflow-y-auto">
+      <div className="flex flex-col justify-center mx-4 h-[470px] sm:mx-8 md:mx-auto w-full sm:w-[80%] md:w-[80%] lg:w-[40%] max-w-lg border shadow-3xl rounded-lg p-6 bg-[#FBFDFF] font-montserrat">
         
 
         <div className="flex justify-between w-full mb-6 cursor-pointer">
-          <div className="flex items-center gap-1 hover:text-blue-300 text-[#4EBCFF] text-[13px]" onClick={() => handleClick("/home")}>
+          <div className="flex items-center gap-1 hover:text-blue-300 text-[#292A84] text-[17px]" onClick={() => handleClick("/home")}>
             <IoMdArrowBack /> Back to Homepage
           </div>
-          <div className="hover:text-blue-300 text-[#4EBCFF] text-[14px]" onClick={() => handleClick("/login")}>
+          <div className="hover:text-blue-300 text-[#292A84] text-[17px]" onClick={() => handleClick("/login")}>
             Login As User 
           </div>
         </div>
@@ -90,7 +92,7 @@ const Login = () => {
 
         <div className="flex flex-col justify-center items-center gap-2 w-full mb-6">
           <img src={Logo} alt="Logo" className="w-24 h-24" />
-          <h1 className="text-[#4EBCFF] font-bold text-2xl text-center">Library Staff</h1>
+          <h1 className="text-[#292A84] font-bold text-2xl text-center">Library Staff</h1>
         </div>
 
         <form onSubmit={handleSubmit}>
@@ -109,7 +111,7 @@ const Login = () => {
                 onChange={handleChange}
                 name="password" />
             </div>
-            <button className="w-full bg-[#4EBCFF] h-[40px] text-black rounded-md hover:text-blue-500 mt-4 mb-2 flex justify-center items-center"                            
+            <button className="w-full bg-[#4EBCFF] h-[40px] text-white rounded-md hover:text-blue-500 mt-4 mb-2 flex justify-center items-center"                            
                     type="submit"
                     disabled={loading}
                     >

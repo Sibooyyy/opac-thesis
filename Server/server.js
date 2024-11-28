@@ -1256,9 +1256,11 @@ app.post('/user/update-status', (req, res) => {
                 smsMessage = `Hi ${firstname} ${lastname}, your book "${title}" has been ${status} and ready for pickup in Library. Thank you!`;
             } else if (status === 'Returned') {
                 smsMessage = `Hi ${firstname} ${lastname}, your book "${title}" has been ${status}. Thank you!`;
+            } else if (status === 'Overdue') {
+                smsMessage = `Hi ${firstname} ${lastname}, your book "${title}" is overdue. Please return it immediately to avoid penalties. Thank you!`;
             }
 
-            if (status === 'Approved' || status === 'Returned') {
+            if (['Approved', 'Returned', 'Overdue'].includes(status)) {
                 client.messages.create({
                     body: smsMessage,
                     from: twilioPhoneNumber, 
@@ -1271,6 +1273,7 @@ app.post('/user/update-status', (req, res) => {
                     console.error("Failed to send SMS:", smsError);
                 });
             }
+
             if (status === 'Returned') {
                 const getBookIdQuery = `SELECT book_id FROM borrowed_books WHERE id = ?`;
                 connection.query(getBookIdQuery, [id], (bookErr, bookResult) => {
@@ -1297,6 +1300,7 @@ app.post('/user/update-status', (req, res) => {
         });
     })
 });
+
 
 
 

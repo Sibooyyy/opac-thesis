@@ -9,7 +9,7 @@ import { MdNavigateNext, MdNavigateBefore } from "react-icons/md";
 import * as XLSX from 'xlsx';
 
 function FacultyRec() {
-  const defaultOptions = ['Pending', 'Returned', 'Approved', 'OverDue'];
+  const defaultOptions = ['Pending', 'Returned', 'Approved', 'Overdue'];
   const [records, setRecords] = useState([]);
   const [editStatus, setEditStatus] = useState({});
   const [searchTerm, setSearchTerm] = useState('');
