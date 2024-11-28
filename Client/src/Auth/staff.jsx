@@ -76,7 +76,7 @@ const Login = () => {
 
   return (
     <div 
-    className="bg-[#EFF6FC] min-h-screen flex justify-center items-center overflow-y-auto">
+    className="bg-[#DCE8F2] min-h-screen flex justify-center items-center overflow-y-auto">
       <div className="flex flex-col justify-center mx-4 h-[470px] sm:mx-8 md:mx-auto w-full sm:w-[80%] md:w-[80%] lg:w-[40%] max-w-lg border shadow-3xl rounded-lg p-6 bg-[#FBFDFF] font-montserrat">
         
 
