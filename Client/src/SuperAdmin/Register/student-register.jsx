@@ -132,7 +132,7 @@ const StudentRegister = () => {
                 </select>
               </div>
 
-              {(formData.designation === 'Faculty' || formData.designation === 'Staff') && (
+              {(formData.designation === 'Staff') && (
                 <div className='flex flex-col gap-2 w-full md:w-[30%]'>
                   <label className='font-montserrat text-md font-semibold'>Position</label>
                   <input
