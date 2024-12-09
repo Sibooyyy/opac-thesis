@@ -100,7 +100,7 @@ const Navs = () => {
   };
 
   return (
-    <div className="flex flex-col md:flex-row items-center bg-[#292A84] text-white border-b-2 shadow-lg rounded-lg gap-4 md:gap-8 w-full p-4 font-montserrat text-lg font-medium cursor-pointer">
+    <div className="flex flex-col md:flex-row items-center bg-[#292A84] text-white border-b-2 shadow-lg rounded-md gap-4 md:gap-8 w-full p-4 font-montserrat text-lg font-medium cursor-pointer">
       <div className="flex gap-2 items-center cursor-pointer" onClick={() => handleClick("/home/dashboard")}>
         <img src={Logo} alt="Logo" className="h-12 w-12 md:h-10 md:w-10 rounded-full" />
         <span className="hidden md:block text-sm md:text-[18px]">Library Staff</span>
