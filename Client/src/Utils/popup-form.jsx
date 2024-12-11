@@ -12,18 +12,17 @@ function PopupForm({ closePopup }) {
 
   useEffect(() => {
     const getCurrentDateInGMT8 = () => {
-      const options = {
-        timeZone: "Asia/Singapore",
-        year: 'numeric',
-        month: '2-digit',
-        day: '2-digit'
-      };
-      const formatter = new Intl.DateTimeFormat('en-GB', options);
-      const formattedDate = formatter.format(new Date());
-      const [day, month, year] = formattedDate.split('/');
-      return `${month}-${day}-${year}`;
+      const now = new Date();
+      const options = { timeZone: "Asia/Singapore" };
+      const localTime = new Date(
+        now.toLocaleString("en-US", options)
+      );
+      const year = localTime.getFullYear();
+      const month = String(localTime.getMonth() + 1).padStart(2, "0");
+      const day = String(localTime.getDate()).padStart(2, "0");
+      return `${year}-${month}-${day}`; // Proper format for min attribute
     };
-
+  
     setCurrentDate(getCurrentDateInGMT8());
   }, []);
 
@@ -115,7 +114,11 @@ function PopupForm({ closePopup }) {
             className="mt-1 p-1 border border-gray-300 rounded-md w-full md:w-3/4 lg:w-1/2 cursor-pointer"
             type="date"
             value={pickupDate}
-            onChange={(e) => setPickupDate(e.target.value)}
+            min={currentDate}
+            onChange={(e) => {
+              setPickupDate(e.target.value);
+              setReturnDate(""); // Reset return date if pickup date changes
+            }}
             required
           />
           <label className="font-poppins font-semibold">Estimated Book Returned Date:</label>
@@ -123,6 +126,16 @@ function PopupForm({ closePopup }) {
             className="mt-1 p-1 border border-gray-300 rounded-md w-full md:w-3/4 lg:w-1/2 cursor-pointer"
             type="date"
             value={returnDate}
+            min={pickupDate || currentDate} // Start from the pickup date
+            max={
+              user.designation === "Student" && pickupDate
+                ? new Date(
+                    new Date(pickupDate).setDate(new Date(pickupDate).getDate() + 3)
+                  )
+                    .toISOString()
+                    .split("T")[0]
+                : undefined // No max limit for faculty or staff
+            }
             onChange={(e) => setReturnDate(e.target.value)}
             required
           />
