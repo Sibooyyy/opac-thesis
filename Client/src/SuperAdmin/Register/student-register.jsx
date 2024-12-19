@@ -63,12 +63,7 @@ const StudentRegister = () => {
       handleErrorTimeout('Email must be either @gmail.com or @yahoo.com.');
       return;
     }
-
-    if (formData.designation === 'Faculty' && !formData.department) {
-      handleErrorTimeout('Department is required for Faculty.');
-      return;
-    }
-
+    
     setLoading(true);
     const url = 'http://localhost:8081/auth/register';
     axios.post(url, formData).then((res) => {
@@ -100,7 +95,7 @@ const StudentRegister = () => {
         <div className='flex flex-row justify-center items-start border border-gray-200 rounded-lg shadow-3xl w-full max-w-[1200px] mx-auto my-[70px] p-8 bg-white'>
           <div className='flex flex-col justify-center items-center w-[30%] mt-12'>
             <img src={candaleria} alt="Candelaria" className='w-32 h-32' />
-            <h1 className='font-montserrat font-bold text-2xl text-[#001377] mt-6'>Client Register Form</h1>
+            <h1 className='font-montserrat font-bold text-2xl text-[#001377] mt-6'>User Register Form</h1>
           </div>
           <form className='flex flex-col gap-6 w-[70%] px-4 md:px-8' onSubmit={handleSubmit}>
             <div className='flex flex-wrap gap-4 md:gap-6'>
@@ -132,7 +127,7 @@ const StudentRegister = () => {
                 </select>
               </div>
 
-              {(formData.designation === 'Faculty' || formData.designation === 'Staff') && (
+              {(formData.designation === 'Staff') && (
                 <div className='flex flex-col gap-2 w-full md:w-[30%]'>
                   <label className='font-montserrat text-md font-semibold'>Position</label>
                   <input

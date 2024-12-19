@@ -19,7 +19,7 @@ const BookRecord = ({ books, onEditClick }) => {
   const [selectedBook, setSelectedBook] = useState(null);
   const [currentPage, setCurrentPage] = useState(1);
   const [sortConfig, setSortConfig] = useState({ key: null, direction: "asc" });
-  const recordsPerPage = 3;
+  const recordsPerPage = 5;
 
   useEffect(() => {
     setData(books);
@@ -217,7 +217,7 @@ const BookRecord = ({ books, onEditClick }) => {
       </table>
 
       {/* Pagination Controls */}
-      <div className="flex justify-end mt-[400px] items-center gap-1 pr-10">
+      <div className="flex justify-end mt-[300px] items-center gap-1 pr-10">
         <button
           onClick={previousPage}
           disabled={currentPage === 1}

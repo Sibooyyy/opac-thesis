@@ -89,7 +89,7 @@ const CatRec = ({ onEditClick }) => {
   }
 
   return (
-    <div className="m-5 w-[80%] h-[550px] mt-16 rounded-2xl border bg-[#F6FBFD] font-montserrat shadow-3xl">
+    <div className="m-5 w-[80%] h-[570px] mt-16 rounded-2xl border bg-[#F6FBFD] font-montserrat shadow-3xl">
       <div className='flex justify-between h-[70px] items-center p-5 bg-[#292A84] rounded-t-2xl'>
         <h1 className='font-bold text-xl text-white'>Category List</h1>
         <button 

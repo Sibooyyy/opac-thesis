@@ -164,18 +164,17 @@ function StudentRecord() {
             </div>
           )}
 
-          <div className='h-[400px]'>
-            <table className="w-[95%] mx-auto table-auto font-montserrat text-sm sm:text-md cursor-pointer">
+          <div className='overflow-x-auto'>
+            <table className="w-full table-auto font-montserrat text-sm sm:text-md cursor-pointer">
               <thead className="text-xs sm:text-sm md:text-md font-semibold h-[45px] text-gray-700">
                 <tr className="border-b-2 border-gray-500">
                   <th className="px-10 py-4">No</th>
                   <th className="px-10 py-4">Name</th>
                   <th className="px-10 py-4">Designation</th>
                   <th className="px-10 py-4">Title</th>
-                  <th className="px-10 py-4">Category</th>
                   <th className="px-10 py-4">Author</th>
-                  <th className="hidden sm:table-cell px-4 py-4">Booking Date</th>
                   <th className="hidden sm:table-cell px-4 py-4">Pick-Up Date</th>
+                  <th className="hidden sm:table-cell px-4 py-4">Estimated Returned</th>
                   <th className="px-10 py-4">Status</th>
                   <th className="px-10 py-4">Action</th>
                 </tr>
@@ -189,7 +188,6 @@ function StudentRecord() {
                       <td className='border-b-2 px-4 py-2 whitespace-nowrap'>{record.designation}</td>
                       <td className='border-b-2 px-4 py-2 whitespace-nowrap'>{record.title}</td>
                       <td className='border-b-2 px-4 py-2 whitespace-nowrap'>{record.author}</td>
-                      <td className='border-b-2 px-4 py-2 whitespace-nowrap'>{record.isbn_issn}</td>
                       <td className='border-b-2 px-4 py-2 whitespace-nowrap'>{moment(record.pickup_date).format("MMM Do YYYY")}</td>
                       <td className='border-b-2 px-4 py-2 whitespace-nowrap'>{moment(record.estimated_date).format("MMM Do YYYY")}</td>
                       <td className='border-b-2 px-4 py-2 whitespace-nowrap'>

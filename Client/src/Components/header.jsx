@@ -52,7 +52,7 @@ function Header() {
               className='text-white text-2xl cursor-pointer mr-7 text-[35px]'
             />
             {isDropdownOpen && (
-              <div className='absolute right-0 mt-2 w-48 bg-white rounded-lg shadow-lg z-50'>
+              <div className='absolute right-0 mt-2 w-[150px] mr-5 bg-white rounded-lg shadow-lg z-50'>
                 <ul className='py-2'>
                   <li 
                     className='p-2 hover:bg-gray-200 cursor-pointer text-sm md:text-[15px] flex items-center gap-2 font-montserrat'
